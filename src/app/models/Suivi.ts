@@ -7,4 +7,6 @@ export interface Suivi {
   cle :string;
   courriel :string;
   statut  :string;
+  dateActivation  :string;
+  admin  :string;
 }

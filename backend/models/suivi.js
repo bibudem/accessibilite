@@ -20,7 +20,7 @@ module.exports = class Suivi {
     let date = dt.format('Y-m-d H:M:S');
     //ajouter la date dans le tableau des données
     objet.push(date);
-    return db.execute('INSERT INTO tbl_suivi SET idSuivi=?,nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,idItem = ?,dateA =?', objet );
+    return db.execute('INSERT INTO tbl_suivi SET idSuivi=?,nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,dateActivation =?,admin=?,idItem = ?,dateA =?', objet );
 
   }
 
@@ -29,11 +29,11 @@ module.exports = class Suivi {
     let dt = datetime.create();
     let date = dt.format('Y-m-d H:M:S');
     //afficher la requette
-    /*let sql = "UPDATE tbl_suivi SET  nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,idItem = ?,dateM =? WHERE idSuivi  = ?"
-    console.log('sql: ', SqlString.format(sql,[objet[1],objet[2],objet[3],objet[4],objet[5],objet[6],objet[7],date,objet[0]]));*/
+    /*let sql = "UPDATE tbl_suivi SET  nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,dateActivation =?,idItem = ?,dateM =? WHERE idSuivi  = ?"
+    console.log('sql: ', SqlString.format(sql,[objet[1],objet[2],objet[3],objet[4],objet[5],objet[6],objet[7],objet[8],date,objet[0]]));*/
 
-    return db.execute('UPDATE tbl_suivi SET  nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,idItem = ?,dateM =? WHERE idSuivi  = ?',
-      [objet[1],objet[2],objet[3],objet[4],objet[5],objet[6],objet[7],date,objet[0]]);
+    return db.execute('UPDATE tbl_suivi SET  nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,dateActivation =?,idItem = ?,dateM =? WHERE idSuivi  = ?',
+      [objet[1],objet[2],objet[3],objet[4],objet[5],objet[6],objet[7],objet[8],date,objet[0]]);
 
   }
 

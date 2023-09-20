@@ -43,6 +43,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 import { MatTabsModule } from '@angular/material/tabs';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {MatSortModule} from "@angular/material/sort";
@@ -90,6 +91,7 @@ import { LinkRecuperationComponent } from './components/link-recuperation/link-r
     AppRoutingModule,
     FormsModule,
     MatTabsModule,
+    ClipboardModule,
     // import HttpClientModule after BrowserModule.
     HttpClientModule,
     TranslateModule.forRoot({

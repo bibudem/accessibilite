@@ -25,17 +25,17 @@ const routes: Routes = [
   { path: 'items/edit/:id', component: ItemsFormComponent, canActivate: [AuthGuard] },
   { path: 'suivi/:id', component: SuiviComponent, canActivate: [AuthGuard] },
   { path: 'items/add', component: ItemsFormComponent, canActivate: [AuthGuard] },
-  { path: 'link/*', component: LinkRecuperationComponent, canActivate: [AuthGuard] },
+  { path: 'lien/:key', component: LinkRecuperationComponent, canActivate: [AuthGuard] },
   { path: 'collection', component: CollectionsListComponent, canActivate: [AuthGuard]},
   { path: 'collection/:id', component: CollectionsFormComponent, canActivate: [AuthGuard]},
   { path: 'processus', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'processus/add', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
-  { path: 'processus/details/:id', component: ListeProcessusDelailsComponent, canActivate: [AuthGuard,AdminGuard] },
+  { path: 'processus/details/:id', component: ListeProcessusDelailsComponent, canActivate: [AuthGuard] },
   { path: 'list-fonds', component: ListFondsComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'list-fournisseurs', component: ListFournisseursComponent, canActivate: [AuthGuard,AdminGuard] },
   { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard]  },
   { path: 'not-user', component: NotUserComponent },
-  { path: 'not-acces', component: NotAutoriseComponent, canActivate: [AuthGuard] },
+  { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard] },
   { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] }
 ];
 
