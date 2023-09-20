@@ -1,0 +1,122 @@
+<div class="card mt-5 mb-1">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-9">
+        <h2 class="mt-1" *ngIf="conditionIdCollection">{{ 'form-values' | translate}}
+          <span  > | {{ 'id' | translate}}</span>
+        </h2>
+        <h2 class="mt-1" *ngIf="!conditionIdCollection">{{ 'new-collection' | translate}}</h2>
+      </div>
+      <div class="col-md-3">
+        <mat-card-actions align="end">
+          <a mat-stroked-button href="/collection" ><mat-icon>keyboard_return</mat-icon> {{ 'btn-return' | translate}}</a>
+        </mat-card-actions>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <!-- Alert notification div -->
+      <div class="alert alert-success alert-dismissible fade show cacherVisible" role="alert" id="alert-modif">
+        {{ 'message.action-text' | translate}}
+        <button type="button"  class="close" (click)="global.nonAfficher('alert-modif')" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="card-body mb-5">
+        <form class="forms-sample"  #collectionForm="ngForm" name="collectionForm" id="collectionForm"   (ngSubmit)="onSubmit(collectionForm)" >
+          <div class="form-group">
+            <label for="nom">{{ 'titre' | translate}} <span class="text-danger">*</span></label>
+            <input  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(collection.nom),'valid-class': global.obligatoireChamp(collection.nom)}" #nom="ngModel" name="nom" id="nom" placeholder="{{ 'titre' | translate}}" [(ngModel)]="collection.nom" >
+            <input  class="form-control" #id_collection="ngModel" name="id_collection" id="id_collection" type="hidden" [(ngModel)]="collection.id_collection">
+            <input  class="form-control"  name="action" id="action" type="hidden"  value="{{action}}"  >
+          </div>
+          <div class="form-group">
+            <label for="description">{{ 'description' | translate}}</label>
+            <textarea class="form-control" id="description" name="description" #description="ngModel" rows="5" [(ngModel)]="collection.description"></textarea>
+          </div>
+          <div class="form-group" *ngIf="!isFile">
+            <mat-card-content>
+              <br><br>
+              <mat-form-field style="width: 100%;">
+                <mat-label>File matInput</mat-label>
+                <button mat-icon-button matPrefix type="button" (click)="f_input.click()">
+                  <mat-icon>attach_file</mat-icon>
+                </button>
+                <input type="text" readonly matInput [formControl]="display" id="label-name-file" />
+                <input
+                  type="file"
+                  accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
+                  id="f_input"
+                  required="false"
+                  hidden
+                  #f_input
+                  (change)="handleFileInputChange(f_input.files)"
+                />
+                <mat-error>{{ 'file-required' | translate}}</mat-error>
+              </mat-form-field>
+              <br><br>
+            </mat-card-content>
+          </div>
+            <mat-card *ngIf="isFile" id="img-collection">
+              <mat-card-content>
+                <img  class="mat-card-image p-1"  src="/assets/files/collections/{{collection.image}}" >
+              </mat-card-content>
+              <mat-card-subtitle>
+                <button mat-button color="primary" (click)="deleteFile(collection.image)"><mat-icon>cached</mat-icon> {{ 'remplacer' | translate}}</button>
+                <button mat-button color="warn" (click)="deleteFile(collection.image)"><mat-icon>delete</mat-icon> {{ 'supprimer' | translate}}</button>
+              </mat-card-subtitle>
+            </mat-card>
+          <input  class="form-control mb-3" #image="ngModel" name="image" id="image1" type="hidden" [(ngModel)]="collection.image">
+          <mat-divider></mat-divider>
+          <button type="button" class="btn btn-success mr-2 mt-4" data-toggle="modal" data-target="#modal-enregistrer" (click)="handleSubmit()"><i class="fa fa-save btn-icon-prepend"></i> {{bouttonAction}}</button>
+          <button *ngIf="conditionIdCollection" type="button" class="btn btn-danger mr-2 mt-4" data-toggle="modal" data-target="#modal-supprimer" ><i class="fa fa-trash btn-icon-prepend"></i> {{'btn-supprimer'| translate}}</button>
+          <!-- Modal pour modifier-->
+          <div class="modal fade" id="modal-enregistrer" tabindex="-1" role="dialog" aria-labelledby="modal-enregistrer" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="exampleModalLabel">{{'message.confirmer-titre'| translate}}</h2>
+                  <button type="button" class="close" #closebutton data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h3>{{'message.confirmer-text'| translate}}</h3>
+                </div>
+                <div class="modal-footer">
+                  <button *ngIf="ifAdmin" type="submit" class="btn btn-success" >{{bouttonAction}}</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> Annuler</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal pour supprimer-->
+          <div class="modal fade" id="modal-supprimer" tabindex="-1" role="dialog" aria-labelledby="modal-enregistrer" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="modal-supprimer-Label">{{'message.confirmer-titre'| translate}}</h2>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h3>{{'message.supprimer-text'| translate}}</h3>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{'btn-annuler'| translate}}</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(collection.id_collection)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn-supprimer'| translate}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- fin modal-->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="noVisible" *ngFor="let collection of collections$ | async"></div>

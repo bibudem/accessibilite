@@ -20,7 +20,9 @@ module.exports = class Suivi {
     let date = dt.format('Y-m-d H:M:S');
     //ajouter la date dans le tableau des données
     objet.push(date);
-    return db.execute('INSERT INTO tbl_suivi SET idSuivi=?,nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,dateActivation =?,admin=?,idItem = ?,dateA =?', objet );
+    /*let sql = "INSERT INTO tbl_suivi SET idSuivi=?,idItem = ?,nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,dateActivation =?,admin=?,dateA =?"
+    console.log('sql: ', SqlString.format(sql,objet));*/
+    return db.execute('INSERT INTO tbl_suivi SET idSuivi=?,idItem = ?,nom =?,prenom =?,note =?,cle =?,courriel =?,statut =?,dateActivation =?,admin=?,dateA =?', objet );
 
   }
 

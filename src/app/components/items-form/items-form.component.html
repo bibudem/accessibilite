@@ -1,0 +1,214 @@
+<div class="card mt-5 mb-1">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-10">
+        <h2 class="mt-1" *ngIf="conditionIdItem">{{ 'form-values' | translate}}
+          <span  > | {{ 'id' | translate}}</span>
+        </h2>
+        <h2 class="mt-1" *ngIf="!conditionIdItem">{{ 'new-item' | translate}}</h2>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn-return' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <!-- Alert notification div -->
+      <div class="alert alert-success alert-dismissible fade show cacherVisible" role="alert" id="alert-modif">
+        {{ 'message.action-text' | translate}}
+        <button type="button"  class="close" (click)="global.nonAfficher('alert-modif')" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="card-body mb-5">
+        <form class="forms-sample"  #itemForm="ngForm" name="itemForm" id="itemForm"   (ngSubmit)="onSubmit(itemForm)" >
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label for="titre">{{ 'titre' | translate}} <span class="text-danger">*</span></label>
+              <input  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.titre),'valid-class': global.obligatoireChamp(item.titre)}" #titre="ngModel" name="titre" id="titre" placeholder="{{ 'titre' | translate}}" [(ngModel)]="item.titre" >
+              <input  class="form-control" #idItem="ngModel" name="idItem" id="idItem" type="hidden" [(ngModel)]="item.idItem">
+              <input  class="form-control"  name="action" id="action" type="hidden"  value="{{action}}"  >
+            </div>
+            <div class="col-md-4">
+              <label for="idColecttion">{{ 'collection' | translate}} </label>
+              <select name="idColecttion" id="idColecttion"  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.idColecttion),'valid-class': global.obligatoireChamp(item.idColecttion)}" #idColecttion  [(ngModel)]="item.idColecttion">
+                <option *ngIf="!item.idColecttion" value="">{{'choisissez' | translate}}</option>
+                <option *ngFor="let rep of listeCollection" [value]="rep.id" >{{rep.nom}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="auteur">{{ 'auteur' | translate}} </label>
+              <input  class="form-control" #auteur="ngModel" name="auteur" id="auteur" type="text" [(ngModel)]="item.auteur">
+            </div>
+            <div class="col-md-4">
+              <label for="editeur">{{ 'editeur' | translate}} </label>
+              <input  class="form-control" #editeur="ngModel" name="editeur" id="editeur" type="text" [(ngModel)]="item.editeur">
+            </div>
+            <div class="col-md-4">
+              <label for="annee">{{ 'annee-pub' | translate}} </label>
+              <select name="annee" id="annee"  class="form-control" #annee [(ngModel)]="item.annee" >
+                <option *ngFor="let rep of this.arrayAnnee" >{{rep}}</option>
+              </select>
+            </div>
+          </div>
+          <!-- Menu onglets-->
+          <div class="mt-5 mb-5">
+            <mat-tab-group animationDuration="2000ms">
+            <mat-tab label="{{ 'file-item' | translate}}">
+              <div class="form-group" *ngIf="!isFile">
+                <mat-card-content>
+                  <br><br>
+                  <mat-form-field style="width: 100%;">
+                    <mat-label>{{ 'file-uploud' | translate}}</mat-label>
+                    <button mat-icon-button matPrefix type="button" (click)="f_input.click()">
+                      <mat-icon class="f-20 mr-2">attach_file</mat-icon>
+                    </button>
+                    <input type="text" readonly matInput [formControl]="display" id="label-name-file" />
+                    <input
+                      type="file"
+                      [accept]="[
+                        '.doc',
+                        '.docx',
+                        '.jpg',
+                        '.jpeg',
+                        '.pdf',
+                        '.png',
+                        '.xls',
+                        '.xlsx'
+                        ]"
+                      id="f_input"
+                      required="false"
+                      hidden
+                      #f_input
+                      (change)="handleFileInputChange(f_input.files)"
+                    />
+                    <mat-hint
+                    >{{ 'accept-file' | translate}}
+                    </mat-hint>
+                    <mat-error>{{ 'file-required' | translate}}</mat-error>
+                  </mat-form-field>
+                  <br><br>
+                </mat-card-content>
+              </div>
+              <mat-card *ngIf="isFile" id="img-collection" class="mt-5 mb-5">
+                <mat-card-content>
+                  <div class="form-group">
+                    <div class="input-group">
+                    <span class="input-group-addon hidden-xs linkname">
+                      <a *ngIf="isFile" href="/assets/files/items/{{item.URL}}/{{item.file}}" class="" target="_blank">
+                        <span> {{ 'voir-fichier' | translate}}</span>
+                      </a>
+                    </span>
+                      <!--<span id="copyButton" class="input-group-addon btn" title="{{ 'click-modif' | translate}}" (click)="global.copyInputValue(fichierURL)">
+                    <i class="typcn typcn-clipboard menu-icon"></i>
+                  </span>-->
+                       <input type="text"  name="fichierURL" id="fichierURL" #fichierURL value="{{item.file}}" class="form-control"  readonly>
+                     </div>
+                   </div>
+                 </mat-card-content>
+                <br>
+                 <mat-card-subtitle>
+                   <!--<button mat-button color="primary" (click)="updateURL(item.idItem,item.URL)" type="button"><mat-icon>cached</mat-icon> {{ 'mise-a-jour-url' | translate}}</button>-->
+                  <button mat-button color="warn" (click)="deleteFile(item.file,item.URL)" type="button"><mat-icon>delete</mat-icon> {{ 'supprimer-file' | translate}}</button>
+                </mat-card-subtitle>
+              </mat-card>
+              <input type="hidden" id="URL" name="URL" #URL="ngModel"  [(ngModel)]="item.URL" class="form-control"  >
+              <input  class="form-control mb-3" #image="ngModel" name="file" id="file" type="hidden" [(ngModel)]="item.file">
+            </mat-tab>
+            <mat-tab label="{{ 'note-item' | translate}}">
+              <div class="form-group mt-4 mb-4">
+                <textarea class="form-control" id="description" name="description" #description="ngModel" rows="5" [(ngModel)]="item.description"></textarea>
+              </div>
+            </mat-tab>
+            <mat-tab label="Suivi" *ngIf="item.idItem">
+              <!-- Section Archives-->
+              <div class="form-group">
+                <button class="btn btn-primary btn-lg float-right mt-4 mb-2"
+                        type="boutton" (click)="reload('/suivi/'+item.idItem)">
+                  <i class="icon-note btn-icon-prepend"></i>{{ 'gestion-suivi' | translate}}
+                </button>
+              </div>
+              <div class="table-responsive" *ngIf="tableauSuivi.length!=0">
+                <table class="table table-hover table-bordered">
+                  <thead>
+                  <tr>
+                    <th class="w-5">{{ 'numero' | translate}}</th>
+                    <th>{{ 'nom' | translate}}</th>
+                    <th>{{ 'prenom' | translate}}</th>
+                    <th>{{ 'statut' | translate}}</th>
+                    <th>{{ 'URL' | translate}}</th>
+                    <th>{{ 'dateAc' | translate}}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let rep of tableauSuivi" >
+                    <td>{{rep.numero}}</td>
+                    <td>{{rep.nom}}</td>
+                    <td>{{rep.prenom}}</td>
+                    <td>{{rep.statut}}</td>
+                    <td><button type="button" class="btn btn-secondary btn-sm" [cdkCopyToClipboard]="routeUrl+'/lien/'+rep.cle">{{ 'copier-url' | translate}}</button></td>
+                    <td>{{ rep.dateActivation  }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- fin archives-->
+            </mat-tab>
+          </mat-tab-group>
+          </div>
+          <mat-divider></mat-divider>
+          <button type="button" class="btn btn-success mr-2 mt-4" data-toggle="modal" data-target="#modal-enregistrer" (click)="handleSubmit()"><i class="fa fa-save btn-icon-prepend"></i> {{bouttonAction}}</button>
+          <button *ngIf="conditionIdItem" type="button" class="btn btn-danger mr-2 mt-4" data-toggle="modal" data-target="#modal-supprimer" ><i class="fa fa-trash btn-icon-prepend"></i> {{'btn-supprimer'| translate}}</button>
+          <!-- Modal pour modifier-->
+          <div class="modal fade" id="modal-enregistrer" tabindex="-1" role="dialog" aria-labelledby="modal-enregistrer" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="exampleModalLabel">{{'message.confirmer-titre'| translate}}</h2>
+                  <button type="button" class="close" #closebutton data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h3>{{'message.confirmer-text'| translate}}</h3>
+                </div>
+                <div class="modal-footer">
+                  <button *ngIf="ifAdmin" type="submit" class="btn btn-success" >{{bouttonAction}}</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{ 'annuler' | translate}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal pour supprimer-->
+          <div class="modal fade" id="modal-supprimer" tabindex="-1" role="dialog" aria-labelledby="modal-enregistrer" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="modal-supprimer-Label">{{'message.confirmer-titre'| translate}}</h2>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h3>{{'message.supprimer-text'| translate}}</h3>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{'btn-annuler'| translate}}</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(item.idItem)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn-supprimer'| translate}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- fin modal-->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="noVisible" *ngFor="let item of items$ | async"></div>

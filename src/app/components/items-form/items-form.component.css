@@ -1,0 +1,70 @@
+.input-group {
+  margin-top: 30px;
+  position: relative;
+}
+
+.input-group {
+  position: relative;
+}
+.input-group-addon {
+  border: none;
+}
+
+.linkname {
+  display: none;
+  width: 12%;
+}
+.linkname span{
+  text-align: center;
+  color: white!important;
+}
+
+#copyButton {
+  cursor: pointer;
+  background: #f15c3a;
+  color: white;
+  border-radius: 0;
+}
+
+#copyTarget {
+  border-left: none;
+}
+
+.copied {
+  opacity: 1;
+  position: absolute;
+  left: 55px;
+}
+
+@media (min-width: 768px) {
+  .copied {
+    left: 135px;
+  }
+
+  .linkname {
+    display: block;
+    background: #183d6d;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+  }
+}
+.example-small-box, .example-large-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 0px;
+}
+
+.example-small-box {
+  height: 100px;
+  width: 100px;
+}
+
+.example-large-box {
+  min-height: 200px;
+  width: 98%;
+  background: #ebecf13b;
+}

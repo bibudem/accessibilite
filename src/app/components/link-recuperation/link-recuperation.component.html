@@ -1,0 +1,27 @@
+<div class="row mt-5" *ngIf="linkActif">
+  <div class="card mt-5 p-4">
+    <h3 class="font-weight-light">{{'files-titre-recuperation'| translate}}</h3>
+    <div class="drop_box p-5">
+      <header>
+        <h2>{{titreItem}}</h2>
+      </header>
+      <p>{{'files-info-recuperation'| translate}}</p>
+      <button  class="btn " (click)="download(lienItem,nameItem)">{{'file-telecharger'| translate}}</button>
+    </div>
+  </div>
+</div>
+<div class="row mt-5" *ngIf="!linkActif">
+  <div class="card mt-5 p-4">
+    <h3 class="font-weight-light">{{'titre-recuperation-expire'| translate}}</h3>
+    <div class="drop_box_alert p-5">
+        <h4>{{'info-recuperation'| translate}}<br>
+          {{'delails-recuperation'| translate}}</h4>
+      <ol>
+        <li>{{'raison-expiration1'| translate}}</li>
+        <li>{{'raison-expiration2'| translate}}</li>
+        <li>{{'raison-expiration3'| translate}}</li>
+      </ol>
+      <p class="text-danger">{{'aide-recuperation'| translate}}</p>
+    </div>
+  </div>
+</div>

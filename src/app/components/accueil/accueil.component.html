@@ -1,0 +1,48 @@
+<div class="row mt-5">
+  <!-- Jumbotron -->
+  <div class="jumbotron jumbotron-billboard text-center bg-white pt-5">
+    <div class="img"></div>
+    <div class="container pt ">
+      <div class="mt-5 text-color text-align-center mb-4 ">
+        <h1 class="shadow-sm mb-2">{{'home-title' | translate }}</h1>
+        <h2 *ngIf="!ifAdmin" class="display-3">{{'home-description-not-admin' | translate }}</h2>
+      </div>
+      <form >
+        <div class="row" *ngIf="ifAdmin">
+          <div class="col-md-8 offset-1">
+            <input id="rechercher" type="text" class="form-control rounded-0 home-input" placeholder="{{'home.placeholder'| translate}}">
+          </div>
+          <div class="col-md-2">
+            <button id = "getMessage" class = "btn btn-dark rounded-0 w-100 h-45" (click)="rechercherMotCle(global.returnValueInputId('rechercher'))">{{'rechercher'| translate}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+</div>
+<!--<div class="row mt-1" *ngIf="ifAdmin">
+  <h2 class="display-3">{{'home-description' | translate }}</h2>
+</div>-->
+<div class="row mt-2" *ngIf="ifAdmin">
+  <div *ngFor="let item of listeItems" class="col-md-6">
+    <div class="card mb-3">
+      <div class="row no-gutters align-items-center">
+        <div class="col-md-5 img-div" *ngIf="item.image">
+          <img src="/assets/files/collections/{{ item.image }}" class="card-img" alt="...">
+        </div>
+        <div class="col-md-7">
+          <div class="card-body">
+            <h1 class="card-title"  *ngIf="item.nom">{{ item.nom }}</h1>
+            <button type="button" class="btn btn-home btn-sm" (click)="rechercherParCollection(item.nom)">{{'parcourrir' | translate }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- row -->
+
+
+
+
