@@ -10,7 +10,7 @@
           </div>
       </div>
       <div class="col-md-3">
-        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn-return' | translate}}</button>
+        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="reload('/items/'+this.idItem)" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn-return' | translate}}</button>
       </div>
     </div>
   </div>
@@ -117,8 +117,8 @@
                   {{'message.confirmer-text'| translate }}
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary btn-sm"  (click)="onSubmit(this.suiviForm);onFermeModal();"><i class="typcn typcn-tick"></i> {{bouttonAction}}</button>
-                  <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"> <i class=" typcn typcn-times"></i>{{'btn-annuler'| translate}}</button>
+                  <button type="button" class="btn btn-primary btn-sm"  (click)="onSubmit(this.suiviForm);onFermeModal();"> {{bouttonAction}}</button>
+                  <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"> {{'btn-annuler'| translate}}</button>
                 </div>
               </div>
             </div>

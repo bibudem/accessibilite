@@ -7,7 +7,7 @@
       <div class="col-md-6">
         <mat-card-actions align="end">
           <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn-return' | translate}}</button>
-          <button class="btn btn-primary btn-sm ml-1 float-right"  href="/items/add" ><i class=" typcn typcn-download"></i> {{ 'ajouter' | translate}}</button>
+          <a class="btn btn-primary btn-sm ml-1 float-right"  href="/items/add" ><i class=" typcn typcn-download"></i> {{ 'ajouter' | translate}}</a>
         </mat-card-actions>
       </div>
     </div>
@@ -24,7 +24,7 @@
       <div class="table-responsive mt-3">
           <mat-table
             [dataSource]="dataSource"
-            class="w-100"
+            class="w-100 mb-5"
             matSort
             matSortActive="titre"
             matSortDirection="asc">
@@ -42,8 +42,8 @@
 
             <!-- URL Column -->
             <ng-container matColumnDef="URL">
-              <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-10 "> {{ 'file' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10 text-center" >
+              <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-10 content-center "> {{ 'file' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10 text-center content-center" >
                 <a *ngIf="row.file"  class="fileLink" href="{{row.URL}}" target="_blank" >
                   <i class="typcn typcn-document-text icon-md text-secondary fileLink"></i>
                 </a>   </mat-cell>
@@ -57,20 +57,15 @@
 
             <!-- dateM Column -->
             <ng-container matColumnDef="dateA">
-              <mat-header-cell *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'dateA' | translate}} </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="mat-w-10"> {{row.dateA | date:'short': 'fr'}} </mat-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header  class="mat-w-20"> {{ 'dateLastModif' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row" class="mat-w-20"> {{row.dateA | date:'short': 'fr'}} </mat-cell>
             </ng-container>
 
-            <!-- dateM Column -->
-            <ng-container matColumnDef="dateM">
-              <th *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'dateM' | translate}} </th>
-              <mat-cell  *matCellDef="let row" class="mat-w-10"> {{row.dateM | date:'short': 'fr'}} </mat-cell>
-            </ng-container>
             <!-- Consulter Column -->
             <ng-container matColumnDef="consulter" >
-              <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-center"> {{ 'consulter' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10 text-center">
-                <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3" routerLink="/items/{{ row.idItem }}">
+              <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-center content-center"> {{ 'consulter' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10 text-center content-center">
+                <button type="button" class="btn btn-success btn-sm btn-icon-text mr-3 align-content-center" routerLink="/items/{{ row.idItem }}">
                   <i class="typcn typcn-edit btn-icon-append"></i>
                 </button>
               </mat-cell>

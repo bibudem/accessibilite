@@ -60,6 +60,7 @@
   "acronyme": "Acronyme ",
   "dateA": "Date d'ajout ",
   "dateM": "Date de modification ",
+  "dateLastModif": "Dernière modification",
   "ordre": "Trier par",
   "voir-details": "Voir les détails",
   "reponse": "Réponse",
@@ -126,7 +127,7 @@
   "voir-fichier": "Voir le fichier",
   "click-modif": "Click pour copier le lien",
   "codes.404": "404- L'adresse URL est erronée.",
-  "accept-file": "Formats acceptés: DOC, DOCX, JPG, JPEG, PDF, PNG, XLS and XLSX, taille maximale de téléchargement de fichiers: 20 MB.",
+  "accept-file": "Formats acceptés: DOC, DOCX, JPG, JPEG, PDF, PNG, XLS, XLSX, MP3 and WAV taille maximale de téléchargement de fichiers: 20 MB.",
 
   "message": {
     "confirmer-titre": "Confirmer votre action",

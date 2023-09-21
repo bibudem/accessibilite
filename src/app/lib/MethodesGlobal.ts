@@ -321,5 +321,11 @@ export class MethodesGlobal  {
       console.error(`Error : ${err.Message}`);
     }
   }
+  remplacerAccentsEtEspaces(nomFichier: string): string {
+    let nomFichierSansAccents = nomFichier.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    let nomFichierSansEspaces = nomFichierSansAccents.replace(/\s/g, "_");
+    return nomFichierSansEspaces;
+  }
+
 
 }

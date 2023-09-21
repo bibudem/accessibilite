@@ -67,10 +67,13 @@ export class ItemsListComponent implements OnInit {
     try {
       this.items$ = this.fetchAll();
       let url: { toString: () => any; }[]=[];
+      let dateLastModif='';
       this.items$.toPromise().then(res => {
         if(res!== undefined){
           for (let i = 0; i < res.length; i++) {
             url[i]='/assets/files/items/'+res[i].URL+'/'+res[i].file;
+            if(res[i].dateM){ dateLastModif=res[i].dateM}
+            else dateLastModif=res[i].dateA
             this.listeItems[i]={
               "numero":i+1,
               "idItem":res[i].idItem,
@@ -78,8 +81,7 @@ export class ItemsListComponent implements OnInit {
               "file":res[i].file,
               "URL":url[i],
               "collection":res[i].collection,
-              "dateA":res[i].dateA,
-              "dateM":res[i].dateM
+              "dateA":dateLastModif
             }
           }
         }

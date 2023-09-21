@@ -183,12 +183,12 @@ export class ItemsFormComponent implements OnInit {
 
   handleSubmit(): void {
     this.file_list = [];
-    let nameFile = new Date().getHours().toLocaleString() + '_item_';
+    let nameFile = new Date().getHours().toLocaleString() + 'c_';
     let nameFolder = this.item.idColecttion + this.global.generateRandomNumber(10);
 
     if (this.file_store !== undefined) {
       for (let i = 0; i < this.file_store.length; i++) {
-        nameFile += this.file_store[i].name;
+        nameFile += this.global.remplacerAccentsEtEspaces(this.file_store[i].name);
         this.formData.append("file", this.file_store[i], nameFile);
         this.formData.append("nameFolder", nameFolder);
         this.file_list.push(this.file_store[i].name);

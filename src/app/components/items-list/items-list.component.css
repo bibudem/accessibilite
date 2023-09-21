@@ -1,3 +1,6 @@
 .fileLink:hover{
   color: #0071b9 !important;
 }
+.content-center {
+  justify-content: center!important;
+}

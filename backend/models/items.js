@@ -43,7 +43,7 @@ module.exports = class Items {
 
 //recouperer la liste des items
   static allItems(){
-    return db.execute('SELECT titre,file,URL,idItem,( SELECT nom from tbl_collections where id_collection=idColecttion) as collection,dateA FROM tbl_items order by titre');
+    return db.execute('SELECT titre,file,URL,idItem,( SELECT nom from tbl_collections where id_collection=idColecttion) as collection,dateA, dateM FROM tbl_items order by titre');
   }
 
 //recouperer la liste des collections

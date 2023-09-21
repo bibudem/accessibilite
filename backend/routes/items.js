@@ -35,22 +35,21 @@ router.use(express.urlencoded({ extended: true }));
 
 router.put('/uploud', function (req, res) {
   //console.log(req);
-  var form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm();
   form.parse(req, function (err, fields, files) {
     let folderName=fields.nameFolder;
     //console.log(files);
-    var oldpath = files.file.filepath;
-    //var newpath = './../src/assets/files/items/' + files.file.originalFilename;
-    var folderItem = './../src/assets/files/items/'+folderName;
+    let oldpath = files.file.filepath;
+    let folderItem = './../src/assets/files/items/'+folderName;
 
     if (!fs.existsSync(folderItem)){
       fs.mkdirSync(folderItem);
     }
-    var newpath = folderItem + '/' + files.file.originalFilename;
+    let newpath = folderItem + '/' + files.file.originalFilename;
     fs.rename(oldpath, newpath, function (err) {
       if (err) throw err;
       res.write('File uploaded and moved!');
-      console.log('File uploaded +++');
+      //console.log('File uploaded +++');
       res.end();
     });
   });
