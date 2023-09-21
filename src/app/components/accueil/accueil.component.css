@@ -19,7 +19,6 @@
   color: #393b44;
   text-align: center;
   line-height: 30px;
-  color: white;
   font-size: 34px;
   margin-top: -60px;
 }
@@ -44,8 +43,10 @@
 
 .shadow-sm {
   color: #0762ab!important;
-  font-size: 36px;
+  font-size: 36px!important;
   margin-bottom: 40px!important;
+  text-shadow: #fff 2px 2px!important;
+  font-weight: 500!important;
 }
 .btn-home{
   background: #c5501e;
@@ -122,7 +123,7 @@ a.action_link {
   text-transform: initial;
 }
 .home-input{
-  border: 1px solid rgba(122, 125, 127, 0.7);
+  border: 1px solid rgba(122, 125, 127, 0.3);
 }
 .display-3{
  font-weight: lighter;

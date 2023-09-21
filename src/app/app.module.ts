@@ -47,11 +47,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {MatSortModule} from "@angular/material/sort";
-import { ListeProcessusComponent } from './components/processus/liste-processus/liste-processus.component';
-import {ListeProcessusDelailsComponent} from "./components/processus/liste-processus-details/liste-processus-details.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
-import {ListFournisseursComponent} from "./components/configuration/fournisseurs/list-fournisseurs/list-fournisseurs.component";
 import {ListBoxModule, DropDownListModule, ComboBoxModule, AutoCompleteModule, MultiSelectModule, DropDownTreeModule, MentionModule} from "@syncfusion/ej2-angular-dropdowns";
 import { RouterModule } from '@angular/router';
 import {CollectionsListComponent} from "./components/collections-list/collections-list.component";
@@ -73,11 +69,7 @@ import { LinkRecuperationComponent } from './components/link-recuperation/link-r
     PageNotFoundComponent,
     NotUserComponent,
     NotAutoriseComponent,
-    ListeProcessusComponent,
     CollectionsFormComponent,
-    ListeProcessusDelailsComponent,
-    ListFournisseursComponent,
-    ListFondsComponent,
     ItemsFormComponent,
     ItemsListComponent,
     SuiviComponent,

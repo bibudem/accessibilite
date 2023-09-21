@@ -16,8 +16,6 @@ const homeRoutes= require('./routes/home');
 
 const homeLink= require('./routes/link');
 
-const processusRoutes= require('./routes/processus');
-
 const config = require('./config/config');
 
 const app = express();
@@ -67,8 +65,6 @@ app.use('/home', homeRoutes);
 //controlleur pour les liens de recuperation
 app.use('/link', homeLink);
 
-//controlleur pour les processus
-app.use('/processus',processusRoutes);
 
 //controlleur pour outils
 app.use('/outils',outilsRoutes);

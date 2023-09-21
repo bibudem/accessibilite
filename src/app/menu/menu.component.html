@@ -2,25 +2,25 @@
   <ul class="nav" *ngIf="ifAdmin">
     <li class="nav-item">
       <a class="nav-link" href="/accueil">
-        <mat-icon>home</mat-icon>
+        <i class="typcn typcn-home-outline icon-sm"></i>
         <span class="menu-title ml-1">{{ 'menu.accueil' | translate}}</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/items" >
-        <mat-icon>find_in_page</mat-icon>
+        <i class=" typcn typcn-zoom-outline icon-sm"></i>
         <span class="menu-title ml-1">{{ 'menu.rechercher' | translate}}</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/items/add" >
-        <mat-icon>move_to_inbox</mat-icon>
-        <span class="menu-title ml-1">{{ 'menu.add-items' | translate}}</span>
+        <i class="typcn typcn-folder-add icon-sm"></i>
+        <span class="menu-title ml-1"> {{ 'menu.add-items' | translate}}</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link collapsed" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <mat-icon>settings_applications</mat-icon>
+        <i class="typcn typcn-lightbulb icon-sm"></i>
         <span class="menu-title"> {{ 'menu.outils' | translate}}</span>
         <i class="menu-arrow"></i>
       </a>

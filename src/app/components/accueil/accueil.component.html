@@ -1,6 +1,6 @@
 <div class="row mt-5">
   <!-- Jumbotron -->
-  <div class="jumbotron jumbotron-billboard text-center bg-white pt-5">
+  <div class="jumbotron jumbotron-billboard text-center bg-white pt-4">
     <div class="img"></div>
     <div class="container pt ">
       <div class="mt-5 text-color text-align-center mb-4 ">
@@ -13,7 +13,7 @@
             <input id="rechercher" type="text" class="form-control rounded-0 home-input" placeholder="{{'home.placeholder'| translate}}">
           </div>
           <div class="col-md-2">
-            <button id = "getMessage" class = "btn btn-dark rounded-0 w-100 h-45" (click)="rechercherMotCle(global.returnValueInputId('rechercher'))">{{'rechercher'| translate}}</button>
+            <button id = "getMessage" class = "btn btn-primary rounded-0 w-100 h-45" (click)="rechercherMotCle(global.returnValueInputId('rechercher'))">{{'rechercher'| translate}}</button>
           </div>
         </div>
       </form>
@@ -34,7 +34,7 @@
         <div class="col-md-7">
           <div class="card-body">
             <h1 class="card-title"  *ngIf="item.nom">{{ item.nom }}</h1>
-            <button type="button" class="btn btn-home btn-sm" (click)="rechercherParCollection(item.nom)">{{'parcourrir' | translate }}</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="rechercherParCollection(item.nom)">{{'parcourrir' | translate }}</button>
           </div>
         </div>
       </div>
