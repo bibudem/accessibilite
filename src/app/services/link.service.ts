@@ -13,7 +13,7 @@ import {Router} from "@angular/router";
 })
 export class LinkService {
   [x: string]: any;
-  private url = "http://localhost:9100/link";
+  private url = "/api/link";
 
   httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ "Content-Type": "application/json" }),

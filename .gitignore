@@ -1,6 +1,7 @@
 # System files
 .DS_Store
 Thumbs.db
+.vscode
 /.angular
 /node_modules/*
 /logs-ng
@@ -11,3 +12,4 @@ Thumbs.db
 .gitignore
 /backend/scratch
 /backend/files
+yarn.lock

@@ -8,7 +8,7 @@ import { ErrorHandlerService } from "./error-handler.service";
   providedIn: "root",
 })
 export class FileUploadService {
-  private url = "http://localhost:9100/collections";
+  private url = "/api/collections";
 
   // Options HTTP pour les requêtes
   httpOptions: { headers: HttpHeaders } = {
