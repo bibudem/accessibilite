@@ -90,6 +90,7 @@ router.get('/file/:name', function (req, res) {
   let nameFile=name.split('&')[0];
   let folder=name.split('&')[1];
   const path = '/apps/accessibilite/prod/src/assets/files/items/'+folder;
+
   try {
     fs.readdir(path, (err, files) => {
       let fileExist=0;
