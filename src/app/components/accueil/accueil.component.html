@@ -1,0 +1,37 @@
+<div class="row mt-5">
+  <!-- Jumbotron -->
+  <div class="jumbotron jumbotron-billboard text-center bg-white pt-4">
+    <div class="img"></div>
+    <div class="container pt ">
+      <div class="mt-5 text-color text-align-center mb-4 ">
+        <h1 class="shadow-sm mb-2">{{'home.title' | translate }}</h1>
+        <h2  class="display-3">{{'home.description' | translate }}</h2>
+      </div>
+      <form >
+        <div class="row" >
+          <div class="col-md-6 offset-2">
+            <input id="rechercher" type="text" class="form-control rounded-0 home-input" placeholder="{{'home.placeholder'| translate}}">
+          </div>
+          <div class="col-md-2">
+            <button id = "getMessage" class = "btn btn-primary rounded-0 w-100 h-45" (click)="rechercherMotCle(global.returnValueInputId('rechercher'))">{{'rechercher'| translate}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+</div>
+<div class="row mt-2" >
+  <div class="list-group">
+    <div *ngFor="let item of listeItems" class="col-md-12">
+        <a href="javascript:;" (click)="rechercherParCollection(item.nom)" class="list-group-item list-group-item-action p-1 mt-1"  *ngIf="item.nom">
+          <h2 class="p-2 mt-2 ml-1 titre-home-description">{{ item.nom }} <small class="home-description">{{ item.description }}</small></h2>
+        </a>
+    </div>
+  </div>
+</div>
+<!-- row -->
+
+
+
+

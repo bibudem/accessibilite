@@ -1,0 +1,157 @@
+.jumbotron-billboard .img {
+  margin-bottom: 0px;
+  opacity: 0.4;
+  color: #f0f1e5;
+  background: #000 url("src/assets/images/accueil.jpg") top center no-repeat;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.jumbotron h1 {
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: #393b44;
+  text-align: center;
+  line-height: 30px;
+  font-size: 34px;
+  margin-top: -60px;
+}
+
+.jumbotron {
+  position: relative;
+  width: 100%;
+  border-radius: 0;
+}
+
+.jumbotron .container {
+  position: relative;
+  z-index: 2;
+}
+
+@media screen and (max-width: 768px) {
+  .jumbotron {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+.shadow-sm {
+  color: #0762ab!important;
+  font-size: 36px!important;
+  margin-bottom: 40px!important;
+  text-shadow: #fff 2px 2px!important;
+  font-weight: 500!important;
+}
+.btn-home{
+  background: #c5501e;
+  color: white;
+  border-radius: 0;
+}
+
+.btn-home:hover{
+  background: #ef5604;
+  color: white;
+}
+.pt {
+  padding-top: 75px;
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+}
+
+.data {
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #F5F5F5;
+}
+
+a.action_link {
+  text-decoration: none;
+}
+
+.resimg {
+  float: left;
+  margin-right: 15px;
+}
+
+.horizontal-center-row {
+  display: flex;
+  justify-content: center;
+}
+
+.rating {
+  float: right;
+  margin-right: 15px;
+}
+.text-warning-2{
+  color:#e7c14f;
+}
+.home-link{
+  cursor: grab;
+  border: 1px solid rgba(196, 194, 194, 0.5);
+  background: linear-gradient(to right, rgba(196, 194, 194, 0.10) 50%, white 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all .75s ease-out;
+}
+
+.home-link:hover{
+  background-position: left bottom;
+}
+.bg-blue{
+  background-color: #020e17 !important;
+}
+.bg-white{
+  background-color: #ffffff !important;
+}
+.card-text{
+ font-size: 18px;
+  color: #323432;
+}
+.card-title{
+  font-size: 24px!important;
+  text-transform: initial;
+}
+.home-input{
+  border: 1px solid rgba(122, 125, 127, 0.3);
+}
+.display-3{
+ font-weight: lighter;
+}
+.img-div{
+  background-color: #ffffff;
+}
+.card-img{
+  opacity: 0.8;
+}
+.card-img:hover{
+  opacity: 1;
+}
+.profile-card .avatar img {
+  border-radius: 0!important;
+  width: 100px!important;
+  height: auto!important;
+}
+.home-description{
+  color: rgb(130, 131, 131);
+  display: block;
+  font-size: 14px;
+}
+.titre-home-description {
+  color: rgb(7, 25, 155)!important;
+  display: block;
+  font-size: 18px;
+}
+.display-3 {
+ margin-top: -20px;
+}

@@ -9,13 +9,11 @@ import { ItemsListComponent } from './components/items-list/items-list.component
 import { ItemsFormComponent } from './components/items-form/items-form.component';
 import { CollectionsFormComponent } from './components/collections-form/collections-form.component';
 import { NotAutoriseComponent } from './components/not-autorise/not-autorise.component';
-import { ListeProcessusComponent } from './components/processus/liste-processus/liste-processus.component';
-import { ListeProcessusDelailsComponent } from './components/processus/liste-processus-details/liste-processus-details.component';
-import { ListFondsComponent } from './components/configuration/fonds/list-fonds/list-fonds.component';
-import { ListFournisseursComponent } from './components/configuration/fournisseurs/list-fournisseurs/list-fournisseurs.component';
-import {SuiviComponent} from "./components/suivi/suivi.component";
+import { HistoriqueDetailsComponent } from './components/historique-details/historique-details.component';
 import {CollectionsListComponent} from "./components/collections-list/collections-list.component";
 import {LinkRecuperationComponent} from "./components/link-recuperation/link-recuperation.component";
+import {PanierFormComponent} from "./components/panier-form/panier-form.component";
+import {HistoriqueListComponent} from "./components/historique-list/historique-list.component";
 
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
@@ -23,16 +21,13 @@ const routes: Routes = [
   { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard] },
   { path: 'items/:id', component: ItemsFormComponent, canActivate: [AuthGuard] },
   { path: 'items/edit/:id', component: ItemsFormComponent, canActivate: [AuthGuard] },
-  { path: 'suivi/:id', component: SuiviComponent, canActivate: [AuthGuard] },
   { path: 'items/add', component: ItemsFormComponent, canActivate: [AuthGuard] },
   { path: 'lien/:key', component: LinkRecuperationComponent, canActivate: [AuthGuard] },
   { path: 'collection', component: CollectionsListComponent, canActivate: [AuthGuard]},
   { path: 'collection/:id', component: CollectionsFormComponent, canActivate: [AuthGuard]},
-  { path: 'processus', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
-  { path: 'processus/add', component: ListeProcessusComponent, canActivate: [AuthGuard,AdminGuard] },
-  { path: 'processus/details/:id', component: ListeProcessusDelailsComponent, canActivate: [AuthGuard] },
-  { path: 'list-fonds', component: ListFondsComponent, canActivate: [AuthGuard,AdminGuard] },
-  { path: 'list-fournisseurs', component: ListFournisseursComponent, canActivate: [AuthGuard,AdminGuard] },
+  { path: 'historique-list', component: HistoriqueListComponent, canActivate: [AuthGuard] },
+  { path: 'historique/:id', component: HistoriqueDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'add-panier', component: PanierFormComponent, canActivate: [AuthGuard] },
   { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard]  },
   { path: 'not-user', component: NotUserComponent },
   { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard] },

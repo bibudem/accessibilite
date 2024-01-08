@@ -1,0 +1,42 @@
+.header-udem {
+  text-transform: uppercase!important;
+}
+.typing {
+  position: relative;
+  font-size: 1.2em;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.typing::after {
+  content: "|";
+  position: absolute;
+  right: 0;
+  width: 100%;
+  color: white;
+  background: #fff;
+  animation: typing 3s steps(16) forwards, caret 1s infinite;
+}
+@keyframes typing {
+  to {
+    width: 0;
+  }
+}
+@keyframes caret {
+  50% {
+    color: red;
+  }
+}
+.count-panier {
+  margin-top: -15px;
+  font-size: 12px;
+}
+.panier-list{
+  width: 300px;
+  padding: 20px;
+  font-size: 12px;
+}
+.link-panier{
+  text-align: center!important;
+  font-weight: bold;
+  font-size: 13px!important;
+}
