@@ -1,0 +1,184 @@
+<div class="card mt-5 mb-1">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-9">
+        <h2 class="card-title">{{'panier.dossier-form'| translate }}</h2>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-1">
+  <div class="col-12 grid-margin stretch-card"  *ngIf="reponse==null">
+    <div class="card">
+      <div class="card-body mb-5">
+        <!-- Alert notification div -->
+        <div class="alert alert-success alert-dismissible fade show cacherVisible" role="alert" id="alert-add">
+          {{ 'message.action-text' | translate}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Alert notification div -->
+        <div class="alert alert-warning alert-dismissible fade show cacherVisible" role="alert" id="alert-sup">
+          {{ 'message.action-suppression' | translate}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form  #panierForm="ngForm"  name="panierForm" id="panierForm" (ngSubmit)="onSubmit(panierForm)" >
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="sujet">{{'sujet'| translate }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="sujet" name="courriel" #sujet  [(ngModel)]="panier.sujet" >
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="nom">{{ 'nom' | translate}} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="nom" name="nom" #nom [(ngModel)]="panier.nom" >
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="prenom">{{'prenom'| translate }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="prenom" name="prenom" #prenom [(ngModel)]="panier.prenom" >
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="courriel">{{'courriel'| translate }} <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" id="courriel" name="courriel" #courriel  [(ngModel)]="panier.courriel" >
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label >{{ 'dateActivation' | translate}} <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input class="form-control ngbfield"  [placeholder]="placeholderDateAc"
+                         id="dateActivation"
+                         name="dateActivation" [readonly]="true" [(ngModel)]="panier.dateActivation"
+                         ngbDatepicker  #d1="ngbDatepicker" required>
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-dark" (click)="d1.toggle()"
+                      type="button"><i class="typcn typcn-calendar-outline"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="nbrJours">{{'nbr-jours'| translate }} <span class="text-danger">*</span></label>
+                <select class="form-control" id="nbrJours" name="nbrJours" #nbrJours [(ngModel)]="panier.nbrJours">
+                  <option *ngFor="let rep of this.listeChoixOptions.listNbrJoursValides" [value]="rep.id">{{rep.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="note">{{ 'note' | translate}}</label>
+                <input type="text" class="form-control" id="note" name="note"  #note [(ngModel)]="panier.note">
+              </div>
+            </div>
+          </div>
+          <div class="row" >
+            <div class="col-md-12 " >
+              <div class="form-group noVisible" >
+                <label for="cle">{{'cle'| translate }} </label>
+                <input type="text" class="form-control " id="cle" name="cle" #cle   readonly [(ngModel)]="panier.cle">
+              </div>
+            </div>
+          </div>
+          <!-- Modal pour modifier-->
+          <div class="modal fade" id="modal-enregistrer" tabindex="-1" role="dialog" aria-labelledby="modal-enregistrer" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content p-2">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="exampleModalLabel">{{'message.confirmer-titre'| translate }}</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closebutton>
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p class="mb-4">{{'message.confirmer-text'| translate }}</p>
+                  <button type="button" class="btn btn-primary btn-sm "  (click)="onSubmit(this.panierForm);onFermeModal();"> {{'btn.ajouter'| translate}}</button>
+                  <button type="button" class="btn btn-secondary btn-sm ml-2" data-dismiss="modal"> {{'btn.annuler'| translate}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <hr>
+        <div class="row" *ngIf="panierService.getPanier().length>0">
+          <div class="col-lg-12 pb-2">
+            <h4>Liste Items : {{panierService.getPanier().length}} items</h4>
+          </div>
+          <div class="col-lg-12 pl-3 pt-3" >
+            <table class="table table-hover table-bordered bg-white">
+              <thead>
+              <tr>
+                <th class="w-75" >Titre</th>
+                <th class="w-20">Fichier</th>
+                <th class="w-5">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of panierService.getPanier()">
+                <td>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <h4 class="nomargin"> {{ item.titre }}</h4>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="item.file" ><a href="/assets/files/items/{{item.URL}}/{{item.file}}" target="_blank" >{{item.file}}</a> </td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="panierService.removeFromPanier(item.idItem)"><i class="typcn typcn-trash"></i></button>
+                </td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                <td><a href="/items" class="btn btn-secondary text-white mt-3"><i class="typcn typcn-arrow-left-outline"></i> {{'panier.continuer'| translate }}</a></td>
+                <td colspan="2"><a href="#" class="btn btn-success btn-block mt-3" data-toggle="modal" data-target="#modal-enregistrer" > <i class="typcn typcn-folder"></i> {{'panier.enregistrer'| translate }} <i class="fa fa-angle-right"></i></a></td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="noVisible" *ngFor="let panier of panier$ | async"></div>
+        <div class="noVisible" *ngFor="let item of panierDetails$ | async"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-1 p-2"  *ngIf="reponse!=null">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">{{'panier.enregistrement-retour'| translate }} <strong>{{reponse.nom}} {{reponse.prenom}}</strong> , {{reponse.courriel}}</h4>
+          <ul class="list-arrow">
+            <li>{{'dateAc'| translate }} : {{reponse.dateActivation}} <span></span> </li>
+            <li>{{'dateExpiration'| translate }}: <span class="text-danger">{{reponse.dateExpiration}}</span></li>
+          </ul>
+          <div class="card card-inverse-success" id="context-menu-access">
+            <div class="card-body bg-ligth-success">
+              <p class="card-text">
+                {{'panier.voici-url'| translate }} {{routeUrl}}{{reponse.cle}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 p-2">
+          <a type="button" href="/historique/{{reponse.idPanier}}" class="btn btn-primary btn-sm ml-2 float-right" > <i class="typcn typcn-edit"></i> {{'btn.modifier'| translate}}</a>
+          <button type="button" class="btn btn-secondary btn-sm ml-2 float-left" > <i class="typcn typcn-th-list"></i> {{'btn.historique'| translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

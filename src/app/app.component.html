@@ -1,7 +1,7 @@
 <div class="container-scroller">
-  <app-header></app-header>
+  <app-header *ngIf="!isNotUserRoute"></app-header>
   <div class="container-fluid page-body-wrapper">
-    <app-menu></app-menu>
+    <app-menu *ngIf="!isNotUserRoute"></app-menu>
     <!-- partial -->
     <div class="main-panel">
       <div class="content-wrapper">
@@ -9,7 +9,7 @@
         <router-outlet></router-outlet>
       </div>
       <!-- partial:partials/_footer.html -->
-      <app-footer></app-footer>
+      <app-footer *ngIf="!isNotUserRoute"></app-footer>
       <!-- partial -->
     </div>
     <!-- main-panel ends -->

@@ -1,0 +1,94 @@
+<div class="card mt-5">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="mt-1">{{'list-items'| translate}}</h2>
+      </div>
+      <div class="col-md-6">
+        <mat-card-actions align="end">
+          <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
+          <a class="btn btn-primary btn-sm ml-1 float-right"  href="/items/add" ><i class=" typcn typcn-download"></i> {{ 'ajouter' | translate}}</a>
+        </mat-card-actions>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mt-1">
+  <div class="card-body">
+    <div class="row">
+  <mat-form-field class=" w-50 mt-2">
+    <input (keyup)="applyFilter(getValue(texteFiltre.value))" class="mat-input-placeholder"
+           matInput  id="textFiltre" name="textFiltre" #texteFiltre value="{{textRechercher}}" placeholder="{{ 'filtre-text' | translate}}">
+    <a href="javascript:;" *ngIf="texteFiltre.value"><span aria-hidden="true" (click)="viderFiltre()">&times;</span></a>
+  </mat-form-field>
+      <div class="table-responsive mt-3">
+          <mat-table
+            [dataSource]="dataSource"
+            class="w-100"
+            matSort
+            matSortActive="titre"
+            matSortDirection="asc">
+            <!-- ID Column -->
+            <ng-container matColumnDef="numero">
+              <mat-header-cell  *matHeaderCellDef #numero mat-sort-header  class=" mat-w-10 pl-2 "> {{ 'nr' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row" class=" mat-w-10 pl-2" > {{row.numero}} </mat-cell>
+            </ng-container>
+
+            <!-- titre Column -->
+            <ng-container matColumnDef="titre">
+              <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-25 "> {{ 'titre' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-25" > {{row.titre}} </mat-cell>
+            </ng-container>
+
+            <!-- auteur Column -->
+            <ng-container matColumnDef="auteur">
+              <mat-header-cell  *matHeaderCellDef #auteur mat-sort-header class="mat-w-10 "> {{ 'auteur' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.auteur}} </mat-cell>
+            </ng-container>
+
+            <!-- URL Column -->
+            <ng-container matColumnDef="URL">
+              <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-10 "> {{ 'file' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10 text-center" >
+                <a *ngIf="row.file"  class="btn-outline-primary btn-rounded btn-icon btn-sm" title="{{ 'voir-fichier' | translate}}" href="{{row.URL}}" target="_blank" >
+                  <i class="typcn typcn-document-text"></i>
+                </a>
+              </mat-cell>
+            </ng-container>
+
+            <!-- collection Column -->
+            <ng-container matColumnDef="collection">
+              <mat-header-cell  *matHeaderCellDef #collection mat-sort-header class="mat-w-15 "> {{ 'collection' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.collection}} </mat-cell>
+            </ng-container>
+
+            <!-- dateM Column -->
+            <ng-container matColumnDef="dateA">
+              <mat-header-cell *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'dateA' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row" class="mat-w-10"> {{row.dateA | date:'short': 'fr'}} </mat-cell>
+            </ng-container>
+
+            <!-- dateM Column -->
+            <ng-container matColumnDef="dateM">
+              <th *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'dateM' | translate}} </th>
+              <mat-cell  *matCellDef="let row" class="mat-w-10"> {{row.dateM | date:'short': 'fr'}} </mat-cell>
+            </ng-container>
+            <!-- Consulter Column -->
+            <ng-container matColumnDef="consulter" >
+              <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-cente"> {{ 'consulter' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center">
+                <button type="button" class="btn btn-dark btn-sm btn-icon-text text-cente" routerLink="/items/{{ row.idItem }}">
+                  <i class="typcn typcn-edit btn-icon-append"></i>
+                </button>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+          </mat-table>
+
+          <mat-paginator [pageSizeOptions]="[30, 60, 90, 120]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

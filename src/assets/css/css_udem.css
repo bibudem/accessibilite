@@ -1,0 +1,154 @@
+
+/* css pour header */
+.navbar .navbar-brand-wrapper{
+  background: #e9eaec;
+}
+
+.navbar {
+  border-bottom: 4px solid #0057ac;
+}
+.navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-brand img {
+  max-width: 100%;
+  height: auto;
+}
+.navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-toggler {
+  color: #0057ac;
+}
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile img {
+  width: 100%;
+}
+
+.mt-page {
+  margin-top: 4%;
+}
+.mat-w-10 {
+  flex: none;
+  width: 10%;
+}
+.mat-w-15 {
+  flex: none;
+  width: 15%;
+}
+.mat-w-20 {
+  flex: none;
+  width: 20%;
+}
+.mat-w-5 {
+  flex: none;
+  width: 5%;
+}
+.mat-w-50 {
+  flex: none;
+  width: 50%;
+}
+.mat-w-75 {
+  flex: none;
+  width: 75%;
+}
+.mat-w-30 {
+  flex: none;
+  width: 30%;
+}
+.noVisible {
+  display: none!important;
+}
+.cacherVisible {
+  display: none;
+}
+.addVisible {
+  display: block!important;
+}
+.b-white{
+  background: white!important;
+}
+/*class ajouté pour les champs obligatoires dans un formulaire*/
+.error-class{
+  border: 1px solid #ff4081!important;
+}
+/*barre du menu gauche */
+.sidebar {
+  min-height: 100%!important;
+  background: #fafbfd!important;
+  width: calc(240px + 0.5rem);
+  margin-left: -15px;
+  border-radius: 0!important;
+}
+.mat-success {
+  background-color: #086208;
+  color: #efefef;
+}
+.mat-success:hover {
+  background-color: #086208c2;
+  color: #fff!important;
+  text-decoration: none!important;
+}
+.mat-stroked-button {
+  text-decoration: none!important;
+}
+.card-img{
+  height: 190px;
+}
+.f-20{
+  font-size: 20px!important;
+}
+.f-16{
+  font-size: 16px!important;
+}
+input.f-right {
+  float: right;
+}
+.f-right{
+  float: right!important;
+}
+.card-title{
+  text-transform: initial!important;
+}
+.btn{
+  border-radius: 0!important;
+}
+.card .card-title {
+  font-size: 1.25rem!important;
+}
+a {
+  text-decoration: none!important;
+}
+.card{
+  border-radius: 0!important;
+  border-color: transparent!important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #c6ccd10a!important;
+}
+.h-45{
+  height: 45px;
+}
+.form-control{
+  border-radius: 0!important;
+}
+.table-bordered>:not(caption)>* {
+  border-color: #f1efef!important;
+}
+.btn-warning{
+  background-color: #eb8520!important;
+  border-color: #eb8520!important;
+}
+.bg-warning{
+  background-color: #eb8520!important;
+}
+select.form-control{
+  color: #7b7777;
+}
+.bg-ligth-success {
+  background-color: rgba(136, 241, 194, 0.30);
+}
+.bg-success {
+  background-color: rgba(31, 129, 85, 100)!important;
+}
+.btn-success {
+  background-color: rgba(31, 129, 85, 100)!important;
+}
+/** tab menu material */
+.mat-mdc-tab-group{
+  border-top: 1px solid #e1e7e9;
+  padding-top: 30px!important;
+}

@@ -44,22 +44,20 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 import { MatTabsModule } from '@angular/material/tabs';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-// directive pour les masks
-import {NotUserComponent} from "./components/not-user/not-user.component";
-import {MatSortModule} from "@angular/material/sort";
-import { ListeProcessusComponent } from './components/processus/liste-processus/liste-processus.component';
-import {ListeProcessusDelailsComponent} from "./components/processus/liste-processus-details/liste-processus-details.component";
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {ListFondsComponent} from "./components/configuration/fonds/list-fonds/list-fonds.component";
-import {ListFournisseursComponent} from "./components/configuration/fournisseurs/list-fournisseurs/list-fournisseurs.component";
 import {ListBoxModule, DropDownListModule, ComboBoxModule, AutoCompleteModule, MultiSelectModule, DropDownTreeModule, MentionModule} from "@syncfusion/ej2-angular-dropdowns";
 import { RouterModule } from '@angular/router';
 import {CollectionsListComponent} from "./components/collections-list/collections-list.component";
 import {CollectionsFormComponent} from "./components/collections-form/collections-form.component";
 import {ItemsFormComponent} from "./components/items-form/items-form.component";
 import {ItemsListComponent} from "./components/items-list/items-list.component";
-import {SuiviComponent} from "./components/suivi/suivi.component";
 import { LinkRecuperationComponent } from './components/link-recuperation/link-recuperation.component';
+import { HistoriqueListComponent } from './components/historique-list/historique-list.component';
+import { HistoriqueDetailsComponent } from './components/historique-details/historique-details.component';
+// directive pour les masks
+import {NotUserComponent} from "./components/not-user/not-user.component";
+import {MatSortModule} from "@angular/material/sort";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {PanierFormComponent} from "./components/panier-form/panier-form.component";
 
 
 @NgModule({
@@ -73,16 +71,14 @@ import { LinkRecuperationComponent } from './components/link-recuperation/link-r
     PageNotFoundComponent,
     NotUserComponent,
     NotAutoriseComponent,
-    ListeProcessusComponent,
     CollectionsFormComponent,
-    ListeProcessusDelailsComponent,
-    ListFournisseursComponent,
-    ListFondsComponent,
     ItemsFormComponent,
     ItemsListComponent,
-    SuiviComponent,
     CollectionsListComponent,
-    LinkRecuperationComponent
+    LinkRecuperationComponent,
+    HistoriqueListComponent,
+    HistoriqueDetailsComponent,
+    PanierFormComponent
   ],
   imports: [
     RouterModule,
