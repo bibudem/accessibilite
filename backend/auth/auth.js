@@ -21,7 +21,7 @@ function AzureOAuthStrategy() {
   function (accessToken, refreshToken, params, profile, done) {
     if (accessToken) {
       let user = jwt.decode(params.id_token, "name", true);
-      console.log(params);
+      //console.log(params);
       done(null, user);
     } else {
       done(new Error('Failed to obtain access token'));

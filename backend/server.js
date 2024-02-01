@@ -23,11 +23,8 @@ proxy.start();
 const collectionsRoutes = require('./routes/collections');
 const panierRoutes = require('./routes/panier');
 const itemsRoutes = require('./routes/items');
-const suiviRoutes = require('./routes/suivi');
-const outilsRoutes = require('./routes/outils');
 const homeRoutes= require('./routes/home');
 const homeLink= require('./routes/link');
-const processusRoutes= require('./routes/processus');
 
 app.use(bodyParser.json());
 
@@ -112,20 +109,11 @@ app.use('/panier', panierRoutes);
 // Contrôleur items
 app.use('/items', itemsRoutes);
 
-// Contrôleur suivi
-app.use('/suivi', suiviRoutes);
-
 // Contrôleur pour les données de board
 app.use('/home', homeRoutes);
 
 // Contrôleur pour les liens de récupération
 app.use('/link', homeLink);
-
-// Contrôleur pour les processus
-app.use('/processus',processusRoutes);
-
-// Contrôleur pour outils
-app.use('/outils',outilsRoutes);
 
 //passport user
 app.use('/user-udem', userUdemRoutes);

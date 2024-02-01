@@ -7,14 +7,14 @@ module.exports = class UserAuth {
   static async returnUserUdem(param) {
     let userConnect = {};
     userConnect['groupe'] = 'not-user';
-    console.log(auth.passport.session.userConnect);
+    //console.log(auth.passport.session.userConnect);
     if (auth.passport.session.userConnect) {
       if (!auth.passport.session.userConnect[param]) {
         return [userConnect];
       }
 
       let user = JSON.parse(auth.passport.session.userConnect[param]);
-      console.log(user);
+      //console.log(user);
       for (const [param, val] of Object.entries(user)) {
         switch (param) {
           case 'family_name':

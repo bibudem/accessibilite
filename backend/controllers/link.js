@@ -15,6 +15,10 @@ exports.getLink = async (req, res, next) => {
 };
 exports.updateStateLink = async (req, res, next) => {
   try {
+    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
+    if(Lib.userConnect(req).length==0){
+      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
+    }
     const [all] = await Link.updateStateLink(req.params.id);
     res.status(200).json(all);
   } catch (err) {
