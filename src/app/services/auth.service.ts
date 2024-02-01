@@ -59,6 +59,7 @@ export class AuthService {
 
 
   async logout() {
+    this.clearInactivityTimeout();
     this.isLoggedIn = false;
     localStorage.removeItem('user'); // Supprimer les données du LocalStorage
     localStorage.removeItem('nom');
