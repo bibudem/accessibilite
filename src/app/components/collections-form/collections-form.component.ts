@@ -79,7 +79,7 @@ export class CollectionsFormComponent implements OnInit {
     }*/
 
     //recouperer le bon titre du bouton
-    this.translate.get('btn-ajouter').subscribe((res: string) => {
+    this.translate.get('btn.ajouter').subscribe((res: string) => {
       this.bouttonAction=res;
     });
     //afficher le bon bouton
@@ -114,7 +114,7 @@ export class CollectionsFormComponent implements OnInit {
     //action update
     this.action='save'
     //recouperer le bon titre du bouton
-    this.translate.get('btn-enregistrer').subscribe((res: string) => {
+    this.translate.get('btn.enregistrer').subscribe((res: string) => {
       this.bouttonAction=res;
     });
     //cacher le boutton add

@@ -8,7 +8,7 @@
         <h2 class="mt-1" *ngIf="!conditionIdCollection">{{ 'new-collection' | translate}}</h2>
       </div>
       <div class="col-md-2">
-        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn-return' | translate}}</button>
+        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="card-body mb-5">
+      <div class="card-body mb-5 mt-2">
         <form class="forms-sample"  #collectionForm="ngForm" name="collectionForm" id="collectionForm"   (ngSubmit)="onSubmit(collectionForm)" >
           <div class="form-group">
             <label for="nom">{{ 'titre' | translate}} <span class="text-danger">*</span></label>
@@ -31,13 +31,13 @@
             <input  class="form-control" #id_collection="ngModel" name="id_collection" id="id_collection" type="hidden" [(ngModel)]="collection.id_collection">
             <input  class="form-control"  name="action" id="action" type="hidden"  value="{{action}}"  >
           </div>
-          <div class="form-group">
+          <div class="form-group mt-2">
             <label for="description">{{ 'description' | translate}}</label>
             <textarea class="form-control" id="description" name="description" #description="ngModel" rows="5" [(ngModel)]="collection.description"></textarea>
           </div>
           <mat-divider></mat-divider>
-          <button type="button" class="btn btn-success mr-2 mt-4" data-toggle="modal" data-target="#modal-enregistrer" ><i class="fa fa-save btn-icon-prepend"></i> {{bouttonAction}}</button>
-          <button *ngIf="conditionIdCollection" type="button" class="btn btn-danger mr-2 mt-4" data-toggle="modal" data-target="#modal-supprimer" ><i class="fa fa-trash btn-icon-prepend"></i> {{'btn-supprimer'| translate}}</button>
+          <button type="button" class="btn btn-success mr-2 mt-4 mb-5" data-toggle="modal" data-target="#modal-enregistrer" ><i class="fa fa-save btn-icon-prepend"></i> {{bouttonAction}}</button>
+          <button *ngIf="conditionIdCollection" type="button" class="btn btn-danger mr-2 mt-4 mb-5" data-toggle="modal" data-target="#modal-supprimer" ><i class="fa fa-trash btn-icon-prepend"></i> {{'btn.supprimer'| translate}}</button>
           <!-- Modal pour modifier-->
           <div class="modal fade" id="modal-enregistrer" tabindex="-1" role="dialog" aria-labelledby="modal-enregistrer" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -51,9 +51,9 @@
                 <div class="modal-body">
                   <h3>{{'message.confirmer-text'| translate}}</h3>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer mt-2 mb-5">
                   <button *ngIf="ifAdmin" type="submit" class="btn btn-success" >{{bouttonAction}}</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> Annuler</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{'btn.annuler'| translate}}</button>
                 </div>
               </div>
             </div>
@@ -72,8 +72,8 @@
                   <h3>{{'message.supprimer-text'| translate}}</h3>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{'btn-annuler'| translate}}</button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(collection.id_collection)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn-supprimer'| translate}}</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{'btn.annuler'| translate}}</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(collection.id_collection)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn.supprimer'| translate}}</button>
                 </div>
               </div>
             </div>

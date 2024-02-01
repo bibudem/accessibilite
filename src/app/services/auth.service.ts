@@ -1,107 +1,71 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import {Injectable, OnInit} from "@angular/core";
-// RxJS 6
-import { Observable, of } from 'rxjs';
-import {tap, delay, catchError} from 'rxjs/operators';
+// auth.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { User } from '../models/User';
 
-import {User} from "../models/User";
 
-import { ErrorHandlerService } from "./error-handler.service";
-import { Inject } from "@angular/core";
-import {DOCUMENT} from "@angular/common";
 @Injectable()
 export class AuthService {
-  isLoggedIn: boolean = false; // L'utilisateur est-il connecté ?
+  isLoggedIn: boolean = false;
+  roleUser: string = '';
+  user: User = { courriel: '', groupe: '', nom: '', prenom: '' };
+  redirectUrl: string | null = null;
 
+  constructor(private http: HttpClient) {}
 
-  redirectUrl: string| undefined='/accueil'; // où rediriger l'utilisateur après l'authentification ?
-
-  // @ts-ignore
-  public user: User = {};
-  private data: any;
-
-  constructor(private http: HttpClient,
-              private errorHandlerService: ErrorHandlerService,
-              @Inject(DOCUMENT) readonly document: Document) {}
-
-
-  // Une méthode de connexion
-  // @ts-ignore
-  async login(): Promise<Observable<boolean>> {
-    let isLoggedIn: boolean ;
-    caches.keys().then((keyList) =>  Promise.all(keyList.map((key) => caches.delete(key))))
-    // Appel au service d'authentification en mode asyncrone
-    try {
-      //reconnect le bon user
-      await this.http
-        .get<User>(`/api/user-udem`, {responseType: "json"})
-        .toPromise()
-        .then((res: any) => {
-            // Success
-            if(res.length==0){
-              isLoggedIn=false;
-              this.logout()
-            }
-
-            this.user=res;
-            //Souvegarder les infos du user// @ts-ignore
-            isLoggedIn=true;
-            //supprimer une fois authentification est instalé
-
-            localStorage.setItem('nomAdmin', this.user.nom);
-            localStorage.setItem('prenomAdmin', this.user.prenom);
-            localStorage.setItem('courrielAdmin', this.user.courriel);
-
-            switch (this.user.groupe){
-              case 'Admin':
-                localStorage.setItem('groupeAdmin', 'Gestionnaire');
-                localStorage.setItem('role', 'Admin');
-                break
-              case 'Viewer':
-                localStorage.setItem('groupeAdmin', 'Bibliothécaire');
-                localStorage.setItem('role', 'Viewer');
-                break
-              default:
-                window.location.href ='/not-user'
-            }
-
-          }
-
-        );
-    } catch (e : any){
-      isLoggedIn=false;
-      await this.logout()
-      console.log('Erreur login http'+e);
+  async login(redirectUrl?: string): Promise<boolean> {
+    // Vérifier si les données sont déjà présentes dans le LocalStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.user = JSON.parse(storedUser);
+      this.isLoggedIn = true;
+      this.roleUser = this.user.groupe;
+      return true;
     }
 
-    //console.log(isLoggedIn);
-    return of(true).pipe(
-      delay(100),
-      tap(val => this.isLoggedIn = isLoggedIn)
-    );
+    try {
+      // Charger les données depuis le serveur
+      const res: any = await this.http.get<User>(`/api/user-udem`, { responseType: 'json' }).toPromise();
+
+      if (res.length === 0) {
+        await this.logout();
+        return false;
+      }
+
+      this.user = res;
+      this.isLoggedIn = true;
+      this.roleUser = this.user.groupe;
+
+      // Stocker les données dans le LocalStorage
+      localStorage.setItem('user', JSON.stringify(this.user));
+
+      localStorage.setItem('nom', this.user.nom);
+      localStorage.setItem('prenom', this.user.prenom);
+      localStorage.setItem('courriel', this.user.courriel);
+      localStorage.setItem('roleUser', this.user.groupe);
+
+      return true;
+
+    } catch (error) {
+      console.error('Erreur login http', error);
+      await this.logout();
+      return false;
+    }
   }
 
-  // Une méthode de déconnexion
 
   async logout() {
-
     this.isLoggedIn = false;
-    sessionStorage.clear()
-    sessionStorage.setItem('isLoggedIn', 'true')
-    caches.keys().then((keyList) =>  Promise.all(keyList.map((key) => caches.delete(key))))
+    localStorage.removeItem('user'); // Supprimer les données du LocalStorage
+    localStorage.removeItem('nom');
+    localStorage.removeItem('prenom');
+    localStorage.removeItem('courriel');
+    localStorage.removeItem('roleUser');
 
-    window.location.href = '/api/logout'
-  }
+    // Effacer également le redirectUrl de la session
+    localStorage.removeItem('redirectUrl');
 
-  /** Redirects to the specified external link with the mediation of the router */
-  public redirect(url: string): Promise<boolean> {
-
-    return new Promise<boolean>( (resolve, reject) => {
-
-      try { // @ts-ignore
-        this.window.location.href=url }
-      catch(e) { reject(e); }
-    });
+    window.location.href = '/not-user';
   }
 
 

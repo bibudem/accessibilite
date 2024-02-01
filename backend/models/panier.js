@@ -36,7 +36,7 @@ module.exports = class Panier {
   }
 
   static getAll(){
-    return db.execute('SELECT p.idPanier, p.sujet, p.nom as nom, p.prenom as prenom, p.courriel as courriel, p.statut as statut,p.sujet as sujet, p.dateActivation as dateActivation,p.dateExpiration as dateExpiration,p.nbrJours as nbrJours,p.cle as cle, p.dateA as dateA, pd.idDetails as idDetails FROM tbl_panier p INNER JOIN tbl_panier_details pd ON p.idPanier = pd.idPanier ORDER BY p.dateA DESC  ');
+    return db.execute('SELECT p.idPanier, p.sujet, p.nom as nom, p.prenom as prenom, p.courriel as courriel, p.statut as statut,p.sujet as sujet, p.dateActivation as dateActivation,p.dateExpiration as dateExpiration,p.nbrJours as nbrJours,p.cle as cle, p.dateA as dateA FROM tbl_panier p  ORDER BY p.dateA DESC  ');
   }
 
   static async addDetails(values) {

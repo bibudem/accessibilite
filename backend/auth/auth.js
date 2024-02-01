@@ -8,7 +8,6 @@ function AzureOAuthStrategy() {
   this.passport = require("passport");
 
 
-
   this.passport.use("provider", new AzureOAuth2Strategy({
       clientID: config.clientID,
       clientSecret: config.clientSecret,
@@ -19,17 +18,16 @@ function AzureOAuthStrategy() {
       state:false
     },
 
-
-    function (accessToken, refreshToken, params, profile, done) {
-      if (accessToken) {
-        let user = jwt.decode(params.id_token, "name", true);
-        //console.log(params);
-        done(null, user);
-      } else {
-        done(new Error('Failed to obtain access token'));
-      }
+  function (accessToken, refreshToken, params, profile, done) {
+    if (accessToken) {
+      let user = jwt.decode(params.id_token, "name", true);
+      console.log(params);
+      done(null, user);
+    } else {
+      done(new Error('Failed to obtain access token'));
     }
-    ));
+  }
+  ));
 
 
   this.passport.serializeUser(function(user, done) {

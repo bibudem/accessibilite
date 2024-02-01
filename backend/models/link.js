@@ -9,16 +9,16 @@ module.exports = class Link {
 
   static  getLink(key) {
 
-    return  db.execute('SELECT idSuivi, nom, prenom, courriel, cle,dateActivation,tbl_suivi.dateA as dateSuivi,tbl_suivi.idItem as id,statut,titre,file,URL FROM `tbl_suivi` INNER JOIN tbl_items on tbl_suivi.idItem=tbl_items.idItem where cle = ?', [key] );
+    return  db.execute('SELECT pd.*, p.*, i.* FROM tbl_panier_details pd JOIN tbl_panier p ON pd.idPanier = p.idPanier JOIN tbl_items i ON pd.idItem = i.idItem WHERE p.cle = ?', [key] );
 
   }
 
   static  updateStateLink(id) {
     let dt = datetime.create();
     let date = dt.format('Y-m-d H:M:S');
-    let sql = "UPDATE `tbl_suivi` SET statut = 'Inactif', dateM=? where idSuivi= ?"
-    console.log('sql: ', SqlString.format(sql,[date,id]));
-    return  db.execute("UPDATE `tbl_suivi` SET statut = 'Inactif', dateM=? where idSuivi= ?", [date,id] );
+    /*let sql = "UPDATE `tbl_panier` SET statut = 'Inactif', dateM=? where idPanier= ?"
+    console.log('sql: ', SqlString.format(sql,[date,id]));*/
+    return  db.execute("UPDATE `tbl_panier` SET statut = 'Inactif', dateM=? where idPanier= ?", [date,id] );
 
   }
 

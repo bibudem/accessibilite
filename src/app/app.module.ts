@@ -58,6 +58,8 @@ import {NotUserComponent} from "./components/not-user/not-user.component";
 import {MatSortModule} from "@angular/material/sort";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {PanierFormComponent} from "./components/panier-form/panier-form.component";
+import {UserAuthGuard} from "./services/user-auth.guard";
+import {ViewerGuard} from "./services/viewer-guard.service";
 
 
 @NgModule({
@@ -123,7 +125,7 @@ import {PanierFormComponent} from "./components/panier-form/panier-form.componen
     DropDownListModule, ComboBoxModule, AutoCompleteModule, MultiSelectModule, DropDownTreeModule, MentionModule
 
   ],
-  providers: [AuthGuard,AdminGuard,{ provide: LOCALE_ID, useValue: "fr-FR" }],
+  providers: [AuthGuard,AdminGuard,UserAuthGuard,ViewerGuard, { provide: LOCALE_ID, useValue: "fr-FR" }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

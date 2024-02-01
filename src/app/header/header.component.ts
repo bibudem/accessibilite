@@ -1,9 +1,10 @@
+// header.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { MethodesGlobal } from '../lib/MethodesGlobal';
-import {PanierService} from "../services/panier.service";
+import { PanierService } from '../services/panier.service';
 
 @Component({
   selector: 'app-header',
@@ -23,24 +24,31 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     private translate: TranslateService,
     public router: Router,
-    public panierService: PanierService,
+    public panierService: PanierService
   ) {}
 
   async ngOnInit() {
-    this.loadAdminInfo();
+    // Redirectioner un user pour le lien
+    if(localStorage.getItem('redirectUrl') && localStorage.getItem('redirectUrl').startsWith('/lien/')){
+      let redirectUrl = localStorage.getItem('redirectUrl');
+      // Effacer également le redirectUrl de la session
+      localStorage.removeItem('redirectUrl');
+      window.location.href = redirectUrl ;
+    }
+    const redirectUrl = this.router.url;
+    await this.loadAdminInfo(redirectUrl);
     this.translate.setDefaultLang('fr');
     this.flagChoix = 'flag-icon-fr';
     this.ifAdmin = this.global.ifAdminFunction();
   }
 
-  async loadAdminInfo() {
-    if (!localStorage.getItem('nomAdmin')) {
-      await this.login();
-    } else {
-      this.nomAdmin = localStorage.getItem('nomAdmin') || '';
-      this.prenomAdmin = localStorage.getItem('prenomAdmin') || '';
-      this.groupeAdmin = localStorage.getItem('groupeAdmin') || '';
+  async loadAdminInfo(redirectUrl: string) {
+    if (!this.authService.roleUser) {
+      await this.login(redirectUrl);
     }
+    this.nomAdmin = localStorage.getItem('nom') || '';
+    this.prenomAdmin = localStorage.getItem('prenom') || '';
+    this.groupeAdmin = localStorage.getItem('roleUser') || '';
   }
 
   switchLanguage(language: string) {
@@ -51,14 +59,19 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  async login() {
-    (await this.authService.login()).subscribe(() => {
-      if (this.authService.isLoggedIn) {
-        this.loadAdminInfo();
+  async login(redirectUrl: string) {
+    try {
+      const loginSuccess: boolean = await this.authService.login(redirectUrl);
+
+      if (loginSuccess) {
+        await this.loadAdminInfo(redirectUrl);
       } else {
-        this.logout();
+        await this.logout();
       }
-    });
+    } catch (error) {
+      console.error('Erreur lors de la connexion', error);
+      await this.logout();
+    }
   }
 
   async logout() {

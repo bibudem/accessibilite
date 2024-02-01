@@ -101,7 +101,6 @@
     "return": "Retour",
     "annuler": "Annuler",
     "modifier": "Modifier",
-    "enregistrer": "Enregistrer",
     "export": "Exporter les données",
     "reset":"Réinitialiser",
     "edit": "Éditer la fiche",
@@ -139,7 +138,7 @@
     "continuer": "Continuer à sélectionner",
     "voici-url": "Voici le lien à partager:"
   },
-  "recuperation-fichier": {
+  "fichier": {
     "files-titre-recuperation": "Téléchargement des Fichiers Demandés",
     "files-info-recuperation": "Cliquez sur le lien de téléchargement ci-dessous pour accéder au fichier",
     "file-telecharger": "Télécharger",
@@ -150,7 +149,10 @@
     "raison-expiration2": "Lien Incorrect : Il se peut qu'une erreur se soit produite dans la saisie du lien ou que le lien ait été mal communiqué.",
     "raison-expiration3": "Fichier Supprimé : Il est également possible que le fichier que vous essayez d'accéder ait été supprimé de nos serveurs ou déplacé vers un autre emplacement.",
     "aide-recuperation": "Si le lien est censé être valide et que vous avez besoin d'accéder au fichier, veuillez contacter notre équipe d'assistance ou l'expéditeur d'origine pour demander un nouveau lien ou obtenir de l'aide supplémentaire.",
-    "not-access-explication": "Votre compte n'est pas autorisé à accéder à ce fichier. Pour obtenir les autorisations nécessaires, veuillez contacter l'équipe de support. Nous nous excusons pour tout désagrément."
+    "not-access-explication": "Certains utilisateurs peuvent avoir un accès limité à certaines pages pour des raisons de sécurité et de confidentialité.",
+    "titre-non-acces": "Aucun Document Assigné",
+    "explication": "Il n'y a actuellement aucun document assigné à votre compte pour ce lien.",
+    "explication-details": "Si vous vous attendiez à voir des documents assignés, veuillez contacter le support technique."
   },
 
   "message": {
@@ -215,11 +217,6 @@
     "result-update": "Vous avez fait une demande de la mise à jour des données statistiques dont les délais peuvent être très long. Vous serez avisé par courriel quand le processus sera fini. Pour des problèmes techniques, veuillez nous écrire au service@bib.umontreal.ca ",
     "demande-importation": "Vous avez fait une demande d'importation des données SUSHI dont les délais peuvent être très long. Vous serez avisé par courriel quand le processus sera fini. Pour des problèmes techniques, veuillez nous écrire au service@bib.umontreal.ca ",
     "message-brute":"Les résultat brute peuvent contenir une grande quantité de données, nous vous suggérons de choisir une plateforme dans le filtre. "
-  },
-  "logs":{
-    "menu-logs": "Les journaux d'importation",
-    "titre-logs-revue": "Journal des données non-importées",
-    "titre-logs-plateforme": "Journal des plateformes"
   },
   "processus":{
     "titre-processus": "Sommaire des processus",

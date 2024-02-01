@@ -1,5 +1,6 @@
+// auth-guard.service.ts
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -7,15 +8,18 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) { }
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    let url: string = state.url;
-    return this.checkLogin(url);
-  }
+  async canActivate(): Promise<boolean> {
+    if (!this.authService.isLoggedIn) {
+      await this.authService.login();
+    }
 
-  checkLogin(url: string): boolean {
-    if (this.authService.isLoggedIn) { return true; }
-    this.authService.redirectUrl = url;
-    this.router.navigate(['./login']);
-    return false;
+    if (this.authService.isLoggedIn) {
+      return true;
+    } else {
+      // Utilisez la méthode getRedirectUrl de authService pour obtenir l'URL de redirection
+      const redirectUrl = this.authService.redirectUrl || '/not-user';
+      this.router.navigate([redirectUrl]);
+      return false;
+    }
   }
 }

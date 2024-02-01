@@ -37,9 +37,8 @@ router.get('/callback.js',
         req.logIn(user, function(err) {
           if (err) { return next(err); }
           auth.passport.session.userConnect=[]
-          auth.passport.session.userConnect[Lib.sessionToken(req)]=JSON.stringify(user)
-          //console.log(user)
-          return res.redirect('/login');
+          auth.passport.session.userConnect[Lib.sessionToken(req)]=JSON.stringify(user);
+          return res.redirect('/accueil');
           //return res.status(200).json(user);
         });
       }

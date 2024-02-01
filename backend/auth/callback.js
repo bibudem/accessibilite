@@ -2,20 +2,20 @@ const auth = require("./auth");  // Importation du module 'auth'
 
 module.exports = class UserAuth {
 
-  static async returnUserUdem(param) {
-    let userConnect = {};  // Création d'un objet pour stocker les informations de l'utilisateur
-    userConnect['groupe'] = 'not-user';  // Initialisation de la propriété 'groupe'
+// ...
 
+  static async returnUserUdem(param) {
+    let userConnect = {};
+    userConnect['groupe'] = 'not-user';
+    console.log(auth.passport.session.userConnect);
     if (auth.passport.session.userConnect) {
-      // Vérification de l'existence de la session utilisateur
       if (!auth.passport.session.userConnect[param]) {
-        return [userConnect];  // Si l'utilisateur n'est pas connecté, renvoyer l'objet userConnect tel quel
+        return [userConnect];
       }
 
-      let user = JSON.parse(auth.passport.session.userConnect[param]);  // Parsing des données de l'utilisateur
-
+      let user = JSON.parse(auth.passport.session.userConnect[param]);
+      console.log(user);
       for (const [param, val] of Object.entries(user)) {
-        // Itération à travers les propriétés de l'objet 'user'
         switch (param) {
           case 'family_name':
             userConnect['nom'] = val;
@@ -28,19 +28,21 @@ module.exports = class UserAuth {
             break;
           case 'groups':
             if (val.includes('bib-aut-accessibilite-gestionnaires')) {
-              userConnect['groupe'] = 'Admin';  // Si l'utilisateur est dans le groupe des gestionnaires, assigner 'Admin'
+              userConnect['groupe'] = 'Admin';
             }
             if (val.includes('bib-aut-accessibilite-lecteurs') && !val.includes('bib-aut-accessibilite-gestionnaires')) {
-              userConnect['groupe'] = 'Viewer';  // Si l'utilisateur est dans le groupe des lecteurs mais pas des gestionnaires, assigner 'Viewer'
+              userConnect['groupe'] = 'Viewer';
             }
             break;
           case 'ip':
             userConnect['ip'] = val;
             break;
         }
+        if (userConnect['groupe'] == 'not-user') {
+          userConnect['groupe'] = 'User';
+        }
       }
     }
-
-    return [userConnect];  // Renvoyer un tableau contenant l'objet userConnect
+    return [userConnect];
   }
 };

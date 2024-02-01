@@ -130,7 +130,7 @@ export class ItemsFormComponent implements OnInit {
     this.action = 'save';
 
     // Changer le texte pour le bouton
-    this.translate.get('btn-enregistrer').subscribe((res: string) => {
+    this.translate.get('btn.enregistrer').subscribe((res: string) => {
       this.bouttonAction = res;
     });
 

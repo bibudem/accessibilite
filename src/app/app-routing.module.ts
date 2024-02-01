@@ -14,24 +14,25 @@ import {CollectionsListComponent} from "./components/collections-list/collection
 import {LinkRecuperationComponent} from "./components/link-recuperation/link-recuperation.component";
 import {PanierFormComponent} from "./components/panier-form/panier-form.component";
 import {HistoriqueListComponent} from "./components/historique-list/historique-list.component";
+import {UserAuthGuard} from "./services/user-auth.guard";
+import {ViewerGuard} from "./services/viewer-guard.service";
 
 const routes: Routes = [
-  { path: '', component: AccueilComponent, canActivate: [AuthGuard] },
-  { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
-  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard] },
-  { path: 'items/:id', component: ItemsFormComponent, canActivate: [AuthGuard] },
-  { path: 'items/edit/:id', component: ItemsFormComponent, canActivate: [AuthGuard] },
-  { path: 'items/add', component: ItemsFormComponent, canActivate: [AuthGuard] },
-  { path: 'lien/:key', component: LinkRecuperationComponent, canActivate: [AuthGuard] },
-  { path: 'collection', component: CollectionsListComponent, canActivate: [AuthGuard]},
-  { path: 'collection/:id', component: CollectionsFormComponent, canActivate: [AuthGuard]},
-  { path: 'historique-list', component: HistoriqueListComponent, canActivate: [AuthGuard] },
-  { path: 'historique/:id', component: HistoriqueDetailsComponent, canActivate: [AuthGuard] },
-  { path: 'add-panier', component: PanierFormComponent, canActivate: [AuthGuard] },
-  { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard]  },
+  { path: '', component: AccueilComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: 'items/:id', component: ItemsFormComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'items/add', component: ItemsFormComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'lien/:key', component: LinkRecuperationComponent, canActivate: [AuthGuard, UserAuthGuard] },
+  { path: 'collection', component: CollectionsListComponent, canActivate: [AuthGuard, ViewerGuard]},
+  { path: 'collection/:id', component: CollectionsFormComponent, canActivate: [AuthGuard, AdminGuard]},
+  { path: 'historique-list', component: HistoriqueListComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: 'historique/:id', component: HistoriqueDetailsComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'add-panier', component: PanierFormComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard, ViewerGuard] },
   { path: 'not-user', component: NotUserComponent },
-  { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard] },
-  { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] }
+  { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard, ViewerGuard] }
 ];
 
 @NgModule({

@@ -1,19 +1,18 @@
-<div class="container-scroller">
-  <app-header *ngIf="!isNotUserRoute"></app-header>
-  <div class="container-fluid page-body-wrapper">
-    <app-menu *ngIf="!isNotUserRoute"></app-menu>
+<div [ngClass]="{'container-scroller': ifAdmin}">
+  <app-header *ngIf="ifAdmin"></app-header>
+  <div  [ngClass]="{'container-fluid page-body-wrapper': ifAdmin}">
+    <app-menu *ngIf="ifAdmin"></app-menu>
     <!-- partial -->
-    <div class="main-panel">
-      <div class="content-wrapper">
-        <!-- Integrer la route -->
+    <div [ngClass]="{'main-panel': ifAdmin}">
+      <div   [ngClass]="{'content-wrapper': ifAdmin}">
         <router-outlet></router-outlet>
       </div>
       <!-- partial:partials/_footer.html -->
-      <app-footer *ngIf="!isNotUserRoute"></app-footer>
+      <app-footer *ngIf="ifAdmin"></app-footer>
       <!-- partial -->
     </div>
     <!-- main-panel ends -->
   </div>
   <!-- page-body-wrapper ends -->
 </div>
-<!-- container-scroller -->
+

@@ -1,141 +1,160 @@
-import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
-import {LinkService} from "../../services/link.service";
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { LinkService } from '../../services/link.service';
+import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {MethodesGlobal} from "../../lib/MethodesGlobal";
-import { Observable} from "rxjs";
-import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-link-recuperation',
   templateUrl: './link-recuperation.component.html',
   styleUrls: ['./link-recuperation.component.css']
 })
+export class LinkRecuperationComponent implements OnInit {
+  items$: Observable<any[]> | undefined;
+  infosItems: any[] = [];
+  key = '';
+  flagChoix: string = 'flag-icon-fr';
+  listeItems: any = [];
+  lienFichier: string = '';
+  userConnect: string = '';
 
-export class LinkRecuperationComponent implements OnInit{
+  nom: string = '';
+  prenom: string = '';
 
   //importer les fonctions global
   global: MethodesGlobal = new MethodesGlobal();
 
-  titreItem = '';
-
-  items$: Observable<any[]> | undefined;
-
-  infosItems:any = [];
-
-  key = '';
-
-  linkActif = false;
-
-  //durré de validité de lien en jours
-  validePerodide = 30;// en jours
-
-  lienItem='';
-
-  nameItem='';
-
-  constructor(private linkService : LinkService,
-              private _location: Location,
-              private router: Router,
-              private route: ActivatedRoute) { }
+  constructor(
+    private linkService: LinkService,
+    private _location: Location,
+    private translate: TranslateService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    if(this.route.snapshot.paramMap.get("key")){
-      this.key = this.route.snapshot.paramMap.get("key").toString();
-       //reccuperer les données
-       this.infosItem(this.key);
-     }
+    this.global.nonAfficher('alertNotUser');
+    // Étape 1: Initialiser le composant
+    this.initializeComponent();
+    // Étape 2: recouperer courriel user
+    this.userConnect = localStorage.getItem('courriel');
+    // Stocker redirectUrl dans la session s'il est fourni
+    this.nom = localStorage.getItem('nom');
+    this.prenom = localStorage.getItem('prenom');
   }
 
-  //fonction doit etre async pour attendre la reponse de la bd
-  async infosItem(key: string) {
-    try {
+  // Méthode d'initialisation du composant
+  private async initializeComponent(): Promise<void> {
+    if (this.route.snapshot.paramMap.get('key')) {
+      // Récupérer la clé depuis l'URL
+      this.key = this.route.snapshot.paramMap.get('key')!.toString();
 
+      // Récupérer les détails de l'item depuis le service
+      await this.fetchItemDetails(this.key);
+
+      // Configuration de la langue par défaut et du drapeau
+      this.translate.setDefaultLang('fr');
+      this.flagChoix = 'flag-icon-fr';
+    }
+  }
+
+  // Méthode pour récupérer les détails de l'item depuis le service
+  private async fetchItemDetails(key: string): Promise<void> {
+    try {
+      // Appeler le service pour récupérer les détails de l'item
       const res = await this.linkService.fetchAll(key).toPromise();
-      if (res && res.length > 0) {
-        const item = res[0];
+      if((this.userConnect===res[0].courriel) || localStorage.getItem('roleUser')==='Admin'){
+        // Parcourir les résultats et créer une structure d'information
+        for (let i = 0; i < res.length; i++) {
+          const item = res[i];
+          const infosItem = this.createInfosItem(item);
+          this.listeItems.push(infosItem);
+        }
 
-        const infosItems = {
-          "idSuivi": item.idSuivi,
-          "nom": item.nom,
-          "prenom": item.prenom,
-          "courriel": item.courriel,
-          "dateActivation": item.dateActivation,
-          "idItem": item.id,
-          "statut": item.statut,
-          "titre": item.titre,
-          "file": item.file,
-          "URL": item.URL,
-        };
-        this.lienItem=item.URL+'/'+ item.file;
-        this.nameItem=this.global.dateSimple()+item.file;
-        this.validerLesInfosItem(infosItems);
-      } else {
-        // Gérer le cas où res est vide ou undefined (redirection, message d'erreur, etc.)
-        // this.redirect();
+      } else{
+        this.global.afficher('alertNotUser');
       }
+
+
     } catch (err) {
+      // Gérer les erreurs, par exemple, afficher un message d'erreur
       console.error(`Error: ${err.message}`);
-      // Gérer l'erreur ici, par exemple, afficher un message d'erreur à l'utilisateur
     }
   }
 
-  validerLesInfosItem(infos: any) {
-    if (infos.statut !== 'Actif') {
-      return; // Sortir de la fonction si le statut n'est pas actif
-    }
+  // Méthode pour créer la structure d'information à partir des détails de l'item
+  private createInfosItem(item: any): any {
+    return {
+      "idPanier": item.idPanier,
+      "nom": item.nom,
+      "prenom": item.prenom,
+      "courriel": item.courriel,
+      "dateActivation": item.dateActivation,
+      "dateExpiration": item.dateExpiration,
+      "nbrJours": item.nbrJours,
+      "idItem": item.idItem,
+      "statut": item.statut,
+      "titre": item.titre,
+      "auteur": item.auteur,
+      "file": item.file,
+      "URL": item.URL,
+    };
+  }
 
-    const dateDonnee: Date = new Date(infos.dateActivation);
-    const differenceEnJours: number = (Date.now() - dateDonnee.getTime()) / (1000 * 60 * 60 * 24);
-
-    // vérifier si c'est le bon user
-    const courrielConnexion = sessionStorage.getItem('courrielConnexion');
-    const courrielAdmin = sessionStorage.getItem('courrielAdmin');
-
-    if (differenceEnJours < this.validePerodide) {
-      if (courrielConnexion !== infos.courriel && !courrielAdmin) {
-        window.location.href = '/not-access';
-      }
-      if (courrielAdmin) {
-        this.titreItem = infos.titre;
-        this.linkActif = true;
-      }
-      this.titreItem = infos.titre;
-      this.linkActif = true;
+  // Méthode pour valider les informations de l'item
+  validerLesInfosItem(dateExpiration: string, idPanier: string): boolean {
+    if (!this.isDateExpired(dateExpiration)) {
+      return true;
     } else {
-      this.handleExpiredStatus(infos.idSuivi);
+      // Gérer le statut expiré de l'item
+      this.handleExpiredStatus(idPanier);
+      return false;
     }
   }
 
-
-  handleExpiredStatus(idSuivi: number) :void {
+  // Méthode pour gérer le statut expiré de l'item
+  private handleExpiredStatus(id: string): void {
     try {
-      this.items$ = this.linkService['updateStatus'](idSuivi);
+      // Mettre à jour le statut de l'item via le service
+      this.items$ = this.linkService['updateStatus'](id);
     } catch (error) {
+      // Gérer les erreurs, par exemple, afficher un message d'erreur
       console.error(`Erreur lors de la mise à jour du statut : ${error.message}`);
-      // Gérer l'erreur ici, par exemple, afficher un message d'erreur à l'utilisateur
     }
   }
 
-  downloadFile(file, name){
-    let link = document.createElement("a");
-    link.download = name;
-    link.href = window.location.origin + '/assets/files/items/' + file;
-    link.click();
-  }
-
-  download(file, name): void {
-    let url=window.location.origin + '/assets/files/items/' + file;
+  // Méthode pour télécharger un fichier
+  download(file: string, urlFile: string): void {
+    const url = window.location.origin + '/assets/files/items/' + urlFile + '/' + file;
     this.linkService
-      .download(url,this.key)
+      .download(url, this.key)
       .subscribe(blob => {
-        const a = document.createElement('a')
-        const objectUrl = URL.createObjectURL(blob)
-        a.href = objectUrl
-        a.download = name;
-        a.click();
+        // Ouvrir le fichier dans une nouvelle fenêtre
+        const objectUrl = URL.createObjectURL(blob);
+        window.open(objectUrl, '_blank');
         URL.revokeObjectURL(objectUrl);
-      })
+      });
   }
 
+  // Méthode pour changer la langue
+  switchLanguage(language: string): void {
+    this.translate.use(language);
+    this.flagChoix = `flag-icon-${language}`;
+    if (language === 'en') {
+      this.flagChoix = 'flag-icon-us';
+    }
+  }
 
+  // Méthode pour vérifier si la date est expirée
+  isDateExpired(expirationDate: string): boolean {
+    const expiration = new Date(expirationDate);
+    const now = new Date();
+    return now > expiration;
+  }
+
+  clearRedirectUrl() {
+    localStorage.removeItem('redirectUrl');
+  }
 }

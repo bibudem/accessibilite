@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import {TranslateService} from "@ngx-translate/core";
-
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,19 +7,28 @@ import {TranslateService} from "@ngx-translate/core";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor( private route: ActivatedRoute,
-               private translate: TranslateService,) {
+  constructor( public authService: AuthService) {
 
   }
   title = 'projet-accessibilite';
-  isNotUserRoute: boolean = false;
+  isUserLinkRoute: boolean = false;
   flagChoix:string= 'flag-icon-fr';
-  ifAdmin = false;
+  ifAdmin = true;
 
   ngOnInit() {
-    if(window.location.pathname=='/not-user'){
-      this.isNotUserRoute =true;
+    // Étape 1: Stocker l'URL actuelle dans le service de redirection
+    const path = window.location.pathname;
+    this.authService.redirectUrl = path;
+    switch (path) {
+      case '/not-user':
+        this.ifAdmin = false;
+        break;
+      default:
+        if (this.isUserLinkRoute = path.startsWith('/lien/')) {
+          this.ifAdmin = false;
+        }
     }
   }
+
 
 }

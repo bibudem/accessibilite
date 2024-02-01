@@ -1,13 +1,4 @@
-:root {
-  --bc: #efeeee;
-  --white: #ffffff;
-  --black: #000000;
-  --red: #da2c4d;
-  --teal: #20c997;
-  --cyan: #17a2b8;
-  --primary: #f9c6cf;
-  --font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-}
+
 * {
   box-sizing: border-box;
 }
@@ -25,7 +16,7 @@
 .title h1 {
   margin: 0;
   padding: 0;
-  font-size: 35px;
+  font-size: 38px;
   font-weight: 400;
   letter-spacing: 8px;
   text-transform: uppercase;
@@ -45,23 +36,25 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  opacity: 0.8;
 }
 .overlay {
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, .4);
   position: absolute;
 }
 .parallax2 h2 {
-  font-size: 3em;
-  font-weight: 300;
+  font-size: 3.2em;
   text-transform: uppercase;
-  color: var(--white);
-  z-index: 1;
+  color: #f9660d !important;
+  padding-top: 10%;
+  font-weight: 450;
 }
 h5 {
-  color: #495057;
+  color: #5a6570;
   font-weight: normal;
+  font-size: 18px;
+  margin-top: 5px;
 }
 /* Paragraph */
 .paragraph {
@@ -78,49 +71,7 @@ h5 {
   letter-spacing: .1em;
   color: rgb(64, 64, 64);
 }
-.first span {
-  font-size: 4em;
-  color: var(--red);
-  float: left;
-  font-weight: 400;
-  line-height: 55px;
-  padding: .05em .2em 0 0;
-}
-.second span {
-  font-size: 4em;
-  color: var(--teal);
-  float: left;
-  font-weight: 400;
-  line-height: 55px;
-  padding: .05em .2em 0 0;
-}
-.third span {
-  font-size: 4em;
-  color: var(--cyan);
-  float: left;
-  font-weight: 400;
-  line-height: 55px;
-  padding: .05em .2em 0 0;
-}
-/* Selection */
-::selection {
-  color: var(--white);
-  background: rgba(161, 181, 201, .8);
-}
-/* SCROLLBAR */
-::-webkit-scrollbar-track {
-  background-color: #F5F5F5;
-}
-::-webkit-scrollbar {
-  width: 12px;
-  background-color: #F5F5F5;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgba(161, 181, 201, .8);
-}
-.w-115{
-  width: 115%;
-}
+
 .footer {
   visibility: hidden!important;
 }
