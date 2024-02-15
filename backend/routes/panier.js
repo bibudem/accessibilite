@@ -17,4 +17,6 @@ router.get('/all', panierController.getAll);
 
 router.post('/add-details', panierController.addDetails);
 
+router.get('/historique/:idItem', panierController.listeHistorique);
+
 module.exports = router;

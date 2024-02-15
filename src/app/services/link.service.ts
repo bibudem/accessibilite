@@ -37,10 +37,12 @@ export class LinkService {
         )
       );
   }
-  update(id: number): Observable<any> {
+
+  updateStateLink(id: string): Observable<any> {
+    const url = this.url+`/update-state/${id}`;
     return this.http
-      .put<any>(this.url+`/state/${id}`, this.httpOptions)
-      .pipe(catchError(this.errorHandlerService.handleError<any>("update")));
+      .get<any>(url, { responseType: "json" })
+      .pipe(catchError(this.errorHandlerService.handleError<any>("updateStateLink")));
   }
 
   download(url: string,key:string): Observable<Blob> {

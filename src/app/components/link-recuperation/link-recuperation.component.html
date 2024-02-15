@@ -29,17 +29,14 @@
                 <td>{{ item.auteur }}</td>
                 <td>{{ item.dateExpiration }}</td>
                 <td>
-                  <label
-                    *ngIf="item.statut === 'Inactif'; else actifStatus"
-                    class="badge badge-danger p-2"
-                  >
+                  <label *ngIf="item.statut === 'Inactif'; else actifStatus" class="badge badge-danger p-2">
                     {{ item.statut }}
                   </label>
                   <ng-template #actifStatus>
                     <label class="badge badge-success p-2">{{ item.statut }}</label>
                   </ng-template>
                 </td>
-                <td *ngIf="validerLesInfosItem(item.dateExpiration, item.idPanier)">
+                <td *ngIf="validerLesInfosItem(item.dateExpiration)">
                   <button class="btn btn-sm" (click)="download(item.file, item.URL)">
                     {{ 'fichier.file-telecharger' | translate }}
                   </button>
@@ -50,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div  class="alert alert-warning mt-3"  id="alertNotUser"  role="alert">
+    <div  class="alert alert-warning mt-3 cacherVisible"  id="alertNotUser"  role="alert">
       <h2>{{'fichier.files-titre-recuperation'| translate}}</h2>
       <p>{{'fichier.explication'| translate}}</p>
       <p>{{'fichier.explication-details'| translate}}</p>

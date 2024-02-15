@@ -13,12 +13,13 @@ module.exports = class Link {
 
   }
 
-  static  updateStateLink(id) {
+  static async updateStateLink(id) {
     let dt = datetime.create();
     let date = dt.format('Y-m-d H:M:S');
-    /*let sql = "UPDATE `tbl_panier` SET statut = 'Inactif', dateM=? where idPanier= ?"
-    console.log('sql: ', SqlString.format(sql,[date,id]));*/
-    return  db.execute("UPDATE `tbl_panier` SET statut = 'Inactif', dateM=? where idPanier= ?", [date,id] );
+    let sql = "UPDATE `tbl_panier` SET statut = 'Inactif', dateM=? where idPanier= ?"
+    console.log('sql: ', SqlString.format(sql,[date,id]));
+    await db.execute("UPDATE `tbl_panier` SET statut = 'Inactif', dateM=? where idPanier= ?", [date,id] );
+    return ['1'];
 
   }
 

@@ -38,10 +38,6 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
-    }
     //console.log(req.params.id);
     const deleteResponse = await Panier.delete(req.params.id);
     res.status(200).json(deleteResponse);
@@ -83,6 +79,17 @@ exports.addDetails = async (req, res, next) => {
     let values=Object.values(req.body);
     const [postResponse] = await Panier.addDetails(values);
     res.status(201).json(postResponse);
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+exports.listeHistorique = async (req, res, next) => {
+  try {
+    const [fichePanier] = await Panier.listeHistorique(req.params.idItem);
+    res.status(200).json(fichePanier);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

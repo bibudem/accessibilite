@@ -63,7 +63,10 @@ module.exports = class Panier {
     }
   }
 
-
+  //recouperer la fiche
+  static listeHistorique(id){
+    return db.execute('SELECT p.idPanier, p.sujet, p.nom as nom, p.prenom as prenom, p.courriel as courriel, p.statut as statut,p.sujet as sujet, p.dateActivation as dateActivation,p.dateExpiration as dateExpiration,p.nbrJours as nbrJours,p.cle as cle,p.note as note, i.idItem AS idItem, i.titre AS item_titre, i.auteur AS item_auteur, i.editeur AS item_editeur, i.annee AS item_annee, p.dateA as dateA, pd.idDetails as idDetails FROM tbl_panier p INNER JOIN tbl_panier_details pd ON p.idPanier = pd.idPanier INNER JOIN tbl_items i ON pd.idItem = i.idItem  WHERE pd.idItem  = ?', [id]);
+  }
 
 };
 

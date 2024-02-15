@@ -26,6 +26,9 @@ export class AppComponent implements OnInit {
       default:
         if (this.isUserLinkRoute = path.startsWith('/lien/')) {
           this.ifAdmin = false;
+        } else {
+          // Effacer également le redirectUrl de la session
+          localStorage.removeItem('redirectUrl');
         }
     }
   }

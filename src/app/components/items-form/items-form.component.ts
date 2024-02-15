@@ -79,7 +79,6 @@ export class ItemsFormComponent implements OnInit {
     private translate: TranslateService,
     private _location: Location,
     private itemService: ItemService,
-    private suiviService: SuiviService,
     private panierService: PanierService,
   ) { }
 
@@ -306,7 +305,7 @@ export class ItemsFormComponent implements OnInit {
   //tableau des archives
   async creerTableauSuivi(id: number) {
     try {
-      this.suivi$ = this.suiviService.fetchAll(id);
+      this.suivi$ = this.panierService.listeHistorique(id);
       await this.suivi$.toPromise().then(res => {
         for (let i = 0; i < res.length; i++) {
           this.tableauSuivi[i]={

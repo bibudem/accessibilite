@@ -65,7 +65,7 @@ export class HistoriqueDetailsComponent implements OnInit {
     this.global.nonAfficher('alert-add-note');
 
     // Récupérer le courriel de l'administrateur depuis localStorage
-    this.courrielAdmin = localStorage.getItem('courrielAdmin');
+    this.courrielAdmin = localStorage.getItem('courriel');
 
     // Récupérer l'ID de l'item depuis la route ou localStorage
     this.idPanier = this.route.snapshot.paramMap.get("id") || localStorage.getItem('idItem');
@@ -111,7 +111,7 @@ export class HistoriqueDetailsComponent implements OnInit {
             this.panier.dateExpiration=res[0].dateExpiration;
             this.placeholderDateAc = res[0].dateActivation;
             this.placeholderDateEx = res[0].dateExpiration;
-          this.dataSource = new MatTableDataSource(this.listePanierDetails);
+            this.dataSource = new MatTableDataSource(this.listePanierDetails);
         });
       }
     } catch(err) {

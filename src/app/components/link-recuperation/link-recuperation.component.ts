@@ -1,10 +1,11 @@
+// Import des modules nécessaires
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LinkService } from '../../services/link.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import {MethodesGlobal} from "../../lib/MethodesGlobal";
+import { MethodesGlobal } from '../../lib/MethodesGlobal';
 
 @Component({
   selector: 'app-link-recuperation',
@@ -12,20 +13,24 @@ import {MethodesGlobal} from "../../lib/MethodesGlobal";
   styleUrls: ['./link-recuperation.component.css']
 })
 export class LinkRecuperationComponent implements OnInit {
-  items$: Observable<any[]> | undefined;
+  // Déclaration des propriétés de la classe
+  stateUpdate$: Observable<any[]> | undefined;
   infosItems: any[] = [];
   key = '';
   flagChoix: string = 'flag-icon-fr';
   listeItems: any = [];
   lienFichier: string = '';
   userConnect: string = '';
-
   nom: string = '';
   prenom: string = '';
 
-  //importer les fonctions global
+  // Import des fonctions globales
   global: MethodesGlobal = new MethodesGlobal();
 
+  statutExpirate = false;
+  idPanier = '';
+
+  // Constructeur avec injection de dépendances
   constructor(
     private linkService: LinkService,
     private _location: Location,
@@ -34,11 +39,11 @@ export class LinkRecuperationComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  // Méthode d'initialisation du composant
   ngOnInit(): void {
-    this.global.nonAfficher('alertNotUser');
     // Étape 1: Initialiser le composant
     this.initializeComponent();
-    // Étape 2: recouperer courriel user
+    // Étape 2: Récupérer le courriel de l'utilisateur connecté
     this.userConnect = localStorage.getItem('courriel');
     // Stocker redirectUrl dans la session s'il est fourni
     this.nom = localStorage.getItem('nom');
@@ -64,20 +69,37 @@ export class LinkRecuperationComponent implements OnInit {
   private async fetchItemDetails(key: string): Promise<void> {
     try {
       // Appeler le service pour récupérer les détails de l'item
-      const res = await this.linkService.fetchAll(key).toPromise();
-      if((this.userConnect===res[0].courriel) || localStorage.getItem('roleUser')==='Admin'){
+      let res = await this.linkService.fetchAll(key).toPromise();
+
+      // Vérifier si l'utilisateur a les droits d'accès
+      if (
+        this.userConnect === res[0].courriel ||
+        localStorage.getItem('roleUser') === 'Admin'
+      ) {
+        // Vérifier les informations de l'item et mettre à jour si nécessaire
+        if (res[0] && !this.validerLesInfosItem(res[0].dateExpiration)) {
+          if (res[0].statut != 'Inactif') {
+            this.stateUpdate$ = this.linkService.updateStateLink(
+              res[0].idPanier
+            );
+            this.stateUpdate$.toPromise().then(res => {
+              if (res !== undefined) {
+                this.reload('/lien/' + this.key);
+              }
+            });
+          }
+        }
+
         // Parcourir les résultats et créer une structure d'information
         for (let i = 0; i < res.length; i++) {
           const item = res[i];
+          this.idPanier = item.idPanier;
           const infosItem = this.createInfosItem(item);
           this.listeItems.push(infosItem);
         }
-
-      } else{
+      } else {
         this.global.afficher('alertNotUser');
       }
-
-
     } catch (err) {
       // Gérer les erreurs, par exemple, afficher un message d'erreur
       console.error(`Error: ${err.message}`);
@@ -87,55 +109,41 @@ export class LinkRecuperationComponent implements OnInit {
   // Méthode pour créer la structure d'information à partir des détails de l'item
   private createInfosItem(item: any): any {
     return {
-      "idPanier": item.idPanier,
-      "nom": item.nom,
-      "prenom": item.prenom,
-      "courriel": item.courriel,
-      "dateActivation": item.dateActivation,
-      "dateExpiration": item.dateExpiration,
-      "nbrJours": item.nbrJours,
-      "idItem": item.idItem,
-      "statut": item.statut,
-      "titre": item.titre,
-      "auteur": item.auteur,
-      "file": item.file,
-      "URL": item.URL,
+      idPanier: item.idPanier,
+      nom: item.nom,
+      prenom: item.prenom,
+      courriel: item.courriel,
+      dateActivation: item.dateActivation,
+      dateExpiration: item.dateExpiration,
+      nbrJours: item.nbrJours,
+      idItem: item.idItem,
+      statut: item.statut,
+      titre: item.titre,
+      auteur: item.auteur,
+      file: item.file,
+      URL: item.URL
     };
   }
 
   // Méthode pour valider les informations de l'item
-  validerLesInfosItem(dateExpiration: string, idPanier: string): boolean {
-    if (!this.isDateExpired(dateExpiration)) {
-      return true;
-    } else {
-      // Gérer le statut expiré de l'item
-      this.handleExpiredStatus(idPanier);
-      return false;
-    }
-  }
-
-  // Méthode pour gérer le statut expiré de l'item
-  private handleExpiredStatus(id: string): void {
-    try {
-      // Mettre à jour le statut de l'item via le service
-      this.items$ = this.linkService['updateStatus'](id);
-    } catch (error) {
-      // Gérer les erreurs, par exemple, afficher un message d'erreur
-      console.error(`Erreur lors de la mise à jour du statut : ${error.message}`);
-    }
+  validerLesInfosItem(dateExpiration: string): boolean {
+    return !this.isDateExpired(dateExpiration);
   }
 
   // Méthode pour télécharger un fichier
   download(file: string, urlFile: string): void {
-    const url = window.location.origin + '/assets/files/items/' + urlFile + '/' + file;
-    this.linkService
-      .download(url, this.key)
-      .subscribe(blob => {
-        // Ouvrir le fichier dans une nouvelle fenêtre
-        const objectUrl = URL.createObjectURL(blob);
-        window.open(objectUrl, '_blank');
-        URL.revokeObjectURL(objectUrl);
-      });
+    const url =
+      window.location.origin +
+      '/assets/files/items/' +
+      urlFile +
+      '/' +
+      file;
+    this.linkService.download(url, this.key).subscribe(blob => {
+      // Ouvrir le fichier dans une nouvelle fenêtre
+      const objectUrl = URL.createObjectURL(blob);
+      window.open(objectUrl, '_blank');
+      URL.revokeObjectURL(objectUrl);
+    });
   }
 
   // Méthode pour changer la langue
@@ -154,7 +162,14 @@ export class LinkRecuperationComponent implements OnInit {
     return now > expiration;
   }
 
+  // Méthode pour effacer l'URL de redirection
   clearRedirectUrl() {
     localStorage.removeItem('redirectUrl');
+  }
+
+  // Méthode pour recharger l'URL
+  async reload(url: string): Promise<boolean> {
+    await this.router.navigateByUrl('.', { skipLocationChange: true });
+    return this.router.navigateByUrl(url);
   }
 }

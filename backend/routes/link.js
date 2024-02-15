@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/:key', linkController.getLink);
 
-router.put('state/:key', linkController.updateStateLink);
+router.get('/update-state/:id', linkController.updateStateLink);
 
 
 module.exports = router;

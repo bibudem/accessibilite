@@ -98,4 +98,11 @@ export class PanierService {
     this.panier = []; // Assurez-vous également de vider le tableau local
   }
 
+  listeHistorique(idItem: number): Observable<any> {
+    const url = this.url+`/historique/${idItem}`;
+    return this.http
+      .get<Panier>(url, { responseType: "json" })
+      .pipe(catchError(this.errorHandlerService.handleError<any>("consulter")));
+  }
+
 }
