@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import { AuthService } from './services/auth.service';
+import { InactivityService } from './services/inactivity.service';
 
 @Component({
   selector: 'app-root',
@@ -7,15 +8,30 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor( public authService: AuthService) {
-
-  }
   title = 'projet-accessibilite';
   isUserLinkRoute: boolean = false;
-  flagChoix:string= 'flag-icon-fr';
-  ifAdmin = true;
+  flagChoix: string = 'flag-icon-fr';
+  ifAdmin: boolean = true;
+
+  constructor(
+    public authService: AuthService,
+    private inactivityService: InactivityService
+  ) {
+    // Initialisation du timer d'inactivité
+    this.inactivityService.initInactivityTimer();
+  }
+
+  // Consolidation des événements utilisateur en une seule déclaration de HostListener
+  @HostListener('document:mousemove')
+  @HostListener('document:keydown')
+  @HostListener('document:click')
+  @HostListener('document:scroll')
+  handleUserActivity() {
+    this.inactivityService.resetInactivityTimer();
+  }
 
   ngOnInit() {
+    this.handleUserActivity();
     // Étape 1: Stocker l'URL actuelle dans le service de redirection
     const path = window.location.pathname;
     this.authService.redirectUrl = path;
@@ -31,6 +47,7 @@ export class AppComponent implements OnInit {
           localStorage.removeItem('redirectUrl');
         }
     }
+
   }
 
 

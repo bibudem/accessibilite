@@ -10,7 +10,6 @@ export class AuthService {
   roleUser: string = '';
   user: User = { courriel: '', groupe: '', nom: '', prenom: '' };
   redirectUrl: string | null = null;
-  private inactivityTimeout: any; // Variable pour stocker l'ID du timeout
 
   constructor(private http: HttpClient) {}
 
@@ -45,9 +44,6 @@ export class AuthService {
       localStorage.setItem('courriel', this.user.courriel);
       localStorage.setItem('roleUser', this.user.groupe);
 
-      // Définir le timeout de déconnexion après 30 minutes
-      this.setInactivityTimeout();
-
       return true;
 
     } catch (error) {
@@ -59,7 +55,6 @@ export class AuthService {
 
 
   async logout() {
-    this.clearInactivityTimeout();
     this.isLoggedIn = false;
     localStorage.removeItem('user'); // Supprimer les données du LocalStorage
     localStorage.removeItem('nom');
@@ -71,20 +66,6 @@ export class AuthService {
     localStorage.removeItem('redirectUrl');
 
     window.location.href = '/not-user';
-  }
-
-  // Méthode pour définir le timeout de déconnexion après 30 minutes
-  private setInactivityTimeout(): void {
-    const inactivityDuration = 30 * 60 * 1000; // 30 minutes en millisecondes
-
-    this.inactivityTimeout = setTimeout(() => {
-      this.logout();
-    }, inactivityDuration);
-  }
-
-  // Méthode pour effacer le timeout de déconnexion
-  private clearInactivityTimeout(): void {
-    clearTimeout(this.inactivityTimeout);
   }
 
 }
