@@ -3,10 +3,6 @@ const Lib = require("../util/lib");
 
 exports.post = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
-    }
     let values=Object.values(req.body);
     const postResponse = await Panier.post(values);
     res.status(201).json(postResponse);
@@ -20,10 +16,6 @@ exports.post = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
-    }
     let values=Object.values(req.body);
     //console.log(Object.values(values));
     const putResponse = await Panier.update(values);

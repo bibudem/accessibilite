@@ -8,8 +8,8 @@ import { MethodesGlobal } from 'src/app/lib/MethodesGlobal';
 import { Item } from 'src/app/models/Item';
 import { ItemService } from 'src/app/services/item.service';
 import { Location } from '@angular/common';
-import { SuiviService } from "../../services/suivi.service";
 import {PanierService} from "../../services/panier.service";
+import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
 
 @Component({
   selector: 'app-items-form',
@@ -32,6 +32,9 @@ export class ItemsFormComponent implements OnInit {
 
   // Import des fonctions globales
   global: MethodesGlobal = new MethodesGlobal();
+
+  //importer les liste des choix
+  lstOptions: ListeChoixOptions = new ListeChoixOptions();
 
   conditionIdItem = false;
 
@@ -62,6 +65,16 @@ export class ItemsFormComponent implements OnInit {
   newURL = '';
 
   arrayAnnee: any = [];
+
+  lstTypeDocument: any = [];
+
+  lstLangue: any = [];
+
+  lstFormatSubstitut: any = [];
+
+  lstDocComplet: any = [];
+
+  lstVisuelAccessible: any = [];
 
   routeUrl = '';
 
@@ -266,14 +279,23 @@ export class ItemsFormComponent implements OnInit {
     const action = document.getElementById('action').value;
     const champs: any = {
       idItem: this.idItem,
-      titre: '',
+      idColecttion: '',
+      typeDocument: '',
       auteur: '',
-      editeur: '',
       annee: '',
+      titre: '',
+      editeur: '',
+      edition: '',
+      isbn: '',
+      format: '',
+      visuelAccessibles: '',
+      documentComplet: '',
       description: '',
+      note: '',
+      langue: '',
       file: '',
       URL: '',
-      idColecttion: ''
+
     };
 
     for (let key in champs) {
@@ -285,7 +307,7 @@ export class ItemsFormComponent implements OnInit {
     this.item = champs;
 
     // Définir les champs obligatoires
-    let donneesValider: any = { 'titre': this.item.titre, 'idColecttion': this.item.idColecttion };
+    let donneesValider: any = {'titre': this.item.titre, 'idColecttion': this.item.idColecttion,'typeDocument': this.item.typeDocument };
 
     switch (action) {
       case 'save':

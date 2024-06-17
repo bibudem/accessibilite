@@ -77,6 +77,7 @@ app.use(function (req, res, next) {
 app.get('/logout', function(req, res) {
   try {
     req.logOut();  // <-- not req.logout();
+    res.redirect('/not-user');
   } catch (error) {
     console.error('Erreur lors de la déconnexion :', error);
   }

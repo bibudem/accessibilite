@@ -7,7 +7,7 @@
         </h2>
         <h2 class="mt-1" *ngIf="!conditionIdItem">{{ 'new-item' | translate}}</h2>
       </div>
-      <div class="col-md-3"><button class="btn btn-warning text-white btn-sm ml-1 float-right"  (click)="addToPanier(item)" ><i class="typcn typcn-shopping-cart menu-icon"></i> {{ 'btn.ajouter-panier' | translate}}</button>
+      <div class="col-md-3"><button *ngIf="conditionIdItem" class="btn btn-warning text-white btn-sm ml-1 float-right"   (click)="addToPanier(item)" ><i class="typcn typcn-shopping-cart menu-icon"></i> {{ 'btn.ajouter-panier' | translate}}</button>
         <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
       </div>
     </div>
@@ -26,27 +26,24 @@
 
       <div class="card-body mb-5">
         <form class="forms-sample"  #itemForm="ngForm" name="itemForm" id="itemForm"   (ngSubmit)="onSubmit(itemForm)" >
-          <div class="row mb-3">
-            <div class="col-md-3">
+          <div class="row">
+            <div class="col-md-6">
               <label for="titre">{{ 'titre' | translate}} <span class="text-danger">*</span></label>
               <input  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.titre),'valid-class': global.obligatoireChamp(item.titre)}" #titre="ngModel" name="titre" id="titre" placeholder="{{ 'titre' | translate}}" [(ngModel)]="item.titre" >
               <input  class="form-control" #idItem="ngModel" name="idItem" id="idItem" type="hidden" [(ngModel)]="item.idItem">
               <input  class="form-control"  name="action" id="action" type="hidden"  value="{{action}}"  >
             </div>
-            <div class="col-md-3">
-              <label for="idColecttion">{{ 'collection' | translate}} <span class="text-danger">*</span></label>
-              <select name="idColecttion" id="idColecttion"  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.idColecttion),'valid-class': global.obligatoireChamp(item.idColecttion)}" #idColecttion  [(ngModel)]="item.idColecttion">
-                <option *ngIf="!item.idColecttion" value="">{{'choisissez' | translate}}</option>
-                <option *ngFor="let rep of listeCollection" [value]="rep.id" >{{rep.nom}}</option>
-              </select>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="typeDocument">{{'typeDocument'| translate }} <span class="text-danger">*</span></label>
+                <select class="form-control" id="typeDocument" name="typeDocument" #typeDocument [(ngModel)]="item.typeDocument">
+                  <option *ngFor="let rep of this.lstOptions.lstTypeDocument" [value]="rep.id">{{rep.name}}</option>
+                </select>
+              </div>
             </div>
             <div class="col-md-2">
               <label for="auteur">{{ 'auteur' | translate}} </label>
               <input  class="form-control" #auteur="ngModel" name="auteur" id="auteur" type="text" [(ngModel)]="item.auteur">
-            </div>
-            <div class="col-md-2">
-              <label for="editeur">{{ 'editeur' | translate}} </label>
-              <input  class="form-control" #editeur="ngModel" name="editeur" id="editeur" type="text" [(ngModel)]="item.editeur">
             </div>
             <div class="col-md-2">
               <label for="annee">{{ 'annee-pub' | translate}} </label>
@@ -55,8 +52,69 @@
               </select>
             </div>
           </div>
+          <div class="row mb-2">
+            <div class="col-md-3">
+              <label for="idColecttion">{{ 'collection' | translate}} <span class="text-danger">*</span></label>
+              <select name="idColecttion" id="idColecttion"  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.idColecttion),'valid-class': global.obligatoireChamp(item.idColecttion)}" #idColecttion  [(ngModel)]="item.idColecttion">
+                <option *ngIf="!item.idColecttion" value="">{{'choisissez' | translate}}</option>
+                <option *ngFor="let rep of listeCollection" [value]="rep.id" >{{rep.nom}}</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="auteur">{{ 'editeur' | translate}} </label>
+              <input  class="form-control" #editeur="ngModel" name="editeur" id="editeur" type="text" [(ngModel)]="item.editeur">
+            </div>
+            <div class="col-md-3">
+              <label for="edition">{{ 'edition' | translate}} </label>
+              <input  class="form-control" #edition="ngModel" name="edition" id="edition" type="text" [(ngModel)]="item.edition">
+            </div>
+            <div class="col-md-3">
+              <label for="isbn">{{ 'isbn' | translate}} </label>
+              <input  class="form-control" #isbn="ngModel" name="isbn" id="isbn" type="text" [(ngModel)]="item.isbn">
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="langue">{{'langue'| translate }} </label>
+                <select class="form-control" id="langue" name="langue" #langue [(ngModel)]="item.langue">
+                  <option *ngFor="let rep of this.lstOptions.lstLangue" [value]="rep.id">{{rep.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="format">{{'format'| translate }} </label>
+                <select class="form-control" id="format" name="format" #format [(ngModel)]="item.format">
+                  <option *ngFor="let rep of this.lstOptions.lstFormatSubstitut" [value]="rep.id">{{rep.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="format">{{'visuelAccessibles'| translate }} </label>
+                <select class="form-control" id="visuelAccessibles" name="visuelAccessibles" #visuelAccessibles [(ngModel)]="item.visuelAccessibles">
+                  <option *ngFor="let rep of this.lstOptions.lstVisuelAccessible" [value]="rep.id">{{rep.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="documentComplet">{{'documentComplet'| translate }} </label>
+                <select class="form-control" id="documentComplet" name="documentComplet" #documentComplet [(ngModel)]="item.documentComplet">
+                  <option *ngFor="let rep of this.lstOptions.lstDocComplet" [value]="rep.name">{{rep.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3 toggle-container" [class.show]="item.documentComplet == 'Oui'">
+            <div class="col-md-12">
+              <label for="description">{{ 'description' | translate }}</label>
+              <input class="form-control" #description name="description" id="description" type="text" [(ngModel)]="item.description">
+            </div>
+          </div>
           <!-- Menu onglets-->
-          <div class="mt-5 mb-5">
+          <div class="mb-5">
             <mat-tab-group animationDuration="2000ms">
             <mat-tab label="{{ 'file-item' | translate}}">
               <div class="form-group" *ngIf="!isFile">
@@ -120,7 +178,7 @@
             </mat-tab>
             <mat-tab label="{{ 'note-item' | translate}}">
               <div class="form-group mt-4 mb-4">
-                <textarea class="form-control" id="description" name="description" #description="ngModel" rows="5" [(ngModel)]="item.description"></textarea>
+                <textarea class="form-control" id="note" name="note" #note="ngModel" rows="5" [(ngModel)]="item.note"></textarea>
               </div>
             </mat-tab>
             <mat-tab label="{{ 'liste-demandes' | translate}}" *ngIf="item.idItem">

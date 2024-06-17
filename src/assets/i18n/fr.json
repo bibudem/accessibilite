@@ -92,6 +92,12 @@
   "modif-cle": "Modifier la clé",
   "url": "Lien",
   "liste-demandes": "Liste des demandes",
+  "typeDocument": "Type de document",
+  "type": "Type",
+  "edition": "Édition",
+  "isbn": "ISBN",
+  "visuelAccessibles": "Éléments visuels accessibles",
+  "documentComplet": "Document complet",
 
   "btn": {
     "choisissez": "Choisissez",

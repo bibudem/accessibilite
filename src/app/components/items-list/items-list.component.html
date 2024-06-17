@@ -30,14 +30,14 @@
             matSortDirection="asc">
             <!-- ID Column -->
             <ng-container matColumnDef="numero">
-              <mat-header-cell  *matHeaderCellDef #numero mat-sort-header  class=" mat-w-10 pl-2 "> {{ 'nr' | translate}} </mat-header-cell>
-              <mat-cell *matCellDef="let row" class=" mat-w-10 pl-2" > {{row.numero}} </mat-cell>
+              <mat-header-cell  *matHeaderCellDef #numero mat-sort-header  class=" mat-w-5 pl-2 "> {{ 'nr' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row" class=" mat-w-5 pl-2" > {{row.numero}} </mat-cell>
             </ng-container>
 
-            <!-- titre Column -->
-            <ng-container matColumnDef="titre">
-              <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-25 "> {{ 'titre' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-25" > {{row.titre}} </mat-cell>
+            <!-- typeDocument Column -->
+            <ng-container matColumnDef="typeDocument">
+              <mat-header-cell  *matHeaderCellDef #typeDocument mat-sort-header class="mat-w-10  "> {{ 'type' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center" > {{row.typeDocument}} </mat-cell>
             </ng-container>
 
             <!-- auteur Column -->
@@ -46,10 +46,22 @@
               <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.auteur}} </mat-cell>
             </ng-container>
 
+            <!-- editeur Column -->
+            <ng-container matColumnDef="editeur">
+              <mat-header-cell  *matHeaderCellDef #editeur mat-sort-header class="mat-w-15 "> {{ 'editeur' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.editeur}} </mat-cell>
+            </ng-container>
+
+            <!-- titre Column -->
+            <ng-container matColumnDef="titre">
+              <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-20 "> {{ 'titre' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-20" > {{row.titre}} </mat-cell>
+            </ng-container>
+
             <!-- URL Column -->
             <ng-container matColumnDef="URL">
-              <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-10 "> {{ 'file' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10 text-center" >
+              <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-5 "> {{ 'file' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-5 text-center" >
                 <a *ngIf="row.file"  class="btn-outline-primary btn-rounded btn-icon btn-sm" title="{{ 'voir-fichier' | translate}}" href="{{row.URL}}" target="_blank" >
                   <i class="typcn typcn-document-text"></i>
                 </a>
@@ -75,9 +87,9 @@
             </ng-container>
             <!-- Consulter Column -->
             <ng-container matColumnDef="consulter" >
-              <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-cente"> {{ 'consulter' | translate}} </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-center"> {{ 'consulter' | translate}} </mat-header-cell>
               <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center">
-                <button type="button" class="btn btn-dark btn-sm btn-icon-text text-cente" routerLink="/items/{{ row.idItem }}">
+                <button type="button" class="btn btn-dark btn-sm btn-icon-text text-center ml-2" routerLink="/items/{{ row.idItem }}">
                   <i class="typcn typcn-edit btn-icon-append"></i>
                 </button>
               </mat-cell>

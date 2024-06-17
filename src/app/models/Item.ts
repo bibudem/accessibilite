@@ -1,11 +1,19 @@
 export interface Item {
   idItem:number;
-  titre:string;
+  idColecttion:string;
+  typeDocument:string;
   auteur:string;
-  editeur:string;
   annee:string;
+  titre:string;
+  editeur:string;
+  edition:string;
+  isbn:string;
+  format:string;
+  visuelAccessibles:string;
+  documentComplet:string;
   description:string;
+  note:string;
+  langue:string;
   file  :string;
   URL :string;
-  idColecttion:string;
 }

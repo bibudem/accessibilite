@@ -153,4 +153,7 @@ select.form-control{
   border-top: 1px solid #e1e7e9;
   padding-top: 30px!important;
 }
+.mat-mdc-tab-header {
+  background: #f3f3f3!important;
+}
 

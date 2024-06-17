@@ -12,10 +12,10 @@ module.exports = class Items {
     let date = dt.format('Y-m-d H:M:S');
     //ajouter la date dans le tableau des données
     values.push(date);
-    /*let sql = "INSERT INTO  tbl_items  SET idItem = ?,titre = ?,auteur = ?,editeur = ?,annee = ?,description = ?,file = ?,URL = ?,idColecttion =?,dateA =?"
+    /*let sql = "INSERT INTO  tbl_items  SET idItem = ?,idColecttion =?,typeDocument =?,auteur = ?,annee = ?,titre = ?,editeur = ?,edition = ?,isbn = ?,format = ?,visuelAccessibles = ?,documentComplet = ?,description = ?,note = ?,langue = ?,file = ?,URL = ?,dateA =?"
     console.log('sql: ', SqlString.format(sql,values));*/
 
-    return db.execute('INSERT INTO  tbl_items  SET idItem = ?,titre = ?,auteur = ?,editeur = ?,annee = ?,description = ?,file = ?,URL = ?,idColecttion =?,dateA =? ', values );
+    return db.execute('INSERT INTO  tbl_items  SET idItem = ?,idColecttion =?,typeDocument =?,auteur = ?,annee = ?,titre = ?,editeur = ?,edition = ?,isbn = ?,format = ?,visuelAccessibles = ?,documentComplet = ?,description = ?,note = ?,langue = ?,file = ?,URL = ?,dateA =?', values );
   }
 
 //mise a jour de la fiche
@@ -24,11 +24,11 @@ module.exports = class Items {
     let dt = datetime.create();
     let date = dt.format('Y-m-d H:M:S');
     //afficher la requette
-    /*let sql = "UPDATE tbl_items SET titre = ?,auteur = ?,editeur = ?,annee = ?,description = ?,file = ?,URL = ?,idColecttion =?,dateM =? WHERE idItem  = ?"
-    console.log('sql: ', SqlString.format(sql,[values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],date,values[0]]));*/
+    /*let sql = "UPDATE tbl_items SET idColecttion =?,typeDocument =?,auteur = ?,annee = ?,titre = ?,editeur = ?,edition = ?,isbn = ?,format = ?,visuelAccessibles = ?,documentComplet = ?,description = ?,note = ?,langue = ?,file = ?,URL = ?,dateM =? WHERE idItem  = ?"
+    console.log('sql: ', SqlString.format(sql,[values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],values[9],values[10],values[11],values[12],values[13],values[14],values[15],values[16],date,values[0]]));*/
 
-    return db.execute('UPDATE tbl_items SET titre = ?,auteur = ?,editeur = ?,annee = ?,description = ?,file = ?,URL = ?,idColecttion =?,dateM =? WHERE idItem  = ?',
-      [values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],date,values[0]]);
+    return db.execute('UPDATE tbl_items SET idColecttion =?,typeDocument =?,auteur = ?,annee = ?,titre = ?,editeur = ?,edition = ?,isbn = ?,format = ?,visuelAccessibles = ?,documentComplet = ?,description = ?,note = ?,langue = ?,file = ?,URL = ?,dateM =? WHERE idItem  = ?',
+      [values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[8],values[9],values[10],values[11],values[12],values[13],values[14],values[15],values[16],date,values[0]]);
   }
 
 //supprimer une fiche
@@ -43,7 +43,7 @@ module.exports = class Items {
 
 //recouperer la liste des items
   static allItems(){
-    return db.execute('SELECT titre,auteur,file,URL,idItem,( SELECT nom from tbl_collections where id_collection=idColecttion) as collection,dateA FROM tbl_items order by titre');
+    return db.execute('SELECT typeDocument,auteur,annee,titre,editeur,edition,isbn,format,visuelAccessibles,documentComplet,description,langue,file,URL,idItem,note,( SELECT nom from tbl_collections where id_collection=idColecttion) as collection,dateA FROM tbl_items order by titre');
   }
 
 //recouperer la liste des collections

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { MethodesGlobal } from 'src/app/lib/MethodesGlobal';
 import { ItemService } from 'src/app/services/item.service';
 import {Location} from '@angular/common';
+import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
 
 @Component({
   selector: 'app-items-list',
@@ -14,7 +15,7 @@ import {Location} from '@angular/common';
 })
 export class ItemsListComponent implements OnInit {
   //les entêts du tableau
-  displayedColumns = ['numero','titre','auteur','URL','collection','dateA','consulter'];
+  displayedColumns = ['numero','typeDocument','auteur','editeur','titre','URL','collection','dateA','consulter'];
   listeItems: any[] = [];
   // @ts-ignore
   dataSource: MatTableDataSource<ListeItems>;
@@ -26,6 +27,9 @@ export class ItemsListComponent implements OnInit {
 
   //importer les fonctions global
   global: MethodesGlobal = new MethodesGlobal();
+
+  //importer les liste des choix
+  lstOptions: ListeChoixOptions = new ListeChoixOptions();
 
   items$: Observable<any[]> | undefined;
 
@@ -49,6 +53,7 @@ export class ItemsListComponent implements OnInit {
     this.textRechercher=this.historiqueRechercheZone();
     //ajout de niveau de securité
     this.ifAdmin=this.global.ifAdminFunction();
+
   }
 
 //appliquer filtre
@@ -66,39 +71,50 @@ export class ItemsListComponent implements OnInit {
   creerTableau() {
     try {
       this.items$ = this.fetchAll();
-      let url: { toString: () => any; }[]=[];
+      let url: string[] = [];
+
       this.items$.toPromise().then(res => {
-        if(res!== undefined){
-          for (let i = 0; i < res.length; i++) {
-            url[i]='/assets/files/items/'+res[i].URL+'/'+res[i].file;
-            this.listeItems[i]={
-              "numero":i+1,
-              "idItem":res[i].idItem,
-              "titre":res[i].titre,
-              "auteur":res[i].auteur,
-              "file":res[i].file,
-              "URL":url[i],
-              "collection":res[i].collection,
-              "dateA":res[i].dateA,
-              "dateM":res[i].dateM
-            }
-          }
+        if (res !== undefined) {
+          this.listeItems = res.map((item, index) => {
+            url[index] = '/assets/files/items/' + item.URL + '/' + item.file;
+            return {
+              "numero": index + 1,
+              "idItem": item.idItem,
+              "typeDocument": this.getDocumentTypeName(item.typeDocument),
+              "titre": item.titre,
+              "editeur": item.editeur,
+              "auteur": item.auteur,
+              "file": item.file,
+              "URL": url[index],
+              "collection": item.collection,
+              "dateA": item.dateA,
+              "dateM": item.dateM
+            };
+          });
         }
 
-        // Redéfinir le contenu de la table avec la pagination est la recherche une fois que le resultat de la bd est returné
+        // Redéfinir le contenu de la table avec la pagination et la recherche une fois que le résultat de la BD est retourné
         this.dataSource = new MatTableDataSource(this.listeItems);
         if (this.textRechercher != '') {
-          this.applyFilter(this.textRechercher)
+          this.applyFilter(this.textRechercher);
         }
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.matSort;
 
       });
-    } catch(err) {
-      console.error(`Error : ${err.Message}`);
-      //
+    } catch (err) {
+      console.error(`Error : ${err.message}`);
     }
   }
+
+
+  getDocumentTypeName(typeDocumentId: string): string {
+    const id = Number(typeDocumentId);
+    const documentType = this.lstOptions.lstTypeDocument.find(docType => docType.id === id);
+    return documentType ? documentType.name : '';
+  }
+
+
 
 //recouperer la liste des periodiques
   fetchAll(): Observable<any[]> {
@@ -125,9 +141,9 @@ export class ItemsListComponent implements OnInit {
     // @ts-ignore
     if(document.getElementById('textFiltre').value){
       // @ts-ignore
-      document.getElementById('textFiltre').value=''
-      localStorage.setItem('textFiltre','')
-      this.applyFilter('')
+      document.getElementById('textFiltre').value='';
+      localStorage.setItem('textFiltre','');
+      this.applyFilter('');
     }
 
   }
