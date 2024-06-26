@@ -1,19 +1,20 @@
 <div class="container-fluid">
   <div class="row bg-white mr-5 ml-5 p-5 mt-2" >
-    <div class="container  text-center mt-2">
-      <img src="assets/images/udem-logo-bib.png" alt="Logo de bibUdem" class="img-responsive m-3">
+    <div class="container  mt-2">
+      <img src="assets/images/biblio-logo.png" alt="Logo de bibUdem" class="img-responsive m-3 img-logo">
       <div class="text-right">
         <small class="text-primary text-uppercase">{{this.nom}} {{this.prenom}} | </small>
-        <small class="text-primary">{{this.userConnect}} </small><br><br>
-        <small class="text-black"><a href="https://bib.umontreal.ca/" onclick="clearRedirectUrl()">{{ 'not-user-lien' | translate}}</a></small>
+        <small class="text-primary">{{this.userConnect}} </small>
+        <br><br>
+        <small ><a href="https://bib.umontreal.ca/" class="text-black" onclick="clearRedirectUrl()">{{ 'not-user-lien' | translate}}</a></small>
       </div>
-      <h1 class="mt-5 f-32">COLLECTIONS SPÉCIALES</h1>
     </div>
-    <div   class="card ml-5 mr-5 mt-1" *ngIf="listeItems!=0">
-      <div class="card-body p-5 m-5" >
-        <h4 class="card-title mb-2">{{'fichier.files-titre-recuperation'| translate}}</h4>
+    <div   class="card  mt-2" *ngIf="listeItems!=0">
+      <h1 class="mt-5 f-32 mb-3 ml-5">COLLECTIONS SPÉCIALES</h1>
+      <div class="card-body p-5 mt-2" >
+        <h4 class="mb-2 text-info">{{'fichier.files-titre-recuperation'| translate}}</h4>
         <div class="table-responsive">
-          <table class="table">
+          <table class="table mt-5">
             <thead>
             <tr>
               <th class="w-50 ">{{'nom'| translate}}</th>
@@ -48,6 +49,7 @@
       </div>
     </div>
     <div  class="alert alert-warning mt-3 cacherVisible"  id="alertNotUser"  role="alert">
+      <h1 class="mt-5 f-32 mb-3 ml-3">COLLECTIONS SPÉCIALES</h1>
       <h2>{{'fichier.files-titre-recuperation'| translate}}</h2>
       <p>{{'fichier.explication'| translate}}</p>
       <p>{{'fichier.explication-details'| translate}}</p>
