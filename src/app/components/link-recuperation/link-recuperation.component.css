@@ -1,6 +1,6 @@
 
 .img-logo {
-  width: 20%!important;
+  width: 40%!important;
 }
 .card {
   min-height: 500px;
@@ -72,4 +72,13 @@
 }
 .f-32{
   font-size: 32px;
+}
+.bib-user-header{
+  border-bottom: #123d85 4px solid;
+  background: #21252908;
+  padding: 20px;
+}
+
+.text-bib-warning {
+  color: #f55f14;
 }

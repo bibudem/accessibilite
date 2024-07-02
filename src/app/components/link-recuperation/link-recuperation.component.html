@@ -1,23 +1,27 @@
 <div class="container-fluid">
   <div class="row bg-white mr-5 ml-5 p-5 mt-2" >
-    <div class="container  mt-2">
-      <img src="assets/images/biblio-logo.png" alt="Logo de bibUdem" class="img-responsive m-3 img-logo">
-      <div class="text-right">
-        <small class="text-primary text-uppercase">{{this.nom}} {{this.prenom}} | </small>
-        <small class="text-primary">{{this.userConnect}} </small>
-        <br><br>
-        <small ><a href="https://bib.umontreal.ca/" class="text-black" onclick="clearRedirectUrl()">{{ 'not-user-lien' | translate}}</a></small>
+    <div class="container mt-2 bib-user-header">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <img src="assets/images/biblio-logo.png" alt="Logo de bibUdem" class="img-responsive m-3 img-logo">
+        </div>
+        <div class="col-md-6 text-right">
+          <small class="text-primary text-uppercase">{{this.nom}} {{this.prenom}} | </small>
+          <small class="text-primary">{{this.userConnect}} </small>
+          <br><br>
+          <small><a href="https://bib.umontreal.ca/" class="text-black" onclick="clearRedirectUrl()">{{ 'not-user-lien' | translate}}</a></small>
+        </div>
       </div>
     </div>
     <div   class="card  mt-2" *ngIf="listeItems!=0">
-      <h1 class="mt-5 f-32 mb-3 ml-5">COLLECTIONS SPÉCIALES</h1>
-      <div class="card-body p-5 mt-2" >
-        <h4 class="mb-2 text-info">{{'fichier.files-titre-recuperation'| translate}}</h4>
+      <h1 class="mt-5 f-32 mb-3 ml-5">COLLECTIONS SPÉCIALES </h1>
+      <div class="card-body p-5 " >
+        <h4 class="mb-2 text-bib-warning">{{'fichier.files-titre-recuperation'| translate}}</h4>
         <div class="table-responsive">
           <table class="table mt-5">
             <thead>
             <tr>
-              <th class="w-50 ">{{'nom'| translate}}</th>
+              <th class="w-50 ">{{'titre'| translate}}</th>
               <th class="w-20 ">{{'auteur'| translate}}</th>
               <th >{{'dateExpiration'| translate}}</th>
               <th >{{'statut'| translate}}</th>

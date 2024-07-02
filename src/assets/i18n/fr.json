@@ -145,7 +145,7 @@
     "voici-url": "Voici le lien à partager:"
   },
   "fichier": {
-    "files-titre-recuperation": "Téléchargement des Fichiers Demandés",
+    "files-titre-recuperation": "Téléchargement des fichiers demandés",
     "files-info-recuperation": "Cliquez sur le lien de téléchargement ci-dessous pour accéder au fichier",
     "file-telecharger": "Télécharger",
     "titre-recuperation-expire": "Lien d'accès au fichier expiré ou inexistant",
