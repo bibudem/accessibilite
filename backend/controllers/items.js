@@ -5,7 +5,7 @@ exports.postItem = async (req, res, next) => {
   try {
     //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
     if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
+      return res.redirect('/api/logout');
     }
     let values=Object.values(req.body);
     //console.log(Object.values(values));
@@ -23,7 +23,7 @@ exports.putItem = async (req, res, next) => {
   try {
     //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
     if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
+      return res.redirect('/api/logout');
     }
     let values=Object.values(req.body);
     //console.log(Object.values(values));
@@ -55,6 +55,10 @@ exports.deleteItem = async (req, res, next) => {
 };
 exports.consulterItem = async (req, res, next) => {
   try {
+    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
+    if(Lib.userConnect(req).length==0){
+      return res.redirect('/api/logout');
+    }
     const [ficheFilm] = await Items.consulter(req.params.id);
     res.status(200).json(ficheFilm);
   } catch (err) {
@@ -66,6 +70,10 @@ exports.consulterItem = async (req, res, next) => {
 };
 exports.allItems = async (req, res, next) => {
   try {
+    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
+    if(Lib.userConnect(req).length==0){
+      return res.redirect('/api/logout');
+    }
     const [all] = await Items.allItems();
     res.status(200).json(all);
   } catch (err) {
@@ -78,6 +86,10 @@ exports.allItems = async (req, res, next) => {
 
 exports.allListeCollections = async (req, res, next) => {
   try {
+    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
+    if(Lib.userConnect(req).length==0){
+      return res.redirect('/api/logout');
+    }
     const [all] = await Items.allListeCollections();
     res.status(200).json(all);
 

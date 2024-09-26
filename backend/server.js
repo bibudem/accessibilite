@@ -75,27 +75,19 @@ app.use(function (req, res, next) {
 
 // Route de déconnexion
 app.get('/logout', function(req, res) {
-  try {
-    req.logOut();  // <-- not req.logout();
-    res.redirect('/not-user');
-  } catch (error) {
-    console.error('Erreur lors de la déconnexion :', error);
+  req.logOut()  // <-- not req.logout();
+  if(Lib.userConnect(req)){
+    Lib.userConnect(req)==[]
   }
-
-  if (Lib.userConnect(req)) {
-    Lib.userConnect(req) == [];
-  }
-
   req.session.destroy(function() {
-    res.clearCookie('connect.sid') ;
-    res.redirect('/not-user');
+    res.clearCookie('connect.sid');
+    res.redirect('/not-user')
   });
 });
-
-// Redirection pour se connecter
+//redirection pour se connecter
 app.get('/', function(req, res) {
-  if(!Lib.userConnect(req) || Lib.userConnect(req).length == 0){
-    res.redirect('/not-user');
+  if(!Lib.userConnect(req)|| Lib.userConnect(req).length==0){
+    res.redirect('/not-user')
   }
 });
 

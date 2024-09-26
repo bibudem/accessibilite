@@ -1,8 +1,9 @@
-// auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/User';
-
+import { Observable, of } from 'rxjs';
+import { tap, delay, catchError } from 'rxjs/operators';
+import {Router} from "@angular/router";
 
 @Injectable()
 export class AuthService {
@@ -11,61 +12,87 @@ export class AuthService {
   user: User = { courriel: '', groupe: '', nom: '', prenom: '' };
   redirectUrl: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private router: Router,) {}
 
-  async login(redirectUrl?: string): Promise<boolean> {
-    // Vérifier si les données sont déjà présentes dans le LocalStorage
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      this.isLoggedIn = true;
-      this.roleUser = this.user.groupe;
-      return true;
-    }
-
+  async login(redirectUrl?: string): Promise<Observable<boolean>> {
+    let isLoggedIn: boolean;
     try {
-      // Charger les données depuis le serveur
-      const res: any = await this.http.get<User>(`/api/user-udem`, { responseType: 'json' }).toPromise();
+      // Reconnecte le bon utilisateur
+      await this.http
+        .get<User>(`/api/user-udem`, { responseType: 'json' })
+        .toPromise()
+        .then((res: any) => {
+          // Success
+          if (res.length == 0) {
+            isLoggedIn = false;
+            this.logout();
+          }
+          this.user = res;
+          this.isLoggedIn = true;
+          this.roleUser = this.user.groupe;
 
-      if (res.length === 0) {
-        await this.logout();
-        return false;
-      }
+          // Stocker les données dans le LocalStorage
+          localStorage.setItem('user', JSON.stringify(this.user));
+          localStorage.setItem('nom', this.user.nom);
+          localStorage.setItem('prenom', this.user.prenom);
+          localStorage.setItem('courriel', this.user.courriel);
+          localStorage.setItem('roleUser', this.user.groupe);
 
-      this.user = res;
-      this.isLoggedIn = true;
-      this.roleUser = this.user.groupe;
+          // Vérification du rôle de l'utilisateur et gestion de la redirection
+          switch (this.user.groupe) {
+            case 'Admin':
+              localStorage.setItem('groupeAdmin', 'Gestionnaire');
+              localStorage.setItem('role', 'Admin');
+              break;
 
-      // Stocker les données dans le LocalStorage
-      localStorage.setItem('user', JSON.stringify(this.user));
+            case 'Viewer':
+              localStorage.setItem('groupeAdmin', 'Bibliothécaire');
+              localStorage.setItem('role', 'Viewer');
+              break;
 
-      localStorage.setItem('nom', this.user.nom);
-      localStorage.setItem('prenom', this.user.prenom);
-      localStorage.setItem('courriel', this.user.courriel);
-      localStorage.setItem('roleUser', this.user.groupe);
-
-      return true;
-
-    } catch (error) {
-      console.error('Erreur login http', error);
+            default:
+              const currentUrl = window.location.href;
+              const lienFichier = currentUrl.includes('/lien/bibUdeM');
+              if (!lienFichier) {
+                isLoggedIn = false;
+                return;
+              }
+          }
+        });
+    } catch (e: any) {
+      isLoggedIn = false;
       await this.logout();
-      return false;
+      console.log('Erreur login http' + e);
     }
-  }
 
+    return of(true).pipe(
+      delay(100),
+      tap((val) => (this.isLoggedIn = isLoggedIn))
+    );
+  }
 
   async logout() {
     this.isLoggedIn = false;
-    localStorage.removeItem('user'); // Supprimer les données du LocalStorage
+    localStorage.removeItem('user');
     localStorage.removeItem('nom');
     localStorage.removeItem('prenom');
     localStorage.removeItem('courriel');
     localStorage.removeItem('roleUser');
 
-    // Effacer également le redirectUrl de la session
-    localStorage.removeItem('redirectUrl');
-
-    window.location.href = '/not-user';
+    window.location.href = '/api/logout';
   }
 
+  /** Redirects to the specified external link with the mediation of the router */
+  public redirect(url: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        // @ts-ignore
+        //this.window.location.href = url;
+        this.router.navigateByUrl(url);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
 }

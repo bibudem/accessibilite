@@ -59,6 +59,8 @@ export class CollectionsFormComponent implements OnInit {
 
   file_list: Array<string> = [];
 
+  showAlert = false;
+
 
 
   @ViewChild('closebutton') closebutton:any;
@@ -114,7 +116,7 @@ export class CollectionsFormComponent implements OnInit {
     //action update
     this.action='save'
     //recouperer le bon titre du bouton
-    this.translate.get('btn.enregistrer').subscribe((res: string) => {
+    this.translate.get('Enregistrer').subscribe((res: string) => {
       this.bouttonAction=res;
     });
     //cacher le boutton add
@@ -154,10 +156,6 @@ export class CollectionsFormComponent implements OnInit {
     return this.collectionService.consulter(id)
   }
 
-  async reload(url: string): Promise<boolean> {
-    await this.router.navigateByUrl('.', { skipLocationChange: true });
-    return this.router.navigateByUrl(url);
-  }
 
 //fonction pour valider
   onSubmit(f: NgForm) {
@@ -202,12 +200,14 @@ export class CollectionsFormComponent implements OnInit {
   }
 
   //fermer le modal une fois envoyer les données
-  onFermeModal(url:string) {
-    let that=this;
-    that.closebutton.nativeElement.click();
-    setTimeout(function(){
-      that.reload(url);
-    }, 1500);
+  onFermeModal(url: string) {
+    this.showAlert = true;
+    this.closebutton.nativeElement.click();
+    // Attendre la fermeture du modal avant de naviguer
+    setTimeout(() => {
+      this.showAlert = false;
+      this.router.navigateByUrl(url);
+    }, 2000);
   }
 
 }

@@ -127,14 +127,25 @@ export class HistoriqueDetailsComponent implements OnInit {
     this.router.navigate(['/panier/'+this.idPanier]);
   }
 
-  update(panier:any): void {
-    //cacher le bouton
+  update(panier: any): void {
     this.global.nonAfficher('save-boutton');
 
     this.panier$ = this.panierService
       .update(panier)
-      .pipe(tap(() => (this.afficherNotification('historique/'+this.idPanier))));
+      .pipe(
+        tap(() => {
+          console.log("Mise à jour réussie.");
+          // Afficher la notification puis naviguer
+          this.afficherNotification('/historique/' + this.idPanier);
+
+          // Utilisez directement navigate() après la mise à jour
+          this.router.navigate(['/historique/' + this.idPanier]).then(() => {
+            console.log("Redirection réussie après mise à jour.");
+          });
+        })
+      );
   }
+
 
   delete(id: number): void {
       this.panier$ = this.panierService
@@ -155,20 +166,26 @@ export class HistoriqueDetailsComponent implements OnInit {
 
   //reload la page
   async reload(url: string): Promise<boolean> {
-    await this.router.navigateByUrl('.', { skipLocationChange: true });
-    return this.router.navigateByUrl(url);
+    // Remplacer cette navigation intermédiaire par une seule navigation directe
+    return this.router.navigate([url]);
   }
 
   //afficher notification ensuite recharger la page
-  afficherNotification(url:string){
-    //afficher la notification
+  afficherNotification(url: string) {
+    // Afficher la notification
     this.global.afficher('alert-add');
-    let that=this;
-    setTimeout(function(){
+
+    let that = this;
+    setTimeout(function() {
       that.global.nonAfficher('alert-add');
-      that.reload(url);
-    }, 1000);
+
+      // Utiliser la navigation Angular plutôt que de recharger la page
+      that.router.navigate([url]).then(() => {
+        console.log(`Redirection réussie vers ${url} après notification.`);
+      });
+    }, 2000);
   }
+
 
   onSubmit(f: NgForm) {
     const champs: any = {
@@ -200,7 +217,10 @@ export class HistoriqueDetailsComponent implements OnInit {
     if (this.global.validationDonneesForm(donneesValider)) {
       this.onFermeModal();
       this.update(this.panier);
-      setTimeout(() => this.reload('/historique/' + this.idPanier), 1500);
+      // Changez la redirection ici, en supprimant le setTimeout et en utilisant directement `navigate`
+      this.router.navigate(['/historique/' + this.idPanier]).then(() => {
+        console.log("Redirection réussie après soumission du formulaire.");
+      });
     }
   }
 

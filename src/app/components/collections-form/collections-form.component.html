@@ -17,7 +17,7 @@
   <div class="col-12 grid-margin stretch-card">
     <div class="card">
       <!-- Alert notification div -->
-      <div class="alert alert-success alert-dismissible fade show cacherVisible" role="alert" id="alert-modif">
+      <div *ngIf="showAlert" class="alert alert-success" role="alert" id="alert-modif">
         {{ 'message.action-text' | translate}}
         <button type="button"  class="close" (click)="global.nonAfficher('alert-modif')" >
           <span aria-hidden="true">&times;</span>

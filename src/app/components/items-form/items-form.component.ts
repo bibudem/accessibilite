@@ -78,6 +78,8 @@ export class ItemsFormComponent implements OnInit {
 
   routeUrl = '';
 
+  showAlert = false;
+
   // Import des suivis
   suivi$: Observable<any> | undefined;
   tableauSuivi: any = [];
@@ -100,7 +102,7 @@ export class ItemsFormComponent implements OnInit {
     this.ifAdmin = true;
     this.routeUrl = window.location.origin;
     // Récupérer le bon titre du bouton
-    this.translate.get('btn.ajouter').subscribe((res: string) => {
+    this.translate.get('Ajouter').subscribe((res: string) => {
       this.bouttonAction = res;
     });
 
@@ -142,7 +144,7 @@ export class ItemsFormComponent implements OnInit {
     this.action = 'save';
 
     // Changer le texte pour le bouton
-    this.translate.get('btn.enregistrer').subscribe((res: string) => {
+    this.translate.get('Enregistrer').subscribe((res: string) => {
       this.bouttonAction = res;
     });
 
@@ -231,21 +233,21 @@ export class ItemsFormComponent implements OnInit {
       if (res !== undefined) {
         this.formData.delete("file");
         this.item.file = '';
-        this.reload('/items/' + this.idItem);
+        this.router.navigateByUrl('/items/' + this.idItem);
       }
     });
   }
 
   // Mise à jour de l'URL
   updateURL(id: number, ancienURL: string) {
-    let newUrl = this.global.generateRandomString(20);
+    let newUrl = this.global.generateRandomString(40);
     this.global.nonAfficher('img-collection');
     this.filesUpdate$ = this.itemService.updateUrl(id.toString(), ancienURL, newUrl);
 
     this.filesUpdate$.toPromise().then(res => {
       if (res !== undefined) {
         this.global.afficher('img-collection');
-        this.reload('/items/' + this.idItem);
+        this.router.navigateByUrl('/items/' + this.idItem);
       }
     });
   }
@@ -348,14 +350,15 @@ export class ItemsFormComponent implements OnInit {
   }
   // Fermer le modal une fois les données envoyées
   onFermeModal(url: string) {
+    this.showAlert = true;
     this.closebutton.nativeElement.click();
-    setTimeout(() => this.reload(url), 1500);
+    // Attendre la fermeture du modal avant de naviguer
+    setTimeout(() => {
+      this.showAlert = false; // Masquez l'alerte
+      this.router.navigateByUrl(url); // Naviguer vers la nouvelle URL
+    }, 2000);
   }
 
-  async reload(url: string): Promise<boolean> {
-    await this.router.navigateByUrl('.', { skipLocationChange: true });
-    return this.router.navigateByUrl(url);
-  }
 
   // Retourner à la page précédente
   backClicked() {

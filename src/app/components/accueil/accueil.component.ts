@@ -1,5 +1,4 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {HomeService} from "../../services/home.service";
 import {Observable} from "rxjs";
 import {TranslateService} from "@ngx-translate/core";
 import {ItemService} from "../../services/item.service";
@@ -38,16 +37,6 @@ export class AccueilComponent implements OnInit {
     //this.ifAdmin=this.global.ifAdminFunction();
   }
 
-
-//chercher la liste des fournisseurs
-  async creerTableauFournisseurs() {
-    try {
-
-    } catch(err) {
-      console.error(`Error : ${err.Message}`);
-    }
-  }
-
   rechercherMotCle(value:string){
     localStorage.setItem('textFiltre',value.toString());
     this.reload('/items');
@@ -77,7 +66,7 @@ export class AccueilComponent implements OnInit {
       });
     } catch(err) {
       console.error(`Error : ${err.Message}`);
-      //
+
     }
   }
 }

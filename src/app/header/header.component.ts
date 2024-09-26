@@ -1,10 +1,10 @@
-// header.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { MethodesGlobal } from '../lib/MethodesGlobal';
 import { PanierService } from '../services/panier.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -12,69 +12,71 @@ import { PanierService } from '../services/panier.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  nomAdmin: string = '';
-  prenomAdmin: string = '';
-  groupeAdmin: string = '';
-  flagChoix: string = 'flag-icon-fr';
-  ifAdmin: boolean = false;
+  nomAdmin = '';
+  prenomAdmin = '';
+  groupeAdmin = '';
+  flagChoix = 'flag-icon-fr';
+  ifAdmin = false;
   currentDate = new Date();
-  global: MethodesGlobal = new MethodesGlobal();
+  global = new MethodesGlobal();
 
   constructor(
     public authService: AuthService,
     private translate: TranslateService,
-    public router: Router,
+    private router: Router,
     public panierService: PanierService
   ) {}
 
   async ngOnInit() {
-    // Redirectioner un user pour le lien
-    if(localStorage.getItem('redirectUrl') && localStorage.getItem('redirectUrl').startsWith('/lien/')){
-      let redirectUrl = localStorage.getItem('redirectUrl');
-      // Effacer également le redirectUrl de la session
+    // Vérifier et gérer la redirection s'il y a un URL à rediriger
+    const storedRedirectUrl = localStorage.getItem('redirectUrl');
+    if (storedRedirectUrl?.startsWith('/lien/')) {
       localStorage.removeItem('redirectUrl');
-      window.location.href = redirectUrl ;
+      //window.location.href = storedRedirectUrl;
+      this.router.navigateByUrl(storedRedirectUrl)
+      return;
     }
-    const redirectUrl = this.router.url;
-    await this.loadAdminInfo(redirectUrl);
-    this.translate.setDefaultLang('fr');
-    this.flagChoix = 'flag-icon-fr';
-    this.ifAdmin = this.global.ifAdminFunction();
+
+    await this.loadAdminInfo(this.router.url); // Charger les infos admin
+    this.initUI(); // Initialiser les paramètres d'interface utilisateur
   }
 
-  async loadAdminInfo(redirectUrl: string) {
+  /** Initialisation des paramètres UI */
+  private initUI() {
+    this.translate.setDefaultLang('fr'); // Langue par défaut
+    this.flagChoix = 'flag-icon-fr'; // Sélectionner le drapeau français
+    this.ifAdmin = this.global.ifAdminFunction(); // Déterminer si l'utilisateur est administrateur
+  }
+
+  /** Charge les informations de l'administrateur depuis le LocalStorage ou effectue une connexion */
+  private async loadAdminInfo(redirectUrl: string) {
     if (!this.authService.roleUser) {
-      await this.login(redirectUrl);
+      await this.login(redirectUrl); // Effectuer la connexion si nécessaire
     }
     this.nomAdmin = localStorage.getItem('nom') || '';
     this.prenomAdmin = localStorage.getItem('prenom') || '';
     this.groupeAdmin = localStorage.getItem('roleUser') || '';
   }
 
-  switchLanguage(language: string) {
-    this.translate.use(language);
-    this.flagChoix = `flag-icon-${language}`;
-    if (language === 'en') {
-      this.flagChoix = 'flag-icon-us';
-    }
-  }
-
-  async login(redirectUrl: string) {
+  /** Effectue la connexion et charge les informations de l'administrateur */
+  private async login(redirectUrl: string) {
     try {
-      const loginSuccess: boolean = await this.authService.login(redirectUrl);
-
-      if (loginSuccess) {
-        await this.loadAdminInfo(redirectUrl);
-      } else {
-        await this.logout();
-      }
+      const loginSuccess = await (await this.authService.login(redirectUrl)).toPromise(); // Convertir Observable en Promise
+      loginSuccess ? this.loadAdminInfo(redirectUrl) : this.logout();
     } catch (error) {
       console.error('Erreur lors de la connexion', error);
-      await this.logout();
+      this.logout();
     }
   }
 
-  async logout() {
+  /** Déconnexion de l'utilisateur */
+  public async logout() {
     await this.authService.logout();
+  }
+
+  /** Changer la langue de l'application */
+  switchLanguage(language: string) {
+    this.translate.use(language);
+    this.flagChoix = language === 'en' ? 'flag-icon-us' : `flag-icon-${language}`;
   }
 }

@@ -18,21 +18,21 @@ import {UserAuthGuard} from "./services/user-auth.guard";
 import {ViewerGuard} from "./services/viewer-guard.service";
 
 const routes: Routes = [
-  { path: '', component: AccueilComponent, canActivate: [AuthGuard, ViewerGuard] },
-  { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, ViewerGuard] },
-  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: '', component: AccueilComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'items', component: ItemsListComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'items/:id', component: ItemsFormComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'items/add', component: ItemsFormComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'lien/:key', component: LinkRecuperationComponent, canActivate: [AuthGuard, UserAuthGuard] },
-  { path: 'collection', component: CollectionsListComponent, canActivate: [AuthGuard, ViewerGuard]},
+  { path: 'collection', component: CollectionsListComponent, canActivate: [AuthGuard, AdminGuard]},
   { path: 'collection/:id', component: CollectionsFormComponent, canActivate: [AuthGuard, AdminGuard]},
   { path: 'historique-list', component: HistoriqueListComponent, canActivate: [AuthGuard, ViewerGuard] },
   { path: 'historique/:id', component: HistoriqueDetailsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'add-panier', component: PanierFormComponent, canActivate: [AuthGuard, AdminGuard] },
-  { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard, ViewerGuard] },
+  { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard] },
   { path: 'not-user', component: NotUserComponent },
-  { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard, ViewerGuard] },
-  { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard, ViewerGuard] }
+  { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard] },
+  { path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

@@ -12,4 +12,5 @@ Thumbs.db
 /backend/scratch
 /backend/files
 yarn.lock
+src/assets/files/*
 

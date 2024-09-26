@@ -1,6 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'login',

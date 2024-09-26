@@ -1,4 +1,4 @@
-import {Component, OnInit, HostListener} from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { InactivityService } from './services/inactivity.service';
 
@@ -9,46 +9,45 @@ import { InactivityService } from './services/inactivity.service';
 })
 export class AppComponent implements OnInit {
   title = 'projet-accessibilite';
-  isUserLinkRoute: boolean = false;
-  flagChoix: string = 'flag-icon-fr';
-  ifAdmin: boolean = true;
+  isUserLinkRoute = false;
+  flagChoix = 'flag-icon-fr';
+  ifAdmin = true;
 
   constructor(
     public authService: AuthService,
     private inactivityService: InactivityService
   ) {
-    // Initialisation du timer d'inactivité
     this.inactivityService.initInactivityTimer();
   }
 
-  // Consolidation des événements utilisateur en une seule déclaration de HostListener
+  // Utilisation d'un seul HostListener avec un tableau d'événements pour la gestion de l'inactivité
   @HostListener('document:mousemove')
   @HostListener('document:keydown')
   @HostListener('document:click')
   @HostListener('document:scroll')
-  handleUserActivity() {
+  onUserActivity() {
     this.inactivityService.resetInactivityTimer();
   }
 
   ngOnInit() {
-    this.handleUserActivity();
-    // Étape 1: Stocker l'URL actuelle dans le service de redirection
-    const path = window.location.pathname;
-    this.authService.redirectUrl = path;
-    switch (path) {
-      case '/not-user':
-        this.ifAdmin = false;
-        break;
-      default:
-        if (this.isUserLinkRoute = path.startsWith('/lien/')) {
-          this.ifAdmin = false;
-        } else {
-          // Effacer également le redirectUrl de la session
-          localStorage.removeItem('redirectUrl');
-        }
-    }
-
+    this.trackRouteState();
   }
 
+  private trackRouteState() {
+    const path = window.location.pathname;
+    this.authService.redirectUrl = path;
+    // Configuration des conditions de route
+    const adminRoutes = ['/', '/admin', '/historique-list'];
+    const dynamicAdminRoutes = ['/items/', '/collection/'];
 
+    if (path === '/not-user') {
+      this.ifAdmin = false;
+    } else if (path.startsWith('/lien/')) {
+      this.isUserLinkRoute = true;
+      localStorage.setItem('redirectUrl', path);
+      this.ifAdmin = false;
+    } else if (adminRoutes.includes(path) || dynamicAdminRoutes.some(route => path.startsWith(route))) {
+      localStorage.removeItem('redirectUrl');
+    }
+  }
 }
