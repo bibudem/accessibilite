@@ -245,7 +245,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="icon-close btn-icon-prepend"></i> {{'btn.annuler'| translate}}</button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(item.idItem)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn.supprimer'| translate}}</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(item.idItem,item.file,item.URL)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn.supprimer'| translate}}</button>
                 </div>
               </div>
             </div>
@@ -257,3 +257,8 @@
   </div>
 </div>
 <div class="noVisible" *ngFor="let item of items$ | async"></div>
+<div class="spinner-overlay" *ngIf="isLoading">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">...</span>
+  </div>
+</div>

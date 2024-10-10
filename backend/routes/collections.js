@@ -4,12 +4,6 @@ const collectionsController = require('../controllers/collections');
 
 const router = express.Router();
 
-let formidable = require('formidable');
-
-let fs = require('fs');
-
-let cors = require('cors')
-
 router.post('/add', collectionsController.post);
 
 router.put('/save', collectionsController.put);

@@ -62,7 +62,7 @@ export class ItemService {
   }
 
   update(item: Item): Observable<any> {
-    //console.log(item);
+    console.log(item);
     return this.http
       .put<Item>(this.url+'/save', item, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<any>("update")));

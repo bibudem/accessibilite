@@ -84,6 +84,8 @@ export class ItemsFormComponent implements OnInit {
   suivi$: Observable<any> | undefined;
   tableauSuivi: any = [];
 
+  isLoading=false;
+
   @ViewChild('closebutton') closebutton: any;
 
   @ViewChild('f_input') myInputVariable: ElementRef | undefined;
@@ -204,7 +206,7 @@ export class ItemsFormComponent implements OnInit {
 
     if (this.file_store !== undefined) {
       for (let i = 0; i < this.file_store.length; i++) {
-        nameFile += this.file_store[i].name;
+        nameFile += this.global.cleanFileName(this.file_store[i].name);
         this.formData.append("file", this.file_store[i], nameFile);
         this.formData.append("nameFolder", nameFolder);
         this.file_list.push(this.file_store[i].name);
@@ -221,7 +223,7 @@ export class ItemsFormComponent implements OnInit {
       this.myInputVariable.nativeElement.value = '';
     if (document.getElementById('label-name-file') !== null) {
       // @ts-ignore
-       document.getElementById('label-name-file').value = '';
+      document.getElementById('label-name-file').value = '';
     }
   }
 
@@ -233,9 +235,9 @@ export class ItemsFormComponent implements OnInit {
       if (res !== undefined) {
         this.formData.delete("file");
         this.item.file = '';
-        this.router.navigateByUrl('/items/' + this.idItem);
       }
     });
+    this.onFermeModal();
   }
 
   // Mise à jour de l'URL
@@ -253,26 +255,63 @@ export class ItemsFormComponent implements OnInit {
   }
 
   // Fonction pour ajouter un item
-  post(item: Item): void {
+  async post(item: Item) {
     if (this.formData.has("file")) {
-      this.itemService.upload(this.formData);
+      const file = this.formData.get("file") as File;
+      if (file && file.size > 300 * 1024 * 1024) { // 300 Mo en octets
+        this.isLoading = true;
+        await this.itemService.upload(this.formData);
+        this.closebutton.nativeElement.click();
+        await this.delay(10000); // Pause de 10 secondes
+        this.isLoading = false;
+      }else {
+        await this.itemService.upload(this.formData);
+      }
     }
-
     this.items$ = this.itemService.post(item);
+    this.onFermeModal();
+
   }
 
   // Mise à jour du formulaire
   async update(item: Item) {
     if (this.formData.has("file")) {
-      await this.itemService.upload(this.formData);
+      const file = this.formData.get("file") as File;
+      if (file && file.size > 300 * 1024 * 1024) { // 300 Mo en octets
+        this.isLoading = true;
+        await this.itemService.upload(this.formData);
+        this.closebutton.nativeElement.click();
+        await this.delay(10000); // Pause de 10 secondes
+        this.isLoading = false;
+      } else {
+        await this.itemService.upload(this.formData);
+      }
     }
-
     this.items$ = this.itemService.update(item);
+    this.onFermeModal();
+  }
+
+  // Fonction utilitaire pour ajouter un délai (pause)
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   // Supprimer un enregistrement
-  delete(id: number): void {
-    this.items$ = this.itemService.delete(id).pipe(tap(() => (this.onFermeModal('items'))));
+  delete(id: number, fileName:string, folder:string ): void {
+    this.filesUpdate$ = this.itemService.deleteFile(fileName, folder);
+
+    this.filesUpdate$.toPromise().then(res => {
+      if (res !== undefined) {
+        this.formData.delete("file");
+        this.item.file = '';
+      }
+    });
+
+    this.items$ = this.itemService.delete(id).pipe(tap(() => {
+      localStorage.removeItem('textFiltre');
+      this.router.navigateByUrl('/items');
+    }));
+
   }
 
   // Fonction pour valider le formulaire
@@ -314,13 +353,11 @@ export class ItemsFormComponent implements OnInit {
     switch (action) {
       case 'save':
         if (this.global.validationDonneesForm(donneesValider)) {
-          this.onFermeModal('/items/' + this.idItem);
           this.update(this.item);
         }
         break;
       case 'add':
         if (this.global.validationDonneesForm(donneesValider)) {
-          this.onFermeModal('/items');
           this.post(this.item);
         }
         break;
@@ -349,14 +386,15 @@ export class ItemsFormComponent implements OnInit {
     }
   }
   // Fermer le modal une fois les données envoyées
-  onFermeModal(url: string) {
+  onFermeModal() {
     this.showAlert = true;
     this.closebutton.nativeElement.click();
     // Attendre la fermeture du modal avant de naviguer
     setTimeout(() => {
       this.showAlert = false; // Masquez l'alerte
-      this.router.navigateByUrl(url); // Naviguer vers la nouvelle URL
-    }, 2000);
+      this.reloadPage();
+    }, 3000);
+
   }
 
 
@@ -368,5 +406,17 @@ export class ItemsFormComponent implements OnInit {
   // Utilisez le service pour effectuer des opérations sur le panier
   addToPanier(item: any) {
     this.panierService.addToPanier(item);
+  }
+
+  reloadPage() {
+    const currentPath = this.router.url;
+    if (currentPath === '/items/add') {
+      localStorage.setItem('textFiltre',this.item.titre);
+      this.router.navigateByUrl('/items');
+    } else {
+      // Pour d'autres chemins, re-naviguer vers la même route
+      window.location.reload();
+    }
+
   }
 }

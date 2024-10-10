@@ -3,7 +3,6 @@
  * See LICENSE in the project root for license information.
  */
 
-const request = require('superagent');
 
 /**
  * Generates a GET request the user endpoint.

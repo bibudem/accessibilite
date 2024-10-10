@@ -37,7 +37,7 @@ export class HistoriqueDetailsComponent implements OnInit {
   //definir le text pour les boutons
   bouttonAction='';
 
-  titreItem=localStorage.getItem('titreItem');
+  sujetItem='';
   courrielAdmin='';
 
   //importer les liste des choix
@@ -112,6 +112,7 @@ export class HistoriqueDetailsComponent implements OnInit {
             this.placeholderDateAc = res[0].dateActivation;
             this.placeholderDateEx = res[0].dateExpiration;
             this.dataSource = new MatTableDataSource(this.listePanierDetails);
+            this.sujetItem = this.panier.sujet;
         });
       }
     } catch(err) {

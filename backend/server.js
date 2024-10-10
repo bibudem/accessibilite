@@ -7,6 +7,7 @@ const parseurl = require('parseurl');
 const app = express();
 const ports = process.env.PORT || config.serverPort;
 
+
 const bs = require('browser-storage');
 const Lib = require("./util/lib");
 const request = require("request");
@@ -26,7 +27,10 @@ const itemsRoutes = require('./routes/items');
 const homeRoutes= require('./routes/home');
 const homeLink= require('./routes/link');
 
-app.use(bodyParser.json());
+// Configuration des limites de requêtes pour gros fichiers
+app.use(bodyParser.json({ limit: '1gb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '1gb' }));
+
 
 // Middleware pour les en-têtes
 app.use((req, res, next) => {

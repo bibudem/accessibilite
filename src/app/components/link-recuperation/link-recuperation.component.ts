@@ -132,18 +132,24 @@ export class LinkRecuperationComponent implements OnInit {
 
   // Méthode pour télécharger un fichier
   download(file: string, urlFile: string): void {
-    const url =
-      window.location.origin +
-      '/assets/files/items/' +
-      urlFile +
-      '/' +
-      file;
-    this.linkService.download(url, this.key).subscribe(blob => {
-      // Ouvrir le fichier dans une nouvelle fenêtre
-      const objectUrl = URL.createObjectURL(blob);
-      window.open(objectUrl, '_blank');
-      URL.revokeObjectURL(objectUrl);
-    });
+    const url = `${window.location.origin}/assets/files/items/${urlFile}/${file}`;
+    this.linkService.download(url, this.key).subscribe((blob: Blob) => {
+        // Create a URL for the blob object
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = file;
+        document.body.appendChild(a);
+        a.click();
+
+        // Revoke the object URL after download is complete
+        URL.revokeObjectURL(objectUrl);
+        a.remove();
+      },
+      error => {
+        console.error('Error during file download:', error);
+      }
+    );
   }
 
   // Méthode pour changer la langue

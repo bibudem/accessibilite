@@ -13,6 +13,25 @@ export class MethodesGlobal  {
   convertNumber(value: string) {
     return parseInt(value);
   }
+
+  // Fonction pour nettoyer le nom du fichier
+  cleanFileName(fileName: string): string {
+    // Supprimer les accents
+    const accents = 'ÀÁÂÃÄÅàáâãäåÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÙÚÛÜùúûü';
+    const accentsOut = 'AAAAAAaaaaaaEEEEeeeeIIIIiiiiOOOOOOooooooUUUUuuuu';
+
+    const normalizedFileName = fileName
+      .split('')
+      .map((char) => {
+        const index = accents.indexOf(char);
+        return index !== -1 ? accentsOut[index] : char;
+      })
+      .join('');
+
+    // Remplacer les espaces par des underscores
+    return normalizedFileName.replace(/\s+/g, '_');
+  }
+
 //prendre la valeur d'un input
   getValue(value:string){
     return value;

@@ -1,7 +1,6 @@
 const db = require('../util/database');
 let SqlString = require('sqlstring'); //global declare
 let datetime = require('node-datetime');
-let formidable = require('formidable');
 let fs = require('fs');
 
 module.exports = class Items {

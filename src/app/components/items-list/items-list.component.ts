@@ -125,7 +125,7 @@ export class ItemsListComponent implements OnInit {
   historiqueRechercheZone(){
     let result=''
     // @ts-ignore
-    let textFiltre=document.getElementById('textFiltre').value
+    let textFiltre=document.getElementById('textFiltre').value;
     if(textFiltre!='')
       localStorage.setItem('textFiltre',textFiltre)
 
