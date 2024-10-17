@@ -13,50 +13,50 @@
         </div>
       </div>
     </div>
-    <div   class="card  mt-2" *ngIf="listeItems!=0">
-      <h1 class="mt-5 f-32 mb-3 ml-5">COLLECTIONS SPÉCIALES </h1>
-      <div class="card-body p-5 " >
-        <h4 class="mb-2 text-bib-warning">{{'fichier.files-titre-recuperation'| translate}}</h4>
+
+    <div class="container mt-5" *ngIf="listeItems.length != 0">
+      <h1 class="text-center text-md-left f-32">COLLECTIONS SPÉCIALES</h1>
+        <h4 class="mb-4 text-center text-bib-warning">{{'fichier.files-titre-recuperation'| translate}}</h4>
         <div class="table-responsive">
-          <table class="table mt-5">
+          <table class="table table-striped mt-5">
             <thead>
             <tr>
-              <th class="w-50 ">{{'titre'| translate}}</th>
-              <th class="w-20 ">{{'auteur'| translate}}</th>
-              <th >{{'dateExpiration'| translate}}</th>
-              <th >{{'statut'| translate}}</th>
-              <th >{{'btn.actions'| translate}}</th>
+              <th class="w-50">{{'titre' | translate}}</th>
+              <th class="w-20">{{'auteur' | translate}}</th>
+              <th>{{'dateExpiration' | translate}}</th>
+              <th>{{'statut' | translate}}</th>
+              <th>{{'btn.actions' | translate}}</th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let item of listeItems">
-                <td>{{ item.titre }}</td>
-                <td>{{ item.auteur }}</td>
-                <td>{{ item.dateExpiration }}</td>
-                <td>
-                  <label *ngIf="item.statut === 'Inactif'; else actifStatus" class="badge badge-danger p-2">
-                    {{ item.statut }}
-                  </label>
-                  <ng-template #actifStatus>
-                    <label class="badge badge-success p-2">{{ item.statut }}</label>
-                  </ng-template>
-                </td>
-                <td *ngIf="validerLesInfosItem(item.dateExpiration)">
-                  <button class="btn btn-sm" (click)="download(item.file, item.URL)">
-                    {{ 'fichier.file-telecharger' | translate }}
-                  </button>
-                </td>
+              <td>{{ item.titre }}</td>
+              <td>{{ item.auteur }}</td>
+              <td>{{ item.dateExpiration }}</td>
+              <td>
+                <ng-container *ngIf="item.statut === 'Inactif'; else actifStatus">
+                  <label class="badge badge-danger p-2">{{ item.statut }}</label>
+                </ng-container>
+                <ng-template #actifStatus>
+                  <label class="badge badge-success p-2">{{ item.statut }}</label>
+                </ng-template>
+              </td>
+              <td *ngIf="validerLesInfosItem(item.dateExpiration)">
+                <button class="btn btn-sm btn-outline-primary" (click)="download(item.file, item.URL)">
+                  {{ 'fichier.file-telecharger' | translate }}
+                </button>
+              </td>
             </tr>
             </tbody>
           </table>
-        </div>
       </div>
     </div>
-    <div  class="alert alert-warning mt-3 cacherVisible"  id="alertNotUser"  role="alert">
+
+    <div class="alert alert-warning mt-3 d-none" id="alertNotUser" role="alert">
       <h1 class="mt-5 f-32 mb-3 ml-3">COLLECTIONS SPÉCIALES</h1>
-      <h2>{{'fichier.files-titre-recuperation'| translate}}</h2>
-      <p>{{'fichier.explication'| translate}}</p>
-      <p>{{'fichier.explication-details'| translate}}</p>
+      <h2>{{ 'fichier.files-titre-recuperation' | translate }}</h2>
+      <p>{{ 'fichier.explication' | translate }}</p>
+      <p>{{ 'fichier.explication-details' | translate }}</p>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
-
+/* Style général */
 .img-logo {
-  width: 40%!important;
+  width: 30% !important;
 }
 .card {
   min-height: 500px;
@@ -8,7 +8,6 @@
 .card h3 {
   font-size: 22px;
   font-weight: 600;
-
 }
 
 .drop_box {
@@ -21,7 +20,7 @@
   border: 3px dotted #abc4a4;
   border-radius: 5px;
 }
-.drop_box_alert{
+.drop_box_alert {
   margin: 10px 0;
   padding: 20px;
   display: flex;
@@ -36,7 +35,6 @@
   font-weight: 400;
   color: #2e2e2e;
 }
-
 .drop_box p {
   margin-top: 10px;
   margin-bottom: 20px;
@@ -53,14 +51,14 @@
   outline: none;
   transition: 0.3s;
 }
-
-.btn:hover{
+.btn:hover {
   text-decoration: none;
   background-color: #ffffff;
   color: #005af0;
   border: none;
   outline: 1px solid #005af0;
 }
+
 .form input {
   margin: 10px 0;
   width: 100%;
@@ -70,10 +68,11 @@
   padding: 12px 20px;
   border-radius: 4px;
 }
-.f-32{
+
+.f-32 {
   font-size: 32px;
 }
-.bib-user-header{
+.bib-user-header {
   border-bottom: #123d85 4px solid;
   background: #21252908;
   padding: 20px;
@@ -81,4 +80,82 @@
 
 .text-bib-warning {
   color: #f55f14;
+}
+
+/* Media Queries pour petits écrans */
+@media only screen and (max-width: 768px) {
+  /* Ajustements pour les tablettes et petits écrans */
+  .img-logo {
+    width: 40% !important;
+  }
+
+  .card {
+    min-height: auto;
+    margin: 0 15px;
+  }
+
+  .drop_box, .drop_box_alert {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .btn {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .form input {
+    padding: 10px 15px;
+  }
+
+  .f-32 {
+    font-size: 24px; /* Taille de police réduite */
+  }
+
+  .bib-user-header {
+    padding: 10px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  /* Ajustements pour les téléphones */
+  .img-logo {
+    width: 50% !important;
+  }
+
+  .row {
+    margin: 0 !important;
+  }
+
+  .card h3 {
+    font-size: 18px;
+  }
+
+  .f-32 {
+    font-size: 20px;
+  }
+
+  .drop_box, .drop_box_alert {
+    padding: 15px;
+    margin: 5px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .form input {
+    padding: 8px 10px;
+    margin: 5px 0;
+  }
+
+  .bib-user-header {
+    padding: 8px;
+    text-align: center;
+  }
+
+  .text-right {
+    text-align: center !important;
+  }
 }

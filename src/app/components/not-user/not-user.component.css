@@ -75,3 +75,60 @@ h5 {
 .footer {
   visibility: hidden!important;
 }
+/* Media Queries for small screens */
+@media only screen and (max-width: 768px) {
+  /* Ajustements pour tablettes */
+  .title h1 {
+    font-size: 28px; /* Réduire la taille du titre */
+    letter-spacing: 4px; /* Réduire l'espacement */
+  }
+
+  .title h3 {
+    font-size: 12px; /* Réduire la taille du sous-titre */
+    letter-spacing: 4px;
+  }
+
+  .parallax2 h2 {
+    font-size: 2.2em; /* Réduire la taille du texte dans l'image */
+    padding-top: 8%;
+  }
+
+  .paragraph p {
+    width: 80%; /* Augmenter la largeur du paragraphe */
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  /* Ajustements pour téléphones */
+  .top {
+    padding: 1em; /* Réduire les marges */
+  }
+
+  .title h1 {
+    font-size: 24px; /* Taille encore plus réduite */
+    letter-spacing: 2px; /* Moins d'espacement */
+  }
+
+  .title h3 {
+    font-size: 10px; /* Plus petit encore pour les sous-titres */
+    letter-spacing: 2px;
+  }
+
+  .parallax2 {
+    min-height: 25vh; /* Réduire la hauteur de l'image */
+  }
+
+  .parallax2 h2 {
+    font-size: 1.8em; /* Taille du texte plus petite */
+    padding-top: 20%;
+  }
+
+  .paragraph p {
+    width: 90%; /* Paragraphe sur presque toute la largeur de l'écran */
+    font-size: 0.95em; /* Taille de police plus petite */
+  }
+
+  h5 {
+    font-size: 16px; /* Réduire la taille du h5 */
+  }
+}
