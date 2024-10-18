@@ -60,7 +60,7 @@ router.put('/uploud', upload.single('file'), async (req, res) => {
     }
     //console.log(file);
     const folderName = req.body.nameFolder;
-    const folderItem = path.join('/apps/accessibilite/prod/src/assets/files/items/', folderName);
+    const folderItem = path.join('/apps/accessibilite/prod/backend/files/items/', folderName);
     const newPath = path.join(folderItem, file.originalname);
 
     // Créer le répertoire cible s'il n'existe pas déjà
@@ -83,7 +83,7 @@ router.put('/uploud', upload.single('file'), async (req, res) => {
 
 // Fonction optionnelle pour nettoyer le dossier temporaire (si nécessaire)
 async function cleanTemporaryDirectory() {
-  const tempDir = '/apps/accessibilite/temp';
+  const tempDir = '/apps/accessibilite/prod/backend/temp';
 
   try {
     const files = await fs.promises.readdir(tempDir);
@@ -104,7 +104,7 @@ module.exports = router;
   let nameFile=name.split('&')[0];
   let folder=name.split('&')[1];
   //const path = './../src/assets/files/items/'+folder;
-  const path = '/apps/accessibilite/prod/src/assets/files/items/'+folder;
+  const path = '/apps/accessibilite/prod/backend/files/items/'+folder;
   try {
     fs.readdir(path, (err, files) => {
       let deleteFile=0;
@@ -134,7 +134,7 @@ router.get('/file/:name', function (req, res) {
   let name=req.params.name;
   let nameFile=name.split('&')[0];
   let folder=name.split('&')[1];
-  const path = '/apps/accessibilite/prod/src/assets/files/items/'+folder;
+  const path = '/apps/accessibilite/prod/backend/files/items/'+folder;
 
   try {
     fs.readdir(path, (err, files) => {
@@ -154,6 +154,7 @@ router.get('/file/:name', function (req, res) {
     console.error(err)
   }
 });
+
 
 
 module.exports = router;

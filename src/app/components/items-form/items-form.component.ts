@@ -10,6 +10,8 @@ import { ItemService } from 'src/app/services/item.service';
 import { Location } from '@angular/common';
 import {PanierService} from "../../services/panier.service";
 import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
+import {LinkService} from "../../services/link.service";
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-items-form',
@@ -97,6 +99,8 @@ export class ItemsFormComponent implements OnInit {
     private _location: Location,
     private itemService: ItemService,
     private panierService: PanierService,
+    private linkService: LinkService,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -174,11 +178,35 @@ export class ItemsFormComponent implements OnInit {
       });
 
       this.ancienImage = this.item.file;
-
+      let param=this.item.file+'&'+this.item.URL;
       // URL du fichier
-      this.currentURL = this.routeUrl+'/assets/files/items/' + this.item.URL;
+      this.currentURL = this.routeUrl+'/api/items/file/' + param;
+
     });
   }
+
+  downloadAndOpen(file: string, urlFile: string): void {
+    let param=file+'&'+urlFile;
+    const url = `${window.location.origin}/api/items/file/${param}`;
+    this.linkService.downloadAndOpen(url, this.idItem.toString()).subscribe((blob: Blob) => {
+        // Create a URL for the blob object
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = file;
+        document.body.appendChild(a);
+        a.click();
+
+        // Revoke the object URL after download is complete
+        URL.revokeObjectURL(objectUrl);
+        a.remove();
+      },
+      error => {
+        console.error('Error during file download:', error);
+      }
+    );
+  }
+
 
   // Consulter une fiche
   consulter(id: number) {

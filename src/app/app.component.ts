@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
     this.authService.redirectUrl = path;
     // Configuration des conditions de route
     const adminRoutes = ['/', '/admin', '/historique-list'];
-    const dynamicAdminRoutes = ['/items/', '/collection/'];
+    const dynamicAdminRoutes = ['/items/','/items', '/collection/'];
 
     if (path === '/not-user') {
       this.ifAdmin = false;

@@ -56,4 +56,15 @@ export class LinkService {
     );
   }
 
+  downloadAndOpen(url: string, id: string): Observable<Blob> {
+    return this.http.get(url, {
+      responseType: 'blob'
+    }).pipe(
+      tap(() => {
+        // Effectuer la redirection vers '/merci' après la requête HTTP
+        this.router.navigate(['/items/'+id]);
+      })
+    );
+  }
+
 }

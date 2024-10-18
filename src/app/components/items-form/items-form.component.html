@@ -152,8 +152,8 @@
                   <div class="form-group">
                     <div class="input-group">
                     <span class="input-group-addon hidden-xs linkname">
-                      <a *ngIf="isFile" href="/assets/files/items/{{item.URL}}/{{item.file}}" class="" target="_blank">
-                        <span> {{ 'voir-fichier' | translate}}</span>
+                      <a *ngIf="isFile" (click)="downloadAndOpen(item.file, item.URL)" class="" href="javascript:void(0)">
+                         <span> {{ 'voir-fichier' | translate }}</span>
                       </a>
                     </span>
                       <!--<span id="copyButton" class="input-group-addon btn" title="{{ 'click-modif' | translate}}" (click)="global.copyInputValue(fichierURL)">
@@ -248,6 +248,7 @@
                   <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(item.idItem,item.file,item.URL)"><i class="fa fa-trash btn-icon-prepend"></i> {{'btn.supprimer'| translate}}</button>
                 </div>
               </div>
+
             </div>
           </div>
           <!-- fin modal-->

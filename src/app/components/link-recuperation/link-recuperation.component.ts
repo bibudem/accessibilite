@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MethodesGlobal } from '../../lib/MethodesGlobal';
+import {ItemService} from "../../services/item.service";
 
 @Component({
   selector: 'app-link-recuperation',
@@ -36,7 +37,7 @@ export class LinkRecuperationComponent implements OnInit {
     private _location: Location,
     private translate: TranslateService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   // Méthode d'initialisation du composant
@@ -132,7 +133,8 @@ export class LinkRecuperationComponent implements OnInit {
 
   // Méthode pour télécharger un fichier
   download(file: string, urlFile: string): void {
-    const url = `${window.location.origin}/assets/files/items/${urlFile}/${file}`;
+    let param=file+'&'+urlFile;
+    const url = `${window.location.origin}/api/items/file/${param}`;
     this.linkService.download(url, this.key).subscribe((blob: Blob) => {
         // Create a URL for the blob object
         const objectUrl = URL.createObjectURL(blob);
@@ -151,6 +153,7 @@ export class LinkRecuperationComponent implements OnInit {
       }
     );
   }
+
 
   // Méthode pour changer la langue
   switchLanguage(language: string): void {
