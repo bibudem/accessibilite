@@ -117,8 +117,8 @@
           <div class="mb-5">
             <mat-tab-group animationDuration="2000ms">
             <mat-tab label="{{ 'file-item' | translate}}">
-              <div class="form-group" *ngIf="!isFile">
-                <mat-card-content>
+              <div class="form-group" *ngIf="(!isFile)">
+              <mat-card-content>
                   <br><br>
                   <mat-form-field style="width: 100%;">
                     <mat-label>{{ 'file-uploud' | translate}}</mat-label>
@@ -147,7 +147,14 @@
                   <br><br>
                 </mat-card-content>
               </div>
-              <mat-card *ngIf="isFile" id="img-collection" class="mt-5 mb-5">
+              <div *ngIf="(isFile) && isFileLoading"  class="loading-container" >
+                <div class="dots">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+              </div>
+              <mat-card *ngIf="(isFile) && (!isFileLoading)" id="img-collection" class="mt-5 mb-5">
                 <mat-card-content>
                   <div class="form-group">
                     <div class="input-group">
@@ -167,7 +174,14 @@
                  </mat-card-content>
                    <!--<button mat-button color="primary" (click)="updateURL(item.idItem,item.URL)" type="button"><mat-icon>cached</mat-icon> {{ 'mise-a-jour-url' | translate}}</button>-->
 
+
               </mat-card>
+              <div *ngIf="isLoading">
+                <p>Téléchargement en cours : {{ uploadProgress }}%</p>
+                <div class="progress-bar">
+                  <div class="progress" [style.width.%]="uploadProgress"></div>
+                </div>
+              </div>
               <input type="hidden" id="URL" name="URL" #URL="ngModel"  [(ngModel)]="item.URL" class="form-control"  >
               <input  class="form-control mb-3" #image="ngModel" name="file" id="file" type="hidden" [(ngModel)]="item.file">
             </mat-tab>
@@ -258,8 +272,3 @@
   </div>
 </div>
 <div class="noVisible" *ngFor="let item of items$ | async"></div>
-<div class="spinner-overlay" *ngIf="isLoading">
-  <div class="spinner-border text-primary" role="status">
-    <span class="visually-hidden">...</span>
-  </div>
-</div>

@@ -99,59 +99,122 @@ module.exports = router;
 
 
 
-  router.get('/deleteFile/:name', function (req, res) {
-  let name=req.params.name;
-  let nameFile=name.split('&')[0];
-  let folder=name.split('&')[1];
-  //const path = './../src/assets/files/items/'+folder;
-  const path = '/apps/accessibilite/prod/backend/files/items/'+folder;
+router.get('/deleteFile/:name', function (req, res) {
+  let name = req.params.name;
+  let nameFile = name.split('&')[0];
+  let folder = name.split('&')[1];
+  const path = '/apps/accessibilite/prod/backend/files/items/' + folder;
+
   try {
     fs.readdir(path, (err, files) => {
-      let deleteFile=0;
+      if (err) {
+        console.error('Error reading directory:', err);
+        return res.status(500).json([0]); // Retourne une réponse avec le statut d'erreur
+      }
+
+      let deleteFile = 0;
+
       files.forEach(file => {
-        if(file==nameFile){
-          fs.unlink(path +'/'+ nameFile, (err) => {
+        if (file === nameFile) {
+          fs.unlink(path + '/' + nameFile, (err) => {
             if (err) {
-              console.log(err);
-              deleteFile=0;
+              console.error('Error deleting file:', err);
+              deleteFile = 0;
+            } else {
+              deleteFile = 1;
             }
-            deleteFile=1;
           });
         }
       });
-      //delete folder
+
+      // Supprimer le dossier
       fs.rmSync(path, { recursive: true, force: true });
+
+      // Envoyer la réponse après la boucle
       res.status(200).json([deleteFile]);
     });
-
-  } catch(err) {
-    res.status(200).json([0]);
-    console.error(err)
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    res.status(500).json([0]);
   }
 });
 
+
 router.get('/file/:name', function (req, res) {
-  let name=req.params.name;
-  let nameFile=name.split('&')[0];
-  let folder=name.split('&')[1];
-  const path = '/apps/accessibilite/prod/backend/files/items/'+folder;
+  const name = req.params.name;
+  const nameFile = name.split('&')[0];
+  const folder = name.split('&')[1];
+  const folderPath = '/apps/accessibilite/prod/backend/files/items/' + folder;
+  const filePath = path.join(folderPath, nameFile);
 
   try {
-    fs.readdir(path, (err, files) => {
-      let fileExist=0;
-      if(files){
+    fs.readdir(folderPath, (err, files) => {
+      let fileExist = 0;
+      if (files) {
         files.forEach(file => {
-          //console.log(file);
-          if(file==nameFile){
-            fileExist=1;
+          if (file === nameFile) {
+            fileExist = 1;
           }
         });
       }
-      res.status(200).json([fileExist]);
+
+      if (fileExist) {
+        // Vérification de l'existence du fichier
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+          if (err) {
+            return res.status(404).json({ error: 'File not found' });
+          }
+
+          // Déduire l'extension du fichier et définir le type MIME
+          const extname = path.extname(filePath).toLowerCase();
+          let mimeType = 'application/octet-stream'; // Valeur par défaut
+
+          // Assigner un type MIME basé sur l'extension
+          if (extname === '.pdf') {
+            mimeType = 'application/pdf';
+          } else if (extname === '.doc' || extname === '.docx') {
+            mimeType = 'application/msword'; // Pour .doc et .docx
+          } else if (extname === '.txt') {
+            mimeType = 'text/plain';
+          } else if (extname === '.jpg' || extname === '.jpeg') {
+            mimeType = 'image/jpeg';
+          } else if (extname === '.gif') {
+            mimeType = 'image/gif';
+          } else if (extname === '.png') {
+            mimeType = 'image/png';
+          } else if (extname === '.svg') {
+            mimeType = 'image/svg+xml';
+          } else if (extname === '.xls' || extname === '.xlsx') {
+            mimeType = 'application/vnd.ms-excel'; // Pour .xls et .xlsx
+          } else if (extname === '.csv') {
+            mimeType = 'text/csv';
+          } else if (extname === '.pptx' || extname === '.ppt') {
+            mimeType = 'application/vnd.ms-powerpoint'; // Pour .pptx et .ppt
+          } else if (extname === '.rtf') {
+            mimeType = 'application/rtf';
+          } else if (extname === '.mp3') {
+            mimeType = 'audio/mpeg';
+          } else if (extname === '.wav') {
+            mimeType = 'audio/wav';
+          } else if (extname === '.ogg') {
+            mimeType = 'audio/ogg';
+          } else if (extname === '.zip') {
+            mimeType = 'application/zip';
+          }
+
+          // Définir l'en-tête de type MIME
+          res.setHeader('Content-Type', mimeType);
+
+          // Envoyer le fichier
+          res.sendFile(filePath);
+        });
+      } else {
+        res.status(404).json({ error: 'File not found in directory' });
+      }
     });
-  } catch(err) {
-    res.status(200).json([0]);
-    console.error(err)
+  } catch (err) {
+    res.status(500).json({ error: 'Error reading directory' });
+    console.error(err);
   }
 });
 

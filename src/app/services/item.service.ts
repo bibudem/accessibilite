@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpProgressEvent} from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { Observable } from "rxjs";
-import { catchError, tap } from "rxjs/operators";
+import {filter, Observable} from "rxjs";
+import {catchError, map, tap} from "rxjs/operators";
 import { Item } from "../models/Item";
 
 import { ErrorHandlerService } from "./error-handler.service";
@@ -90,14 +90,18 @@ export class ItemService {
       .get<any[]>(url, this.httpOptions)
       .pipe(catchError(this.errorHandlerService.handleError<any>("delete")));
   }
+
   //veriffier si file existe
-  getFile(name:string,folder:string): Observable<any> {
+  getFile(name:string,folder:string): Observable<Blob>  {
     let param=name+'&'+folder;
     console.log(this.url+`/file/${param}`);
     return this.http
-      .get<any[]>(this.url+`/file/${param}`, { responseType: "json" })
+      .get(`${this.url}/file/${param}`, {
+        responseType: 'blob' // Utilisation correcte pour recevoir un fichier binaire
+      })
       .pipe(catchError(this.errorHandlerService.handleError<any>("verifier si file existe")));
   }
+
   //mise a jour d'url
   updateUrl(id:string,ancienURL:string,newUrl:string): Observable<any> {
     let rep=id+'&'+ancienURL+'&'+newUrl;
@@ -115,4 +119,23 @@ export class ItemService {
       .pipe(catchError(this.errorHandlerService.handleError<any>("liste suivi")));
 
   }
+
+  uploadWithProgress(formData: FormData) {
+    return this.http.put( this.url+`/uploud`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(
+      // Filtrer uniquement les événements de type HttpProgressEvent
+      filter(event => event.type === HttpEventType.UploadProgress),
+      map((event: HttpProgressEvent) => {
+        if (event.total) {
+          // Calcul de la progression en pourcentage
+          return Math.round((100 * event.loaded) / event.total);
+        }
+        return 0;  // Retourner 0 si aucun total n'est disponible
+      })
+    );
+  }
+
+
 }

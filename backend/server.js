@@ -4,6 +4,7 @@ const session = require('express-session');
 const config = require('./config/config');
 const parseurl = require('parseurl');
 
+
 const app = express();
 const ports = process.env.PORT || config.serverPort;
 
@@ -94,6 +95,7 @@ app.get('/', function(req, res) {
     res.redirect('/not-user')
   }
 });
+
 
 app.use('/auth', userUdemRoutes);
 

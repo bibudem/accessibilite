@@ -48,11 +48,11 @@ export class ItemsFormComponent implements OnInit {
 
   formData = new FormData();
 
-  isFile$: Observable<any[]> | undefined;
+  isFile$: Observable<Blob>;
 
   display: FormControl = new FormControl("", Validators.required);
 
-  isFile = false;
+  isFile = true;
 
   file_list: Array<string> = [];
 
@@ -87,6 +87,11 @@ export class ItemsFormComponent implements OnInit {
   tableauSuivi: any = [];
 
   isLoading=false;
+
+  isFileLoading=false;
+
+  // Ajoutez cette propriété pour suivre l'avancement
+  uploadProgress: number | null = null;
 
   @ViewChild('closebutton') closebutton: any;
 
@@ -166,14 +171,15 @@ export class ItemsFormComponent implements OnInit {
       this.item = res[0];
       localStorage.setItem('titreItem', this.item.titre);
 
-      // Vérifier si l'image existe
       this.isFile$ = this.itemService.getFile(this.item.file, this.item.URL);
-
+      this.isFileLoading = true;
       this.isFile$.toPromise().then(res => {
+
         if (res !== undefined) {
-          if (res[0] == 1) {
-            this.isFile = true;
-          }
+            this.isFileLoading = false;
+
+        } else {
+          this.isFile = false;
         }
       });
 
@@ -206,7 +212,6 @@ export class ItemsFormComponent implements OnInit {
       }
     );
   }
-
 
   // Consulter une fiche
   consulter(id: number) {
@@ -265,6 +270,7 @@ export class ItemsFormComponent implements OnInit {
         this.item.file = '';
       }
     });
+
     this.onFermeModal();
   }
 
@@ -282,42 +288,79 @@ export class ItemsFormComponent implements OnInit {
     });
   }
 
-  // Fonction pour ajouter un item
+// Fonction pour ajouter un item
   async post(item: Item) {
+    // Vérification si un fichier est présent dans formData
     if (this.formData.has("file")) {
-      const file = this.formData.get("file") as File;
-      if (file && file.size > 300 * 1024 * 1024) { // 300 Mo en octets
-        this.isLoading = true;
-        await this.itemService.upload(this.formData);
-        this.closebutton.nativeElement.click();
-        await this.delay(10000); // Pause de 10 secondes
-        this.isLoading = false;
-      }else {
-        await this.itemService.upload(this.formData);
-      }
-    }
-    this.items$ = this.itemService.post(item);
-    this.onFermeModal();
+      this.uploadProgress = 0;
+      this.isLoading = true;
+      this.closebutton.nativeElement.click();
 
+      // Appel à la méthode de téléchargement avec gestion de la progression
+      this.itemService.uploadWithProgress(this.formData).subscribe({
+        next: (progress: number) => {
+          if (progress !== undefined) {
+            this.uploadProgress = progress;
+          }
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.uploadProgress = 0;
+          this.reloadPage();
+        },
+        error: (err) => {
+          console.error("Erreur lors du téléchargement:", err);
+          this.isLoading = false;
+          this.reloadPage();
+        }
+      });
+      this.items$ = this.itemService.post(item);
+    } else {
+      // Appel du service pour poster l'item si aucun fichier n'est présent
+      this.items$ = this.itemService.post(item);
+      this.onFermeModal();
+    }
   }
 
-  // Mise à jour du formulaire
+// Fonction pour mettre à jour un item existant
   async update(item: Item) {
+    // Vérification si un fichier est présent dans formData
     if (this.formData.has("file")) {
-      const file = this.formData.get("file") as File;
-      if (file && file.size > 300 * 1024 * 1024) { // 300 Mo en octets
-        this.isLoading = true;
-        await this.itemService.upload(this.formData);
-        this.closebutton.nativeElement.click();
-        await this.delay(10000); // Pause de 10 secondes
-        this.isLoading = false;
-      } else {
-        await this.itemService.upload(this.formData);
+      this.uploadProgress = 0;
+      this.isLoading = true;
+      this.closebutton.nativeElement.click();
+
+      // Appel à la méthode de téléchargement avec gestion de la progression
+      this.itemService.uploadWithProgress(this.formData).subscribe({
+        next: (progress: number) => {
+          if (progress !== undefined) {
+            this.uploadProgress = progress;
+          }
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.uploadProgress = 100;  // S'assurer que la barre de progression atteint 100%
+          this.reloadPage();
+        },
+        error: (err) => {
+          console.error("Erreur lors du téléchargement:", err);
+          this.isLoading = false;
+          this.reloadPage();
+        },
+
+      });
+      if (this.uploadProgress === 99) {
+        console.log('Téléchargement terminé avec succès !');
       }
+      this.items$ = this.itemService.update(item);
+    } else {
+      // Appel du service pour mettre à jour l'item si aucun fichier n'est présent
+      this.items$ = this.itemService.update(item);
+      this.onFermeModal();
     }
-    this.items$ = this.itemService.update(item);
-    this.onFermeModal();
   }
+
+
 
   // Fonction utilitaire pour ajouter un délai (pause)
   private delay(ms: number): Promise<void> {
@@ -407,7 +450,7 @@ export class ItemsFormComponent implements OnInit {
             "dateExpiration":res[i].dateExpiration
           }
         }
-        console.log(this.tableauSuivi);
+        //console.log(this.tableauSuivi);
       });
     } catch(err) {
       console.error(`Error : ${err.Message}`);
