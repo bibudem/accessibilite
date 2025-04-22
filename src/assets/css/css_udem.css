@@ -1,5 +1,18 @@
 
 /* css pour header */
+h1, h3, h5, h6{
+  font-family: 'Figtree', sans-serif!important;
+}
+
+h2, h4{
+  font-family: 'Lora', serif!important;
+}
+
+p, span {
+  font-family: 'Figtree', sans-serif!important;
+  font-size: 1rem!important;
+}
+
 .navbar .navbar-brand-wrapper{
   background: #e9eaec;
 }
@@ -103,9 +116,7 @@ input.f-right {
 .card-title{
   text-transform: initial!important;
 }
-.btn{
-  border-radius: 0!important;
-}
+
 .card .card-title {
   font-size: 1.25rem!important;
 }

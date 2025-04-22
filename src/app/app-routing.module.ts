@@ -17,6 +17,7 @@ import {HistoriqueListComponent} from "./components/historique-list/historique-l
 import {UserAuthGuard} from "./services/user-auth.guard";
 import {ViewerGuard} from "./services/viewer-guard.service";
 
+
 const routes: Routes = [
   { path: '', component: AccueilComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard, AdminGuard] },

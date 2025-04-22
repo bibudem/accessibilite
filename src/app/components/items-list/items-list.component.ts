@@ -58,13 +58,18 @@ export class ItemsListComponent implements OnInit {
 
 //appliquer filtre
   applyFilter(filterValue: string) {
-    localStorage.setItem('textFiltre','')
-    this.textRechercher=this.historiqueRechercheZone()
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-    // @ts-ignore
-    this.dataSource.filter = filterValue;
+    localStorage.setItem('textFiltre', '');
+    this.textRechercher = this.historiqueRechercheZone();
 
+    const normalizedFilter = this.global.normalizeString(filterValue);
+
+    // Redéfinir la logique du filtre
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const dataStr = this.global.normalizeString(Object.values(data).join(' '));
+      return dataStr.includes(filter);
+    };
+
+    this.dataSource.filter = normalizedFilter;
   }
 
   //fonction doit etre async pour attendre la reponse de la bd

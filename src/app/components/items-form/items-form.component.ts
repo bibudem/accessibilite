@@ -146,6 +146,7 @@ export class ItemsFormComponent implements OnInit {
       this.conditionIdItem = false;
       this.action = 'add';
       this.idItem = 0;
+      this.isFile=false;
     }
   }
 
@@ -482,6 +483,7 @@ export class ItemsFormComponent implements OnInit {
   reloadPage() {
     const currentPath = this.router.url;
     if (currentPath === '/items/add') {
+      this.isFile=false;
       localStorage.setItem('textFiltre',this.item.titre);
       this.router.navigateByUrl('/items');
     } else {

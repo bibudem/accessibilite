@@ -6,7 +6,7 @@ module.exports = class UserAuth {
 
   static async returnUserUdem(param) {
     let userConnect = {};
-    userConnect['groupe'] = 'not-user';
+    userConnect['groupe'] = 'User';
     //console.log(auth.passport.session.userConnect);
     if (auth.passport.session.userConnect) {
       if (!auth.passport.session.userConnect[param]) {
@@ -38,10 +38,8 @@ module.exports = class UserAuth {
             userConnect['ip'] = val;
             break;
         }
-        if (userConnect['groupe'] == 'not-user') {
-          userConnect['groupe'] = 'User';
-        }
       }
+      //console.log(userConnect);
     }
     return [userConnect];
   }

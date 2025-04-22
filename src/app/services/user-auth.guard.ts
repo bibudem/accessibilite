@@ -12,7 +12,6 @@ export class UserAuthGuard implements CanActivate {
 
   async canActivate(): Promise<boolean> {
     await this.authService.login();
-    localStorage.setItem('redirectUrl', this.authService.redirectUrl);
     if (this.authService.isLoggedIn && (this.authService.roleUser === 'User' || this.authService.roleUser === 'Admin')) {
       return true;
     } else {

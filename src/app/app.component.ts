@@ -20,34 +20,45 @@ export class AppComponent implements OnInit {
     this.inactivityService.initInactivityTimer();
   }
 
-  // Utilisation d'un seul HostListener avec un tableau d'événements pour la gestion de l'inactivité
+  // Regroupement de tous les événements sous un seul HostListener
   @HostListener('document:mousemove')
   @HostListener('document:keydown')
   @HostListener('document:click')
   @HostListener('document:scroll')
-  onUserActivity() {
+  onUserActivity(): void {
     this.inactivityService.resetInactivityTimer();
   }
 
-  ngOnInit() {
-    this.trackRouteState();
+  ngOnInit(): void {
+    this.updateRouteState();
   }
 
-  private trackRouteState() {
+  private updateRouteState(): void {
     const path = window.location.pathname;
-    this.authService.redirectUrl = path;
-    // Configuration des conditions de route
-    const adminRoutes = ['/', '/admin', '/historique-list'];
-    const dynamicAdminRoutes = ['/items/','/items', '/collection/'];
 
+    this.authService.redirectUrl = path;
+
+    // Routes administrateur
+    const adminRoutes = [
+      '/', '/accueil', '/items', '/items/add', '/collection',
+      '/historique-list', '/add-panier', '/historique/:id', '/items/:id', '/collection/:id'
+    ];
+    // Vérification si la route est administrateur ou utilisateur
     if (path === '/not-user') {
       this.ifAdmin = false;
-    } else if (path.startsWith('/lien/')) {
+      this.isUserLinkRoute = false;
+    } else if (path.startsWith('/lien')) {
       this.isUserLinkRoute = true;
       localStorage.setItem('redirectUrl', path);
+      //console.log(localStorage.getItem('redirectUrl'));
       this.ifAdmin = false;
-    } else if (adminRoutes.includes(path) || dynamicAdminRoutes.some(route => path.startsWith(route))) {
-      localStorage.removeItem('redirectUrl');
+    } else if (adminRoutes.some(route => path.startsWith(route.split(':')[0]))) {
+      this.ifAdmin = true;
+      this.isUserLinkRoute = false;
+      //localStorage.removeItem('redirectUrl');
+    } else {
+      this.isUserLinkRoute = false;
+      this.ifAdmin = false;
     }
   }
 }

@@ -1,18 +1,16 @@
-<div [ngClass]="{'container-scroller': ifAdmin}">
+<div *ngIf="!isUserLinkRoute; else simpleView" class="container-scroller">
   <app-header *ngIf="ifAdmin"></app-header>
   <div  [ngClass]="{'container-fluid page-body-wrapper': ifAdmin}">
     <app-menu *ngIf="ifAdmin"></app-menu>
-    <!-- partial -->
     <div [ngClass]="{'main-panel': ifAdmin}">
       <div   [ngClass]="{'content-wrapper': ifAdmin}">
         <router-outlet></router-outlet>
       </div>
-      <!-- partial:partials/_footer.html -->
       <app-footer *ngIf="ifAdmin"></app-footer>
-      <!-- partial -->
     </div>
-    <!-- main-panel ends -->
   </div>
-  <!-- page-body-wrapper ends -->
 </div>
 
+<ng-template #simpleView>
+  <router-outlet></router-outlet>
+</ng-template>

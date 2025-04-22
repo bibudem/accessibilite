@@ -32,8 +32,8 @@ export class HeaderComponent implements OnInit {
     const storedRedirectUrl = localStorage.getItem('redirectUrl');
     if (storedRedirectUrl?.startsWith('/lien/')) {
       localStorage.removeItem('redirectUrl');
-      //window.location.href = storedRedirectUrl;
-      this.router.navigateByUrl(storedRedirectUrl)
+      window.location.href = storedRedirectUrl;
+      //this.router.navigateByUrl(storedRedirectUrl)
       return;
     }
 

@@ -44,6 +44,19 @@ export class AuthService {
             case 'Admin':
               localStorage.setItem('groupeAdmin', 'Gestionnaire');
               localStorage.setItem('role', 'Admin');
+              const currentUrlLink = window.location.href;
+              //console.log(currentUrlLink);
+              localStorage.setItem('redirectUrl', currentUrlLink);
+              this.redirectUrl = currentUrlLink;
+              redirectUrl = currentUrlLink;
+              const storedRedirectUrl = localStorage.getItem('redirectUrl');
+              if (storedRedirectUrl?.startsWith('/lien/')) {
+                localStorage.removeItem('redirectUrl');
+                //console.log(storedRedirectUrl);
+                window.location.href = storedRedirectUrl;
+                //this.router.navigateByUrl(storedRedirectUrl)
+                return;
+              }
               break;
 
             case 'Viewer':
@@ -58,6 +71,8 @@ export class AuthService {
                 isLoggedIn = false;
                 return;
               }
+              localStorage.setItem('redirectUrl', currentUrl);
+              this.redirectUrl = currentUrl;
           }
         });
     } catch (e: any) {

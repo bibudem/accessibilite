@@ -16,20 +16,11 @@ export class MethodesGlobal  {
 
   // Fonction pour nettoyer le nom du fichier
   cleanFileName(fileName: string): string {
-    // Supprimer les accents
-    const accents = 'ÀÁÂÃÄÅàáâãäåÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÙÚÛÜùúûü';
-    const accentsOut = 'AAAAAAaaaaaaEEEEeeeeIIIIiiiiOOOOOOooooooUUUUuuuu';
+    // Supprimer les accents et autres caractères spéciaux
+    const normalizedFileName = fileName.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-    const normalizedFileName = fileName
-      .split('')
-      .map((char) => {
-        const index = accents.indexOf(char);
-        return index !== -1 ? accentsOut[index] : char;
-      })
-      .join('');
-
-    // Remplacer les espaces par des underscores
-    return normalizedFileName.replace(/\s+/g, '_');
+    // Remplacer les espaces et autres caractères non autorisés par des underscores
+    return normalizedFileName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_.-]/g, '');
   }
 
 //prendre la valeur d'un input
@@ -372,6 +363,15 @@ export class MethodesGlobal  {
     } catch(err) {
       console.error(`Error : ${err.Message}`);
     }
+  }
+
+  normalizeString(value: string): string {
+    return value
+      .normalize("NFD")                   // décompose les accents
+      .replace(/[\u0300-\u036f]/g, '')   // supprime les diacritiques
+      .replace(/[^\w\s]/gi, '')          // supprime les caractères spéciaux
+      .toLowerCase()
+      .trim();
   }
 
 }

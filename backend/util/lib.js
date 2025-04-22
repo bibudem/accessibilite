@@ -17,8 +17,11 @@ module.exports = class Lib {
     const projet = 'accessibilite2023';
     const ipLocal = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const dateSession = this.dateNow('d.m.Y');
+
     const token = `${ipLocal}.${dateSession}.${projet}`;
-    return token;
+    const base64Token = Buffer.from(token).toString("base64");
+
+    return base64Token;
   }
 
 

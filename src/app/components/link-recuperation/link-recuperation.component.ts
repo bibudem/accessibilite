@@ -59,7 +59,6 @@ export class LinkRecuperationComponent implements OnInit {
 
       // Récupérer les détails de l'item depuis le service
       await this.fetchItemDetails(this.key);
-
       // Configuration de la langue par défaut et du drapeau
       this.translate.setDefaultLang('fr');
       this.flagChoix = 'flag-icon-fr';
