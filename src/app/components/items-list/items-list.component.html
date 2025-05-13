@@ -34,12 +34,6 @@
               <mat-cell *matCellDef="let row" class=" mat-w-5 pl-2" > {{row.numero}} </mat-cell>
             </ng-container>
 
-            <!-- typeDocument Column -->
-            <ng-container matColumnDef="typeDocument">
-              <mat-header-cell  *matHeaderCellDef #typeDocument mat-sort-header class="mat-w-10  "> {{ 'type' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center" > {{row.typeDocument}} </mat-cell>
-            </ng-container>
-
             <!-- auteur Column -->
             <ng-container matColumnDef="auteur">
               <mat-header-cell  *matHeaderCellDef #auteur mat-sort-header class="mat-w-10 "> {{ 'auteur' | translate}} </mat-header-cell>
@@ -58,15 +52,27 @@
               <mat-cell  *matCellDef="let row" class="mat-w-20" > {{row.titre}} </mat-cell>
             </ng-container>
 
+            <!-- format Column -->
+            <ng-container matColumnDef="format">
+              <mat-header-cell  *matHeaderCellDef #format mat-sort-header class="mat-w-10 "> {{ 'format' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.format}} </mat-cell>
+            </ng-container>
+
+            <!-- typeDocument Column -->
+            <ng-container matColumnDef="typeDocument">
+              <mat-header-cell  *matHeaderCellDef #typeDocument mat-sort-header class="mat-w-10  "> {{ 'type' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center" > {{row.typeDocument}} </mat-cell>
+            </ng-container>
+
             <!-- URL Column -->
-            <ng-container matColumnDef="URL">
+            <!--<ng-container matColumnDef="URL">
               <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-5 "> {{ 'file' | translate}} </mat-header-cell>
               <mat-cell  *matCellDef="let row" class="mat-w-5 text-center" >
                 <a *ngIf="row.file"  class="btn-outline-primary btn-rounded btn-icon btn-sm" title="{{ 'voir-fichier' | translate}}" href="{{row.URL}}" target="_blank" >
                   <i class="typcn typcn-document-text"></i>
                 </a>
               </mat-cell>
-            </ng-container>
+            </ng-container>-->
 
             <!-- collection Column -->
             <ng-container matColumnDef="collection">
@@ -76,15 +82,10 @@
 
             <!-- dateM Column -->
             <ng-container matColumnDef="dateA">
-              <mat-header-cell *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'dateA' | translate}} </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="mat-w-10"> {{row.dateA | date:'short': 'fr'}} </mat-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'date-mise-a-jour' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row" class="mat-w-10"> {{ row.dateM ? (row.dateM | date:'short':'fr') : (row.dateA | date:'short':'fr') }} </mat-cell>
             </ng-container>
 
-            <!-- dateM Column -->
-            <ng-container matColumnDef="dateM">
-              <th *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'dateM' | translate}} </th>
-              <mat-cell  *matCellDef="let row" class="mat-w-10"> {{row.dateM | date:'short': 'fr'}} </mat-cell>
-            </ng-container>
             <!-- Consulter Column -->
             <ng-container matColumnDef="consulter" >
               <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-center"> {{ 'consulter' | translate}} </mat-header-cell>

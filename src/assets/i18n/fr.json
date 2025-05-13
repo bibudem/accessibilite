@@ -1,5 +1,5 @@
 {
-  "app-title": "Nos collections",
+  "app-title": "Ressources adaptées",
   "app-title-dev": "Espace développement",
   "app-footer-link": "Tous droits réservés - Bibliothèques de l'UdeM",
   "lngApp": "Français",
@@ -118,8 +118,8 @@
     "actions": "Actions"
   },
   "home": {
-    "title": "Collections spéciales",
-    "description": "Outil web de gestion des fichiers dans les collections spéciales",
+    "title": "Ressources adaptées",
+    "description": "Outil web de gestion des fichiers en formats accessibles",
     "cards-list": "Éditeurs ou fournisseurs",
     "placeholder": "Rechercher un fichier",
     "direction-collections": "Direction des collections",
@@ -243,5 +243,7 @@
     "mise-a-jour-prets": "Mise à jour « Prêts Numériques »",
     "procedure-fini": "Votre processus est bien complété",
     "btn-csv-monographie": "Mis à jour de la liste de monographies"
-  }
+  },
+
+  "date-modification": "Dernière modification"
 }

@@ -1,11 +1,19 @@
-
+:root {
+  --bc: #efeeee;
+  --white: #ffffff;
+  --black: #000000;
+  --red: #da2c4d;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --primary: #f9c6cf;
+  --font-family-sans-serif: -apple-system,BlinkMacSystemFont,'Figtree', sans-serif;
+}
 * {
   box-sizing: border-box;
 }
-
 /* Classes */
 .top {
-  padding: 2em;
+  padding: 1.5em;
   margin: 0 auto;
   background-color: white;
   text-align: center;
@@ -16,10 +24,12 @@
 .title h1 {
   margin: 0;
   padding: 0;
+  margin-bottom: 10px;
   font-size: 38px;
   font-weight: 400;
   letter-spacing: 8px;
   text-transform: uppercase;
+  font-family: 'Figtree', sans-serif;
 }
 .title h3 {
   font-size: 14px;
@@ -27,40 +37,50 @@
   text-transform: uppercase;
   letter-spacing: 8px;
   line-height: 0;
+  font-family: 'Lora', serif;
 }
-
+/* Parallax */
+.parallax1 {
+  position: relative;
+  background-image: url("https://matrice.bib.umontreal.ca/assets/images/bib-not-user.jpg");
+  min-height: 35vh;
+  position: relative;
+  background-attachment: fixed;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .parallax2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   background-image: url("https://accessibilite.bib.umontreal.ca/assets/images/bib-not-user1.jpg");
   min-height: 50vh;
   position: relative;
-  background-position: center;
+  background-attachment: fixed;
+  background-position: bottom;
   background-repeat: no-repeat;
   background-size: cover;
-  margin-top:-40px;
-  z-index: 1;
 }
 .overlay {
   width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, .5);
   position: absolute;
-  background: #000;
-  opacity: 0.2;
-  z-index: 2;
 }
 .parallax2 h2 {
-  font-size: 3.2em;
+  font-size: 3em;
+  font-weight: 300;
   text-transform: uppercase;
-  color: #f9660d !important;
+  color: var(--red);
+  z-index: 1;
   font-family: 'Lora', serif;
-  padding-top: 10%;
-  font-weight: 450;
-  z-index: 3;
 }
 h5 {
-  color: #5a6570;
+  color: #5e6265;
   font-weight: normal;
-  font-size: 18px;
-  margin-top: 5px;
+  font-size:1.5em;
 }
 /* Paragraph */
 .paragraph {
@@ -76,65 +96,47 @@ h5 {
   line-height: 1.45em;
   letter-spacing: .1em;
   color: rgb(64, 64, 64);
+  font-family: 'Lora', serif;
 }
-
-.footer {
-  visibility: hidden!important;
+.first span {
+  font-size: 4em;
+  color: var(--red);
+  float: left;
+  font-weight: 400;
+  line-height: 55px;
+  padding: .05em .2em 0 0;
+  font-family: 'Lora', serif;
 }
-/* Media Queries for small screens */
-@media only screen and (max-width: 768px) {
-  /* Ajustements pour tablettes */
-  .title h1 {
-    font-size: 28px; /* Réduire la taille du titre */
-    letter-spacing: 4px; /* Réduire l'espacement */
-  }
-
-  .title h3 {
-    font-size: 12px; /* Réduire la taille du sous-titre */
-    letter-spacing: 4px;
-  }
-
-  .parallax2 h2 {
-    font-size: 2.2em; /* Réduire la taille du texte dans l'image */
-    padding-top: 8%;
-  }
-
-  .paragraph p {
-    width: 80%; /* Augmenter la largeur du paragraphe */
-  }
+.second span {
+  font-size: 4em;
+  color: var(--teal);
+  float: left;
+  font-weight: 400;
+  line-height: 55px;
+  padding: .05em .2em 0 0;
+  font-family: 'Lora', serif;
 }
-
-@media only screen and (max-width: 576px) {
-  /* Ajustements pour téléphones */
-  .top {
-    padding: 1em; /* Réduire les marges */
-  }
-
-  .title h1 {
-    font-size: 24px; /* Taille encore plus réduite */
-    letter-spacing: 2px; /* Moins d'espacement */
-  }
-
-  .title h3 {
-    font-size: 10px; /* Plus petit encore pour les sous-titres */
-    letter-spacing: 2px;
-  }
-
-  .parallax2 {
-    min-height: 25vh; /* Réduire la hauteur de l'image */
-  }
-
-  .parallax2 h2 {
-    font-size: 1.8em; /* Taille du texte plus petite */
-    padding-top: 20%;
-  }
-
-  .paragraph p {
-    width: 90%; /* Paragraphe sur presque toute la largeur de l'écran */
-    font-size: 0.95em; /* Taille de police plus petite */
-  }
-
-  h5 {
-    font-size: 16px; /* Réduire la taille du h5 */
-  }
+.third span {
+  font-size: 4em;
+  color: var(--cyan);
+  float: left;
+  font-weight: 400;
+  line-height: 55px;
+  padding: .05em .2em 0 0;
+}
+/* Selection */
+::selection {
+  color: var(--white);
+  background: rgba(161, 181, 201, .8);
+}
+/* SCROLLBAR */
+::-webkit-scrollbar-track {
+  background-color: #F5F5F5;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(161, 181, 201, .8);
 }

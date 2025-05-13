@@ -15,7 +15,7 @@ import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
 })
 export class ItemsListComponent implements OnInit {
   //les entêts du tableau
-  displayedColumns = ['numero','typeDocument','auteur','editeur','titre','URL','collection','dateA','consulter'];
+  displayedColumns = ['numero','auteur','editeur','titre','format','typeDocument','collection','dateA','consulter'];
   listeItems: any[] = [];
   // @ts-ignore
   dataSource: MatTableDataSource<ListeItems>;
@@ -91,6 +91,7 @@ export class ItemsListComponent implements OnInit {
               "auteur": item.auteur,
               "file": item.file,
               "URL": url[index],
+              "format": this.getFormatName(item.format),
               "collection": item.collection,
               "dateA": item.dateA,
               "dateM": item.dateM
@@ -112,14 +113,19 @@ export class ItemsListComponent implements OnInit {
     }
   }
 
-
+  //recouperer le titre de type selon l'id
   getDocumentTypeName(typeDocumentId: string): string {
     const id = Number(typeDocumentId);
     const documentType = this.lstOptions.lstTypeDocument.find(docType => docType.id === id);
     return documentType ? documentType.name : '';
   }
 
-
+  //recouperer le titre de format selon l'id
+  getFormatName(formatId: number): string {
+    const id = Number(formatId);
+    const format = this.lstOptions.lstFormatSubstitut.find(f => f.id === id);
+    return format ? format.name : 'Inconnu';
+  }
 
 //recouperer la liste des periodiques
   fetchAll(): Observable<any[]> {
@@ -152,6 +158,8 @@ export class ItemsListComponent implements OnInit {
     }
 
   }
+
+
 //return historique page
   backClicked() {
     this._location.back();

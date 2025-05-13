@@ -32,6 +32,9 @@ export class ItemsFormComponent implements OnInit {
 
   idItem: number = -1;
 
+  dateA= '';
+  dateM= '';
+
   // Import des fonctions globales
   global: MethodesGlobal = new MethodesGlobal();
 
@@ -93,6 +96,8 @@ export class ItemsFormComponent implements OnInit {
   // Ajoutez cette propriété pour suivre l'avancement
   uploadProgress: number | null = null;
 
+  idItemString='';
+
   @ViewChild('closebutton') closebutton: any;
 
   @ViewChild('f_input') myInputVariable: ElementRef | undefined;
@@ -134,6 +139,8 @@ export class ItemsFormComponent implements OnInit {
       }
 
       this.creerTableauSuivi(this.idItem);
+      this.idItemString= this.idItem.toString()
+      console.log(this.idItem);
     }
 
     // Année
@@ -170,6 +177,8 @@ export class ItemsFormComponent implements OnInit {
     this.items$.subscribe(res => {
       // Création de l'objet item
       this.item = res[0];
+      this.dateA = res[0].dateA;
+      this.dateM = res[0].dateM;
       localStorage.setItem('titreItem', this.item.titre);
 
       this.isFile$ = this.itemService.getFile(this.item.file, this.item.URL);

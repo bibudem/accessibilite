@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-9">
         <h2 class="mt-1" *ngIf="conditionIdItem">{{ 'form-values' | translate}}
-          <span  > | {{ 'id' | translate}}</span>
+          <span  > | {{ 'id' | translate}} = {{ this.idItemString }} </span>
         </h2>
         <h2 class="mt-1" *ngIf="!conditionIdItem">{{ 'new-item' | translate}}</h2>
       </div>
@@ -268,7 +268,19 @@
           <!-- fin modal-->
         </form>
       </div>
+      <!-- Dates d'ajout et de modification -->
+      <div class="mt-4 p-3 border-top d-flex justify-content-between align-items-center bg-light rounded">
+        <div>
+          <strong>{{ 'date-ajout' | translate }}:</strong>
+          <span class="text-muted"> {{ dateA | date:'short':'fr' }}</span>
+        </div>
+        <div>
+          <strong>{{ 'date-modification' | translate }}:</strong>
+          <span class="text-muted"> {{ dateM | date:'short':'fr' }}</span>
+        </div>
+      </div>
     </div>
   </div>
+
 </div>
 <div class="noVisible" *ngFor="let item of items$ | async"></div>

@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from "./app.component";
@@ -15,7 +15,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 //import pour traduction
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { HeaderComponent } from './header/header.component';
@@ -60,7 +60,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {PanierFormComponent} from "./components/panier-form/panier-form.component";
 import {UserAuthGuard} from "./services/user-auth.guard";
 import {ViewerGuard} from "./services/viewer-guard.service";
-
 
 @NgModule({
   declarations: [
@@ -125,13 +124,29 @@ import {ViewerGuard} from "./services/viewer-guard.service";
     DropDownListModule, ComboBoxModule, AutoCompleteModule, MultiSelectModule, DropDownTreeModule, MentionModule
 
   ],
-  providers: [AuthGuard,AdminGuard,UserAuthGuard,ViewerGuard, { provide: LOCALE_ID, useValue: "fr-FR" }],
+  providers: [AuthGuard,AdminGuard,UserAuthGuard,ViewerGuard, { provide: LOCALE_ID, useValue: "fr-FR" },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      deps: [TranslateService],
+      multi: true
+    }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }
 
-//fonction ajouté pour la traduction
+
+// Traduction : loader
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
+}
+
+// Traduction : initialisation avant démarrage
+export function appInitializerFactory(translate: TranslateService) {
+  return () => {
+    const lang = 'fr';
+    translate.setDefaultLang(lang);
+    return translate.use(lang).toPromise();
+  };
 }
