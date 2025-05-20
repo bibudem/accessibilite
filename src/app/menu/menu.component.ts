@@ -23,4 +23,8 @@ export class MenuComponent implements OnInit {
     this.ifAdmin=this.global.ifAdminFunction();
   }
 
+  isActive(route: string): boolean {
+    return this.router.isActive(route, true);
+  }
+
 }

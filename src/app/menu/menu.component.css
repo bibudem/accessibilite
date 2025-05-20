@@ -1,3 +1,63 @@
-.menu-udem{
-  color: white!important;
+/* Styles généraux du menu */
+.sidebar {
+  background: #f8f9fa !important;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.nav-item {
+  margin: 5px 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px !important;
+  color: #495057 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.nav-link mat-icon {
+  margin-right: 10px;
+  color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+/* Style pour l'élément actif */
+.nav-item.active {
+  background-color: rgba(0, 89, 171, 0.8)!important
+}
+
+.nav-item.active .nav-link span{
+  color: #0059ab!important;
+  font-weight: 600;
+}
+
+.nav-item.active mat-icon {
+  color: #0059ab !important;
+}
+
+/* Effet au survol */
+.nav-item:not(.active):hover {
+  background-color: rgba(0, 89, 171, 0.05);
+}
+
+.nav-item:not(.active):hover .nav-link {
+  color: #0059ab !important;
+}
+
+.nav-item:not(.active):hover mat-icon {
+  color: #0059ab !important;
+}
+
+/* Style pour les sous-menus (décommenté si nécessaire) */
+.sub-menu .nav-link {
+  padding-left: 40px !important;
+}
+
+.sub-menu .nav-item.active {
+  background-color: transparent;
+  border-left: 3px solid #0059ab;
 }

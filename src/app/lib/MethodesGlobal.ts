@@ -374,4 +374,15 @@ export class MethodesGlobal  {
       .trim();
   }
 
+  onlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+
+    // Autoriser uniquement les chiffres (0-9) et les touches de contrôle
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
 }

@@ -27,13 +27,31 @@
       <div class="card-body mb-5">
         <form class="forms-sample"  #itemForm="ngForm" name="itemForm" id="itemForm"   (ngSubmit)="onSubmit(itemForm)" >
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="titre">{{ 'titre' | translate}} <span class="text-danger">*</span></label>
               <input  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.titre),'valid-class': global.obligatoireChamp(item.titre)}" #titre="ngModel" name="titre" id="titre" placeholder="{{ 'titre' | translate}}" [(ngModel)]="item.titre" >
               <input  class="form-control" #idItem="ngModel" name="idItem" id="idItem" type="hidden" [(ngModel)]="item.idItem">
               <input  class="form-control"  name="action" id="action" type="hidden"  value="{{action}}"  >
             </div>
+            <div class="col-md-3">
+              <label for="auteur">{{ 'auteur' | translate}} </label>
+              <input  class="form-control" #auteur="ngModel" name="auteur" id="auteur" type="text" [(ngModel)]="item.auteur">
+            </div>
             <div class="col-md-2">
+              <label for="annee">{{ 'annee-pub' | translate}} </label>
+              <input
+                #annee="ngModel"
+                type="text"
+                id="annee"
+                name="annee"
+                class="form-control"
+                [(ngModel)]="item.annee"
+                maxlength="4"
+                (keypress)="global.onlyNumbers($event)"
+                placeholder="YYYY"
+              />
+            </div>
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="typeDocument">{{'typeDocument'| translate }} <span class="text-danger">*</span></label>
                 <select class="form-control" id="typeDocument" name="typeDocument" #typeDocument [(ngModel)]="item.typeDocument">
@@ -41,32 +59,28 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-2">
-              <label for="auteur">{{ 'auteur' | translate}} </label>
-              <input  class="form-control" #auteur="ngModel" name="auteur" id="auteur" type="text" [(ngModel)]="item.auteur">
-            </div>
-            <div class="col-md-2">
-              <label for="annee">{{ 'annee-pub' | translate}} </label>
-              <select name="annee" id="annee"  class="form-control" #annee [(ngModel)]="item.annee" >
-                <option *ngFor="let rep of this.arrayAnnee" >{{rep}}</option>
-              </select>
-            </div>
+
           </div>
           <div class="row mb-2">
-            <div class="col-md-3">
-              <label for="idColecttion">{{ 'collection' | translate}} <span class="text-danger">*</span></label>
-              <select name="idColecttion" id="idColecttion"  [ngClass]="{ 'form-control':true,'error-class': !global.obligatoireChamp(item.idColecttion),'valid-class': global.obligatoireChamp(item.idColecttion)}" #idColecttion  [(ngModel)]="item.idColecttion">
-                <option *ngIf="!item.idColecttion" value="">{{'choisissez' | translate}}</option>
-                <option *ngFor="let rep of listeCollection" [value]="rep.id" >{{rep.nom}}</option>
-              </select>
+            <div class="col-md-4">
+              <label for="docOriginal">{{ 'docOriginal' | translate}} </label>
+              <input class="form-control" #description name="docOriginal" id="docOriginal" type="text" [(ngModel)]="item.docOriginal">
             </div>
             <div class="col-md-3">
               <label for="auteur">{{ 'editeur' | translate}} </label>
               <input  class="form-control" #editeur="ngModel" name="editeur" id="editeur" type="text" [(ngModel)]="item.editeur">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <label for="edition">{{ 'edition' | translate}} </label>
-              <input  class="form-control" #edition="ngModel" name="edition" id="edition" type="text" [(ngModel)]="item.edition">
+              <input class="form-control"
+                     #edition="ngModel"
+                     name="edition"
+                     id="edition"
+                     type="text"
+                     [(ngModel)]="item.edition"
+                     (keypress)="global.onlyNumbers($event)"
+                     maxlength="3"
+                     pattern="[0-9]*">
             </div>
             <div class="col-md-3">
               <label for="isbn">{{ 'isbn' | translate}} </label>

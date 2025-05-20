@@ -1,15 +1,27 @@
+/* Règles de police avec fallback */
+@font-face {
+  font-family: 'Figtree';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('sans-serif');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lora';
+  src: local('Georgia'), local('Times New Roman'), local('serif');
+  font-display: swap;
+}
 
 /* css pour header */
 h1, h3, h5, h6{
-  font-family: 'Figtree', sans-serif!important;
+  font-family: 'Figtree', Arial, sans-serif !important;
 }
 
 h2, h4{
-  font-family: 'Lora', serif!important;
+  font-family: 'Lora', Georgia, serif !important;
 }
 
 p, span {
-  font-family: 'Figtree', sans-serif!important;
+  font-family: 'Figtree', Arial, sans-serif !important;
   font-size: 1rem!important;
 }
 
@@ -17,9 +29,26 @@ p, span {
   background: #e9eaec;
 }
 
+.btn{
+  border-radius: 50px;
+}
+
+.btn-dark{
+  border-radius: 12px;
+}
+
+.nav-link{
+  border-radius: 12px !important;
+}
+
 .navbar {
   border-bottom: 4px solid #0057ac;
 }
+
+.btn-primary {
+  background:#0057ac!important;
+}
+
 .navbar .navbar-brand-wrapper .navbar-brand-inner-wrapper .navbar-brand img {
   max-width: 100%;
   height: auto;
@@ -141,9 +170,15 @@ a {
 }
 
 .btn-warning{
-  background-color: #eb8520!important;
-  border-color: #eb8520!important;
+  background-color: #f05128!important;
+  border-color: #f05128!important;
+  color:white!important
 }
+
+.btn-rounded{
+  border-radius: 50px!important;
+}
+
 .bg-warning{
   background-color: #eb8520!important;
 }
@@ -168,3 +203,290 @@ select.form-control{
   background: #f3f3f3!important;
 }
 
+/* ===== STRUCTURE GENERALE ===== */
+/* Règles de police avec fallback */
+@font-face {
+  font-family: 'Figtree';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('sans-serif');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lora';
+  src: local('Georgia'), local('Times New Roman'), local('serif');
+  font-display: swap;
+}
+
+.horizontal-center-row {
+  display: flex;
+  justify-content: center;
+}
+
+.pt {
+  padding-top: 75px;
+}
+
+.data {
+  padding: 10px 50px;
+  background-color: #F5F5F5;
+}
+
+/* ===== TYPOGRAPHIE ===== */
+.display-3 {
+  font-weight: lighter;
+  margin-top: -20px;
+}
+
+.card-title {
+  font-size: 26px!important;
+  text-transform: initial;
+  margin-top: 20px!important;
+  font-family: 'Lora', Georgia, serif !important;
+
+}
+
+.card-text {
+  font-size: 18px;
+  color: #323432;
+}
+
+.titre-home-description {
+  color: rgb(3, 18, 72) !important;
+  display: block;
+  font-size: 18px;
+}
+
+.home-description {
+  color: rgb(130, 131, 131);
+  display: block;
+  font-size: 14px;
+}
+
+.text-warning-2 {
+  color: #e7c14f;
+}
+
+/* ===== JUMBOTRON ===== */
+.jumbotron {
+  position: relative;
+  width: 100%;
+  border-radius: 0;
+  height: 320px;
+}
+
+.jumbotron .container {
+  position: relative;
+  z-index: 2;
+}
+
+.bib-titre {
+  text-transform: uppercase;
+  color: #393b44;
+  font-size: 48px!important;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+  font-family: 'Figtree', Arial, sans-serif !important;
+  margin-bottom: 15px!important;
+}
+
+.jumbotron-billboard .img {
+  margin-bottom: 0;
+  opacity: 0.6;
+  color: #f0f1e5;
+  background: #000 url("/assets/images/accueil.jpg") top center no-repeat;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* ===== CARTES ===== */
+.card {
+  border-radius: 12px !important;
+}
+
+.action-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
+.card-img {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.card-img:hover {
+  opacity: 1;
+}
+
+.card-img-top {
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+}
+
+.search-bg {
+  background-image: url('/assets/images/carte-img.png');
+  background-color: rgba(0, 89, 171, 0.3);
+  background-blend-mode: overlay;
+  opacity: 1;
+  position: relative;
+}
+
+.add-bg {
+  background-image: url('/assets/images/carte-img.png');
+  background-color: rgb(240, 81, 40, 0.3);
+  background-blend-mode: overlay;
+  opacity: 1;
+  position: relative;
+}
+
+.history-bg {
+  background-image: url('/assets/images/carte-img.png');
+  background-color: rgba(40, 167, 69, 0.3);
+  background-blend-mode: overlay;
+  opacity: 1;
+  position: relative;
+}
+
+/* ===== BOUTONS ===== */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn-home {
+  background: #c5501e;
+  color: #ffffff;
+  border-radius: 0;
+}
+
+.btn-home:hover {
+  background: #ef5604;
+  color: #ffffff;
+}
+
+.btn-arrow, .btn-arrow-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-arrow {
+  padding-right: 35px;
+  border-radius: 30px;
+}
+
+.btn-arrow-hover {
+  padding-right: 2.5rem !important;
+}
+
+.arrow, .arrow-icon {
+  position: absolute;
+  right: 15px;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.btn-arrow:hover, .btn-arrow-hover:hover {
+  padding-right: 40px;
+}
+
+.btn-arrow:hover .arrow,
+.btn-arrow-hover:hover .arrow-icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ===== ICONES ===== */
+.icon-wrapper {
+  width: 50px;
+  height: 50px;
+  margin: -40px auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 2;
+}
+
+
+.icon-wrapper i {
+  font-size: 30px;
+}
+
+.bg-primary-light {
+  background-color: rgba(63, 150, 231);
+  color: #fdfdfe;
+}
+
+.bg-danger-light {
+  background-color: rgb(229, 97, 63);
+  color: #fdfdfe;
+}
+
+.btn-danger{
+  background: #f05128;
+  btn-border-color: #f05128;
+}
+
+.bg-success-light {
+  background-color: rgba(40, 167, 69);
+  color: #fdfdfe;
+}
+
+/* ===== ELEMENTS DIVERS ===== */
+.home-link {
+  cursor: grab;
+  border: 1px solid rgba(196, 194, 194, 0.5);
+  background: linear-gradient(to right, rgba(196, 194, 194, 0.10) 50%, white 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all 0.75s ease-out;
+}
+
+.home-link:hover {
+  background-position: left bottom;
+}
+
+.bg-blue {
+  background-color: #020e17 !important;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .jumbotron {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .card-img-top {
+    height: 100px;
+  }
+
+  .icon-wrapper {
+    width: 50px;
+    height: 50px;
+    margin-top: -30px;
+  }
+
+  .icon-wrapper i {
+    font-size: 24px;
+  }
+}

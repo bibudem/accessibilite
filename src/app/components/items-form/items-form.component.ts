@@ -63,8 +63,6 @@ export class ItemsFormComponent implements OnInit {
 
   urlId = '';
 
-  listeCollection: any = [];
-
   currentURL = '';
 
   newURL = '';
@@ -145,9 +143,6 @@ export class ItemsFormComponent implements OnInit {
 
     // Année
     this.arrayAnnee = this.global.anneeOptions();
-
-    // Options dynamiques de la liste des collections
-    this.global.optionsDynamiques(this.listeCollection, this.itemService.fetchAllCollection());
 
     if (this.route.snapshot.paramMap.get("id") == 'add') {
       this.conditionIdItem = false;
@@ -245,7 +240,7 @@ export class ItemsFormComponent implements OnInit {
   handleSubmit(): void {
     this.file_list = [];
     let nameFile = new Date().getHours().toLocaleString() + '_item_';
-    let nameFolder = this.item.idColecttion + this.global.generateRandomNumber(10);
+    let nameFolder = this.item.idItem + this.global.generateRandomNumber(10);
 
     if (this.file_store !== undefined) {
       for (let i = 0; i < this.file_store.length; i++) {
@@ -401,7 +396,6 @@ export class ItemsFormComponent implements OnInit {
     const action = document.getElementById('action').value;
     const champs: any = {
       idItem: this.idItem,
-      idColecttion: '',
       typeDocument: '',
       auteur: '',
       annee: '',
@@ -413,6 +407,7 @@ export class ItemsFormComponent implements OnInit {
       visuelAccessibles: '',
       documentComplet: '',
       description: '',
+      docOriginal: '',
       note: '',
       langue: '',
       file: '',
@@ -429,7 +424,7 @@ export class ItemsFormComponent implements OnInit {
     this.item = champs;
 
     // Définir les champs obligatoires
-    let donneesValider: any = {'titre': this.item.titre, 'idColecttion': this.item.idColecttion,'typeDocument': this.item.typeDocument };
+    let donneesValider: any = {'titre': this.item.titre, 'typeDocument': this.item.typeDocument };
 
     switch (action) {
       case 'save':
@@ -501,4 +496,5 @@ export class ItemsFormComponent implements OnInit {
     }
 
   }
+
 }

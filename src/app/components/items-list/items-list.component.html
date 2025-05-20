@@ -29,40 +29,57 @@
             matSortActive="titre"
             matSortDirection="asc">
             <!-- ID Column -->
-            <ng-container matColumnDef="numero">
-              <mat-header-cell  *matHeaderCellDef #numero mat-sort-header  class=" mat-w-5 pl-2 "> {{ 'nr' | translate}} </mat-header-cell>
-              <mat-cell *matCellDef="let row" class=" mat-w-5 pl-2" > {{row.numero}} </mat-cell>
-            </ng-container>
-
-            <!-- auteur Column -->
-            <ng-container matColumnDef="auteur">
-              <mat-header-cell  *matHeaderCellDef #auteur mat-sort-header class="mat-w-10 "> {{ 'auteur' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.auteur}} </mat-cell>
-            </ng-container>
-
-            <!-- editeur Column -->
-            <ng-container matColumnDef="editeur">
-              <mat-header-cell  *matHeaderCellDef #editeur mat-sort-header class="mat-w-15 "> {{ 'editeur' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.editeur}} </mat-cell>
+            <ng-container matColumnDef="idItem">
+              <mat-header-cell  *matHeaderCellDef #idItem mat-sort-header  class=" mat-w-5 pl-2"> {{ 'id' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row" class=" mat-w-5 pl-2" > {{row.idItem}} </mat-cell>
             </ng-container>
 
             <!-- titre Column -->
             <ng-container matColumnDef="titre">
-              <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-20 "> {{ 'titre' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-20" > {{row.titre}} </mat-cell>
+              <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-25"> {{ 'titre' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-25" > {{row.titre}} </mat-cell>
             </ng-container>
 
-            <!-- format Column -->
-            <ng-container matColumnDef="format">
-              <mat-header-cell  *matHeaderCellDef #format mat-sort-header class="mat-w-10 "> {{ 'format' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.format}} </mat-cell>
+            <!-- auteur Column -->
+            <ng-container matColumnDef="auteur">
+              <mat-header-cell  *matHeaderCellDef #auteur mat-sort-header class="mat-w-15"> {{ 'auteur' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.auteur}} </mat-cell>
+            </ng-container>
+
+            <!-- collection Column -->
+            <ng-container matColumnDef="annee">
+              <mat-header-cell  *matHeaderCellDef #annee mat-sort-header class="mat-w-5"> {{ 'annee' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-5 text-center" > {{row.annee}} </mat-cell>
+            </ng-container>
+
+            <!-- editeur Column -->
+            <ng-container matColumnDef="editeur">
+              <mat-header-cell  *matHeaderCellDef #editeur mat-sort-header class="mat-w-15"> {{ 'editeur' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.editeur}} </mat-cell>
+            </ng-container>
+
+            <!-- dateM Column -->
+            <ng-container matColumnDef="dateA">
+              <mat-header-cell *matHeaderCellDef mat-sort-header class="mat-w-10">
+                {{ 'date-mise-a-jour' | translate }}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row" class="mat-w-10">
+                {{ row.dateM ? (row.dateM | date:'yyyy/MM/dd') : (row.dateA | date:'yyyy/MM/dd') }} <!-- yyyy/MM/dd HH:mm -->
+              </mat-cell>
             </ng-container>
 
             <!-- typeDocument Column -->
             <ng-container matColumnDef="typeDocument">
-              <mat-header-cell  *matHeaderCellDef #typeDocument mat-sort-header class="mat-w-10  "> {{ 'type' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center" > {{row.typeDocument}} </mat-cell>
+              <mat-header-cell  *matHeaderCellDef #typeDocument mat-sort-header class="mat-w-5"> {{ 'type' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-5 align-content-center" > {{row.typeDocument}} </mat-cell>
             </ng-container>
+
+            <!-- format Column -->
+            <ng-container matColumnDef="format">
+              <mat-header-cell  *matHeaderCellDef #format mat-sort-header class="mat-w-10"> {{ 'format' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.format}} </mat-cell>
+            </ng-container>
+
 
             <!-- URL Column -->
             <!--<ng-container matColumnDef="URL">
@@ -74,17 +91,6 @@
               </mat-cell>
             </ng-container>-->
 
-            <!-- collection Column -->
-            <ng-container matColumnDef="collection">
-              <mat-header-cell  *matHeaderCellDef #collection mat-sort-header class="mat-w-15 "> {{ 'collection' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.collection}} </mat-cell>
-            </ng-container>
-
-            <!-- dateM Column -->
-            <ng-container matColumnDef="dateA">
-              <mat-header-cell *matHeaderCellDef mat-sort-header  class="mat-w-10"> {{ 'date-mise-a-jour' | translate}} </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="mat-w-10"> {{ row.dateM ? (row.dateM | date:'short':'fr') : (row.dateA | date:'short':'fr') }} </mat-cell>
-            </ng-container>
 
             <!-- Consulter Column -->
             <ng-container matColumnDef="consulter" >

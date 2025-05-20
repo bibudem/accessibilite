@@ -4,34 +4,71 @@
     <div class="img"></div>
     <div class="container pt ">
       <div class="mt-5 text-color text-align-center mb-4 ">
-        <h1 class="shadow-sm mb-2">{{'home.title' | translate }}</h1>
+        <h1 class="mb-2 bib-titre">{{'home.title' | translate }}</h1>
         <h2  class="display-3">{{'home.description' | translate }}</h2>
       </div>
-      <form >
-        <div class="row" >
-          <div class="col-md-6 offset-2">
-            <input id="rechercher" type="text" class="form-control rounded-0 home-input" placeholder="{{'home.placeholder'| translate}}">
-          </div>
-          <div class="col-md-2">
-            <button id = "getMessage" class = "btn btn-primary rounded-0 w-100 h-45" (click)="rechercherMotCle(global.returnValueInputId('rechercher'))">{{'rechercher'| translate}}</button>
-          </div>
-        </div>
-      </form>
     </div>
   </div>
   <!-- Jumbotron -->
 </div>
-<div class="row mt-2" >
-  <div class="list-group">
-    <div *ngFor="let item of listeItems" class="col-md-12">
-        <a href="javascript:;" (click)="rechercherParCollection(item.nom)" class="list-group-item list-group-item-action p-1 mt-1"  *ngIf="item.nom">
-          <h2 class="p-2 mt-2 ml-1 titre-home-description">{{ item.nom }} <small class="home-description">{{ item.description }}</small></h2>
+<!-- Section informative -->
+<div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+  <!-- Carte Recherche -->
+  <div class="col">
+    <div class="card h-100 action-card">
+      <div class="card-img-top search-bg"></div>
+      <div class="card-body">
+        <div class="icon-wrapper bg-primary-light mb-3">
+          <i class="material-icons">search</i>
+        </div>
+        <h5 class="card-title mt-4">{{ 'home.dashboard.search_title' | translate }}</h5>
+        <p class="card-text">{{ 'home.dashboard.search_description' | translate }}</p>
+        <a href="/items" class="btn btn-primary btn-arrow">
+          {{ 'home.dashboard.button_search' | translate }}
+          <span class="arrow">→</span>
         </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte Ajout Article -->
+  <div class="col">
+    <div class="card h-100 action-card">
+      <div class="card-img-top add-bg"></div>
+      <div class="card-body">
+        <div class="icon-wrapper bg-danger-light mb-3">
+          <i class="material-icons">add_circle</i>
+        </div>
+        <h5 class="card-title">{{ 'home.dashboard.add_article_title' | translate }}</h5>
+        <p class="card-text">{{ 'home.dashboard.add_article_description' | translate }}</p>
+        <a href="/items/add" class="btn btn-warning btn-action btn-arrow">
+          {{ 'home.dashboard.button_add' | translate }}
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte Historique -->
+  <div class="col">
+    <div class="card h-100 action-card">
+      <div class="card-img-top history-bg"></div>
+      <div class="card-body">
+        <div class="icon-wrapper bg-success-light mb-3">
+          <i class="material-icons">history</i>
+        </div>
+        <h5 class="card-title">{{ 'home.dashboard.history_title' | translate }}</h5>
+        <p class="card-text">{{ 'home.dashboard.history_description' | translate }}</p>
+        <a href="/historique-list" class="btn btn-success btn-action btn-arrow">
+          {{ 'home.dashboard.button_view_history' | translate }}
+          <span class="arrow">→</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>
-<!--<bib-avis bouton-fermer></bib-avis>-->
-<!-- row -->
+
+
 
 
 

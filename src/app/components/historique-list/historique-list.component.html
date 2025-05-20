@@ -83,14 +83,14 @@
           <!-- lastDateModif Column -->
           <ng-container matColumnDef="lastDateModif">
             <mat-header-cell  *matHeaderCellDef #dateExpiration mat-sort-header class="mat-w-15 "> {{ 'lastDateModif' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.lastDateModif | date:'short': 'fr'}} </mat-cell>
+            <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.lastDateModif | date:'yyyy/MM/dd HH:mm'}} </mat-cell>
           </ng-container>
 
           <!-- Consulter Column -->
           <ng-container matColumnDef="consulter" >
             <mat-header-cell *matHeaderCellDef   class="mat-w-5 text-center"> {{ 'details' | translate}} </mat-header-cell>
             <mat-cell  *matCellDef="let row" class="mat-w-5 text-center">
-              <button type="button" class="btn btn-dark btn-rounded btn-icon btn-sm" title="Consulter la fiche"  routerLink="/historique/{{ row.idPanier }}">
+              <button type="button" class="btn btn-dark btn-icon btn-sm" title="Consulter la fiche"  routerLink="/historique/{{ row.idPanier }}">
                 <i class="typcn typcn-edit btn-icon-append"></i>
               </button>
             </mat-cell>

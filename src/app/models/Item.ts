@@ -1,6 +1,5 @@
 export interface Item {
   idItem:number;
-  idColecttion:string;
   typeDocument:string;
   auteur:string;
   annee:string;
@@ -12,6 +11,7 @@ export interface Item {
   visuelAccessibles:string;
   documentComplet:string;
   description:string;
+  docOriginal:string;
   note:string;
   langue:string;
   file  :string;

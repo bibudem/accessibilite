@@ -15,7 +15,7 @@ import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
 })
 export class ItemsListComponent implements OnInit {
   //les entêts du tableau
-  displayedColumns = ['numero','auteur','editeur','titre','format','typeDocument','collection','dateA','consulter'];
+  displayedColumns = ['idItem','titre','auteur','annee','editeur','dateA','typeDocument','format','consulter'];
   listeItems: any[] = [];
   // @ts-ignore
   dataSource: MatTableDataSource<ListeItems>;
@@ -92,7 +92,7 @@ export class ItemsListComponent implements OnInit {
               "file": item.file,
               "URL": url[index],
               "format": this.getFormatName(item.format),
-              "collection": item.collection,
+              "annee": item.annee,
               "dateA": item.dateA,
               "dateM": item.dateM
             };

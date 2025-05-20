@@ -99,6 +99,7 @@
   "isbn": "ISBN",
   "visuelAccessibles": "Éléments visuels accessibles",
   "documentComplet": "Document complet",
+  "docOriginal": "Document original (URL)",
 
   "btn": {
     "choisissez": "Choisissez",
@@ -130,7 +131,20 @@
     "dir-collections-courriel": "courriel@umontreal.ca",
     "dir-technologies-tel": "514-343-2080",
     "dir-technologies-courriel": "service@bib.umontreal.ca",
-    "home-description-not-admin": "Bienvenue dans notre espace réservé aux membres ayant fait leur demande par courriel !"
+    "home-description-not-admin": "Bienvenue dans notre espace réservé aux membres ayant fait leur demande par courriel !",
+    "dashboard": {
+      "add_article_title": "Ajouter une ressource",
+      "add_article_description": "Soumettre un nouveau document numérique.",
+      "button_add": "Ajouter",
+
+      "search_title": "Rechercher des ressources",
+      "search_description": "Trouver rapidement des articles ou fichiers par mot-clé.",
+      "button_search": "Rechercher",
+
+      "history_title": "Historique des demandes",
+      "history_description": "Consulter vos soumissions passées et leur statut.",
+      "button_view_history": "Voir l’historique"
+    }
   },
   "panier": {
     "voir": "Voir le Panier",
