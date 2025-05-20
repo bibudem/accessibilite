@@ -27,12 +27,12 @@
 
 /* Style pour l'élément actif */
 .nav-item.active {
-  background-color: rgba(0, 89, 171, 0.8)!important
+  background-color: rgba(0, 89, 171)!important
 }
 
 .nav-item.active .nav-link span{
   color: #0059ab!important;
-  font-weight: 600;
+  font-weight: 550;
 }
 
 .nav-item.active mat-icon {
