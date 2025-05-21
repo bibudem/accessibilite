@@ -25,9 +25,19 @@
   transition: all 0.3s ease;
 }
 
-/* Style pour l'élément actif */
+/* Style pour l'élément actif du menu */
 .nav-item.active {
-  background-color: rgba(0, 89, 171)!important
+  background-color: rgba(0, 89, 171, 0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-link {
+  color: #0059ab !important;
+  font-weight: 500;
+}
+
+.nav-item.active mat-icon {
+  color: #0059ab !important;
 }
 
 .nav-item.active .nav-link span{
