@@ -469,6 +469,26 @@ select.form-control{
   background-color: #ffffff !important;
 }
 
+
+/* Dans votre fichier CSS global */
+.mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background {
+  border-color: #0057AC !important;
+  background-color: #0057AC !important;
+}
+
+.mdc-checkbox--selected .mdc-checkbox__ripple::before,
+.mdc-checkbox--selected .mdc-checkbox__ripple::after {
+  background-color: #0057AC !important;
+}
+
+/* Supprime toutes les ombres des cartes Material-UI */
+.bib-card{
+  box-shadow: none !important;
+  border: 1px solid #e4e4f4 !important;
+}
+
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .jumbotron {

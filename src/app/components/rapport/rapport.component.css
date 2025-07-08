@@ -1,0 +1,114 @@
+/* rapport.component.css */
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.mat-row:hover {
+  background-color: #f0f0f0;
+}
+
+.mat-paginator {
+  background-color: transparent;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-card-header {
+  padding: 16px;
+}
+
+.mat-card-content {
+  padding: 16px;
+}
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+
+.btn-primary {
+    background-color: #0057AC;
+    color: #fff!important;
+}
+
+/* Supprime toutes les ombres des cartes Material-UI */
+.MuiCard-root {
+  box-shadow: none !important;
+}
+
+.MuiCard-root:hover {
+  box-shadow: none !important;
+}
+
+.mt-2 {
+  margin-top:20px!important;
+}
+
+
+.error-snackbar {
+  background-color: #f44336;
+  color: white;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  min-height: 300px;
+}
+
+.mat-elevation-z1 {
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 
+              0 1px 1px 0 rgba(0,0,0,.14), 
+              0 1px 3px 0 rgba(0,0,0,.12);
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mat-table {
+    min-width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .mat-cell, .mat-header-cell {
+    padding: 8px;
+    font-size: 12px;
+  }
+  
+  .mat-form-field {
+    margin-bottom: 8px;
+  }
+}

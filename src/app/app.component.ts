@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
 
     // Routes administrateur
     const adminRoutes = [
-      '/', '/accueil', '/items', '/items/add', '/collection',
+      '/', '/accueil', '/items', '/items/add', '/collection', '/rapport',
       '/historique-list', '/add-panier', '/historique/:id', '/items/:id', '/collection/:id'
     ];
     // Vérification si la route est administrateur ou utilisateur

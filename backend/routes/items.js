@@ -58,20 +58,27 @@ router.put('/uploud', upload.single('file'), async (req, res) => {
     if (!file) {
       return res.status(400).send('No file uploaded.');
     }
-    //console.log(file);
+
     const folderName = req.body.nameFolder;
     const folderItem = path.join('/apps/accessibilite/prod/backend/files/items/', folderName);
     const newPath = path.join(folderItem, file.originalname);
+    const backupDir = '/apps/accessibilite/prod/backend/backup-temp';
+    const backupPath = path.join(backupDir, file.filename);
 
-    // Créer le répertoire cible s'il n'existe pas déjà
+    // Créer les dossiers nécessaires
     await fs.promises.mkdir(folderItem, { recursive: true });
+    await fs.promises.mkdir(backupDir, { recursive: true });
 
-    // Copier le fichier temporaire vers le chemin cible
+    // 🔐 Crée une copie de sauvegarde du fichier temporaire avant de le déplacer
+    await fs.promises.copyFile(file.path, backupPath);
+
+    // 🟢 Déplace le fichier temporaire vers son dossier final
     await fs.promises.rename(file.path, newPath);
 
-    //console.log(`Fichier déplacé de ${file.path} à ${newPath}`);
+    console.log(`Fichier déplacé de ${file.path} à ${newPath}`);
+    console.log(`Copie de sauvegarde conservée à : ${backupPath}`);
 
-    // Optionnel : nettoyer le dossier temporaire si vous le souhaitez
+    // Nettoyage optionnel du dossier temporaire
     await cleanTemporaryDirectory();
 
     res.status(200).send('File successfully uploaded and moved.');
@@ -80,6 +87,7 @@ router.put('/uploud', upload.single('file'), async (req, res) => {
     res.status(500).send('An error occurred during file upload.');
   }
 });
+
 
 // Fonction optionnelle pour nettoyer le dossier temporaire (si nécessaire)
 async function cleanTemporaryDirectory() {
@@ -99,44 +107,55 @@ module.exports = router;
 
 
 
-router.get('/deleteFile/:name', function (req, res) {
-  let name = req.params.name;
-  let nameFile = name.split('&')[0];
-  let folder = name.split('&')[1];
-  const path = '/apps/accessibilite/prod/backend/files/items/' + folder;
+router.get('/deleteFile/:name', async function (req, res) {
+  const name = req.params.name;
+  const [nameFile, folder] = name.split('&');
+  const sourceDir = path.join('/apps/accessibilite/prod/backend/files/items/', folder);
+  const sourcePath = path.join(sourceDir, nameFile);
+  const destDir = path.join('/apps/accessibilite/prod/backend/files-del', folder);
+  const destPath = path.join(destDir, nameFile);
+
+  let result = {
+    status: 'error',
+    message: '',
+    moved: false,
+    file: nameFile,
+    from: sourcePath,
+    to: destPath
+  };
 
   try {
-    fs.readdir(path, (err, files) => {
-      if (err) {
-        console.error('Error reading directory:', err);
-        return res.status(500).json([0]); // Retourne une réponse avec le statut d'erreur
-      }
-
-      let deleteFile = 0;
-
-      files.forEach(file => {
-        if (file === nameFile) {
-          fs.unlink(path + '/' + nameFile, (err) => {
-            if (err) {
-              console.error('Error deleting file:', err);
-              deleteFile = 0;
-            } else {
-              deleteFile = 1;
-            }
-          });
-        }
-      });
-
-      // Supprimer le dossier
-      fs.rmSync(path, { recursive: true, force: true });
-
-      // Envoyer la réponse après la boucle
-      res.status(200).json([deleteFile]);
-    });
+    await fs.promises.access(sourcePath, fs.constants.F_OK);
   } catch (err) {
-    console.error('Unexpected error:', err);
-    res.status(500).json([0]);
+    result.message = `Fichier introuvable : ${sourcePath}`;
+    console.error(`[ERROR] ${result.message}`, err);
+    return res.status(200).json(result); // Retourne quand même un 200
   }
+
+  try {
+    await fs.promises.mkdir(destDir, { recursive: true });
+    await fs.promises.rename(sourcePath, destPath);
+    result.status = 'success';
+    result.moved = true;
+    result.message = 'Fichier déplacé avec succès';
+  } catch (err) {
+    result.message = `Erreur lors du déplacement du fichier`;
+    console.error(`[ERROR] ${result.message}`, err);
+  }
+
+  try {
+    const remainingFiles = await fs.promises.readdir(sourceDir);
+    if (remainingFiles.length === 0) {
+      await fs.promises.rmdir(sourceDir);
+      console.log(`[INFO] Dossier supprimé car vide : ${sourceDir}`);
+    } else {
+      console.log(`[INFO] Dossier non vide : ${sourceDir}`);
+    }
+  } catch (err) {
+    console.warn(`[WARNING] Problème avec le dossier ${sourceDir}`, err.message);
+  }
+
+  return res.status(200).json(result);
 });
 
 

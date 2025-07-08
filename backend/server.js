@@ -27,6 +27,7 @@ const panierRoutes = require('./routes/panier');
 const itemsRoutes = require('./routes/items');
 const homeRoutes= require('./routes/home');
 const homeLink= require('./routes/link');
+const rapports = require('./routes/rapports');
 
 // Configuration des limites de requêtes pour gros fichiers
 app.use(bodyParser.json({ limit: '1gb' }));
@@ -99,19 +100,22 @@ app.get('/', function(req, res) {
 
 app.use('/auth', userUdemRoutes);
 
-// Contrôleur revue
+// route revue
 app.use('/collections', collectionsRoutes);
 
-// Contrôleur panier
+// route panier
 app.use('/panier', panierRoutes);
 
-// Contrôleur items
+// route items
 app.use('/items', itemsRoutes);
 
-// Contrôleur pour les données de board
+// route pour les données de board
 app.use('/home', homeRoutes);
 
-// Contrôleur pour les liens de récupération
+// route pour les rapports
+app.use('/rapport', rapports);
+
+// route pour les liens de récupération
 app.use('/link', homeLink);
 
 //passport user

@@ -41,6 +41,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {NotAutoriseComponent} from "./components/not-autorise/not-autorise.component";
 import { MatTabsModule } from '@angular/material/tabs';
 import { ClipboardModule } from '@angular/cdk/clipboard';
@@ -58,6 +59,7 @@ import {NotUserComponent} from "./components/not-user/not-user.component";
 import {MatSortModule} from "@angular/material/sort";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {PanierFormComponent} from "./components/panier-form/panier-form.component";
+import { RapportComponent } from './components/rapport/rapport.component';
 import {UserAuthGuard} from "./services/user-auth.guard";
 import {ViewerGuard} from "./services/viewer-guard.service";
 
@@ -79,7 +81,8 @@ import {ViewerGuard} from "./services/viewer-guard.service";
     LinkRecuperationComponent,
     HistoriqueListComponent,
     HistoriqueDetailsComponent,
-    PanierFormComponent
+    PanierFormComponent,
+    RapportComponent
   ],
   imports: [
     RouterModule,
@@ -88,6 +91,7 @@ import {ViewerGuard} from "./services/viewer-guard.service";
     AppRoutingModule,
     FormsModule,
     MatTabsModule,
+    MatSnackBarModule,
     ClipboardModule,
     // import HttpClientModule after BrowserModule.
     HttpClientModule,

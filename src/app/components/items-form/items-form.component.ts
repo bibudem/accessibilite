@@ -240,7 +240,7 @@ export class ItemsFormComponent implements OnInit {
   handleSubmit(): void {
     this.file_list = [];
     let nameFile = new Date().getHours().toLocaleString() + '_item_';
-    let nameFolder = this.item.idItem + this.global.generateRandomNumber(10);
+    let nameFolder = this.global.generateRandomNumber(12);
 
     if (this.file_store !== undefined) {
       for (let i = 0; i < this.file_store.length; i++) {

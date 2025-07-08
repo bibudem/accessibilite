@@ -6,6 +6,7 @@ import {NotUserComponent} from "./components/not-user/not-user.component";
 import {AdminGuard} from "./services/admin-guard.service";
 import { AccueilComponent } from './components/accueil/accueil.component';
 import { ItemsListComponent } from './components/items-list/items-list.component';
+import { RapportComponent } from './components/rapport/rapport.component';
 import { ItemsFormComponent } from './components/items-form/items-form.component';
 import { CollectionsFormComponent } from './components/collections-form/collections-form.component';
 import { NotAutoriseComponent } from './components/not-autorise/not-autorise.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'historique-list', component: HistoriqueListComponent, canActivate: [AuthGuard, ViewerGuard] },
   { path: 'historique/:id', component: HistoriqueDetailsComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'add-panier', component: PanierFormComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'rapport', component: RapportComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'page-not-found', component: PageNotFoundComponent, canActivate: [AuthGuard] },
   { path: 'not-user', component: NotUserComponent },
   { path: 'not-access', component: NotAutoriseComponent, canActivate: [AuthGuard] },
