@@ -5,8 +5,8 @@ exports.getUserUdem = async (req, res, next) => {
 
   try {
     //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout');
+    if(!Lib.userConnect(req)) { 
+       return res.redirect('/logout'); 
     }
 
     const [ficheUser] = await UserAuth.returnUserUdem(Lib.sessionToken(req));

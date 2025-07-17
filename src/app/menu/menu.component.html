@@ -24,6 +24,12 @@
         <span class="menu-title ml-1">{{ 'menu.historique' | translate}}</span>
       </a>
     </li>
+    <li class="nav-item" [class.active]="isActive('/rapport')">
+      <a class="nav-link" href="/rapport">
+        <mat-icon>assessment</mat-icon>
+        <span class="menu-title ml-1">{{ 'menu.rapport' | translate}}</span>
+      </a>
+    </li>
     <!--<li class="nav-item">
       <a class="nav-link collapsed" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
         <mat-icon>settings_applications</mat-icon>

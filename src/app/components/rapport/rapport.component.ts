@@ -131,15 +131,21 @@ export class RapportComponent implements OnInit {
     this.rapport$.subscribe(data => {
       let filteredData = [...data];
       const filters = this.filterForm.value;
-
+      console.log(filters.typeDocument);
+      console.log('Données reçues:', data);
       if (filters.typeDocument) {
-        filteredData = filteredData.filter(item => item.typeDocument === filters.typeDocument);
-      }
-      if (filters.langue) {
-        filteredData = filteredData.filter(item => item.langue === filters.langue);
+        // Convertir en nombre si c'est une chaîne avant comparaison
+        const typeDocumentFilter = Number(filters.typeDocument);
+        filteredData = filteredData.filter(item => 
+          Number(item.typeDocument) === typeDocumentFilter
+        );
       }
       if (filters.format) {
-        filteredData = filteredData.filter(item => item.format === filters.format);
+        // Même approche pour format si nécessaire
+        const formatFilter = Number(filters.format);
+        filteredData = filteredData.filter(item => 
+          Number(item.format) === formatFilter
+        );
       }
       if (filters.dateStart) {
         filteredData = filteredData.filter(item => new Date(item.dateA) >= new Date(filters.dateStart));
@@ -167,7 +173,26 @@ export class RapportComponent implements OnInit {
       const dataToExport = this.dataSource.filteredData.map(item => {
         const exportedItem: any = {};
         this.displayedColumns.forEach(col => {
-          exportedItem[this.translate.instant(`rapport.fields.${col}`) || col] = item[col];
+          // Traduire le nom de la colonne
+          const columnName = this.translate.instant(`rapport.fields.${col}`) || col;
+          
+          // Convertir les IDs en noms pour les champs spécifiques
+          switch(col) {
+            case 'typeDocument':
+              exportedItem[columnName] = this.getOptionName(item[col], this.typeDocumentOptions);
+              break;
+            case 'format':
+              exportedItem[columnName] = this.getOptionName(item[col], this.formatOptions);
+              break;
+            case 'langue':
+              exportedItem[columnName] = this.getOptionName(item[col], this.langueOptions);
+              break;
+            case 'visuelAccessibles':
+              exportedItem[columnName] = this.getOptionName(item[col], this.visuelAccessibleOptions);
+              break;
+            default:
+              exportedItem[columnName] = item[col];
+          }
         });
         return exportedItem;
       });
@@ -180,7 +205,7 @@ export class RapportComponent implements OnInit {
       console.error('Error exporting to Excel:', error);
       this.showError(this.translate.instant('error.export-excel'));
     }
-  }
+}
 
   toggleFieldSelection(field: string, isChecked: boolean): void {
     if (isChecked) {

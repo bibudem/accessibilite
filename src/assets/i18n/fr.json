@@ -212,7 +212,8 @@
     "not-access-explication": "Certains utilisateurs peuvent avoir un accès limité à certaines pages pour des raisons de sécurité et de confidentialité.",
     "titre-non-acces": "Aucun Document Assigné",
     "explication": "Il n'y a actuellement aucun document assigné à votre compte pour ce lien.",
-    "explication-details": "Si vous vous attendiez à voir des documents assignés, veuillez contacter le support technique."
+    "explication-details": "Si vous vous attendiez à voir des documents assignés, veuillez contacter le support technique.",
+    "telechargement-en-cours": "Téléchargement en cours... Veuillez patienter"
   },
 
   "message": {
@@ -250,7 +251,8 @@
     "add-items": "Ajouter",
     "panier": "Panier",
     "ajouter-collection": "Ajouter une collection",
-    "historique": "Historique"
+    "historique": "Historique",
+    "rapport": "Rapports"
   },
   "importation": {
     "titre": "Importation des données",
@@ -296,6 +298,7 @@
     "procedure-fini": "Votre processus est bien complété",
     "btn-csv-monographie": "Mis à jour de la liste de monographies"
   },
+  
 
   "date-modification": "Dernière modification"
 }

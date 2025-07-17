@@ -24,6 +24,7 @@ export class LinkRecuperationComponent implements OnInit {
   userConnect: string = '';
   nom: string = '';
   prenom: string = '';
+  isLoading: boolean = false;
 
   // Import des fonctions globales
   global: MethodesGlobal = new MethodesGlobal();
@@ -132,9 +133,12 @@ export class LinkRecuperationComponent implements OnInit {
 
   // Méthode pour télécharger un fichier
   download(file: string, urlFile: string): void {
+    this.isLoading = true; // Activer l'animation de chargement
+    
     let param=file+'&'+urlFile;
     const url = `${window.location.origin}/api/items/file/${param}`;
-    this.linkService.download(url, this.key).subscribe((blob: Blob) => {
+    this.linkService.download(url, this.key).subscribe(
+      (blob: Blob) => {
         // Create a URL for the blob object
         const objectUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -146,13 +150,14 @@ export class LinkRecuperationComponent implements OnInit {
         // Revoke the object URL after download is complete
         URL.revokeObjectURL(objectUrl);
         a.remove();
+        this.isLoading = false; // Désactiver l'animation de chargement
       },
       error => {
         console.error('Error during file download:', error);
+        this.isLoading = false; // Désactiver l'animation de chargement en cas d'erreur
       }
     );
   }
-
 
   // Méthode pour changer la langue
   switchLanguage(language: string): void {

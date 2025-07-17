@@ -61,14 +61,6 @@
     color: #fff!important;
 }
 
-/* Supprime toutes les ombres des cartes Material-UI */
-.MuiCard-root {
-  box-shadow: none !important;
-}
-
-.MuiCard-root:hover {
-  box-shadow: none !important;
-}
 
 .mt-2 {
   margin-top:20px!important;

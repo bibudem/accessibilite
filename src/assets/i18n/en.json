@@ -210,6 +210,23 @@
     "rapport-total-statistique": "General report",
     "rapport-statistique-plateforme": "Statistics report by platform"
   },
+  "fichier": {
+    "files-titre-recuperation": "Download of requested files",
+    "files-info-recuperation": "Click on the download link below to access the file",
+    "file-telecharger": "Download",
+    "titre-recuperation-expire": "File access link expired or invalid",
+    "info-recuperation": "We regret to inform you that the link you used to access the requested file has expired or is invalid.",
+    "delails-recuperation": "This situation may occur for several reasons, including:",
+    "raison-expiration1": "Link Expiration: Download links often have a limited validity period for security reasons. The time allowed for file access may have expired.",
+    "raison-expiration2": "Incorrect Link: There may have been an error in entering the link or it may have been communicated incorrectly.",
+    "raison-expiration3": "File Deleted: It's also possible that the file you're trying to access has been deleted from our servers or moved to another location.",
+    "aide-recuperation": "If the link should be valid and you need to access the file, please contact our support team or the original sender to request a new link or get additional assistance.",
+    "not-access-explication": "Some users may have limited access to certain pages for security and privacy reasons.",
+    "titre-non-acces": "No Documents Assigned",
+    "explication": "There are currently no documents assigned to your account for this link.",
+    "explication-details": "If you expected to see assigned documents, please contact technical support.",
+    "telechargement-en-cours": "Download in progress... Please wait"
+   },
   "logs":{
     "menu-logs": "Import logs",
     "titre-logs-revue": "Periodicals logs",

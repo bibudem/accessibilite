@@ -7,6 +7,7 @@ const parseurl = require('parseurl');
 
 const app = express();
 const ports = process.env.PORT || config.serverPort;
+const MemoryStore = require('memorystore')(session);
 
 
 const bs = require('browser-storage');
@@ -42,13 +43,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware de session
-app.use(session({
-  secret: 'accessibilite*2023!!',
-  cookie: { maxAge: 3600000 },
-  resave: true,
-  saveUninitialized : true
-}));
+// Configuration de la session avec MemoryStore pour stocker les sessions en mémoire
+  app.use(session({
+      store: new MemoryStore({ checkPeriod: 86400000 }), // Nettoie les entrées expirées toutes les 24h
+      secret: config.sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+          secure: process.env.NODE_ENV === 'production', 
+          maxAge: 30 * 60 * 1000
+      }
+  }));
 
 // Middleware pour le comptage des vues
 app.use((req, res, next) => {

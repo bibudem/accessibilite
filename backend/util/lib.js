@@ -14,7 +14,7 @@ module.exports = class Lib {
 
   //creation d'un token d'utilisateur
   static sessionToken(req) {
-    const projet = 'accessibilite2023';
+    const projet = 'accessibilite2023$$$';
     const ipLocal = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const dateSession = this.dateNow('d.m.Y');
 

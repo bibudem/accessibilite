@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row bg-white" >
+  <div class="row bg-white">
     <div class="container mt-2 bib-user-header">
       <div class="row align-items-center">
         <div class="col-md-6">
@@ -50,7 +50,21 @@
             </tbody>
           </table>
       </div>
-    </div>
+       <!-- Animation de chargement -->
+        <div *ngIf="isLoading" class="loading-overlay">
+          <div class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="loading-text mt-3">
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+              </div>
+              <p class="mt-2">{{ 'fichier.telechargement-en-cours' | translate }}</p>
+            </div>
+          </div>
+        </div>
+        </div>
 
     <div class="alert alert-warning mt-3 d-none" id="alertNotUser" role="alert">
       <h1 class="mt-5 f-32 mb-3 ml-3">COLLECTIONS SPÉCIALES</h1>
