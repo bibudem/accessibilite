@@ -40,6 +40,12 @@
               <mat-cell  *matCellDef="let row" class="mat-w-25" > {{row.titre}} </mat-cell>
             </ng-container>
 
+            <!-- isbn Column -->
+            <ng-container matColumnDef="isbn">
+              <mat-header-cell  *matHeaderCellDef #isbn mat-sort-header class="mat-w-10"> {{ 'isbn' | translate}} </mat-header-cell>
+              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.isbn}} </mat-cell>
+            </ng-container>
+
             <!-- auteur Column -->
             <ng-container matColumnDef="auteur">
               <mat-header-cell  *matHeaderCellDef #auteur mat-sort-header class="mat-w-15"> {{ 'auteur' | translate}} </mat-header-cell>

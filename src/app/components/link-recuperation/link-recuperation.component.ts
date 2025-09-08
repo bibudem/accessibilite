@@ -43,6 +43,9 @@ export class LinkRecuperationComponent implements OnInit {
 
   // Méthode d'initialisation du composant
   ngOnInit(): void {
+    if (localStorage.getItem('nom')==='undefined' || localStorage.getItem('prenom')==='undefined' || !localStorage.getItem('nom') || !localStorage.getItem('prenom')) {
+      window.location.href = '/not-user';
+    }
     // Étape 1: Initialiser le composant
     this.initializeComponent();
     // Étape 2: Récupérer le courriel de l'utilisateur connecté

@@ -29,16 +29,24 @@ export class HeaderComponent implements OnInit {
 
   async ngOnInit() {
     // Vérifier et gérer la redirection s'il y a un URL à rediriger
-    const storedRedirectUrl = localStorage.getItem('redirectUrl');
-    if (storedRedirectUrl?.startsWith('/lien/')) {
-      localStorage.removeItem('redirectUrl');
-      window.location.href = storedRedirectUrl;
-      //this.router.navigateByUrl(storedRedirectUrl)
-      return;
-    }
-
     await this.loadAdminInfo(this.router.url); // Charger les infos admin
-    this.initUI(); // Initialiser les paramètres d'interface utilisateur
+    const nom = localStorage.getItem('nom');
+    const prenom = localStorage.getItem('prenom');
+    //console.log(prenom);
+    if (nom==='undefined' || prenom==='undefined') {
+      window.location.href = '/not-user';
+    }
+    
+    const storedRedirectUrl = localStorage.getItem('redirectUrl');
+      if (storedRedirectUrl?.startsWith('/lien/')) {
+        localStorage.removeItem('redirectUrl');
+        window.location.href = storedRedirectUrl;
+        //this.router.navigateByUrl(storedRedirectUrl)
+        return;
+      }
+
+      this.initUI(); // Initialiser les paramètres d'interface utilisateur
+ 
   }
 
   /** Initialisation des paramètres UI */
@@ -50,7 +58,7 @@ export class HeaderComponent implements OnInit {
 
   /** Charge les informations de l'administrateur depuis le LocalStorage ou effectue une connexion */
   private async loadAdminInfo(redirectUrl: string) {
-    if (!this.authService.roleUser) {
+    if (!this.authService.roleUser || localStorage.getItem('nom')==='undefined' || localStorage.getItem('prenom')==='undefined') {
       await this.login(redirectUrl); // Effectuer la connexion si nécessaire
     }
     this.nomAdmin = localStorage.getItem('nom') || '';
@@ -61,7 +69,7 @@ export class HeaderComponent implements OnInit {
   /** Effectue la connexion et charge les informations de l'administrateur */
   private async login(redirectUrl: string) {
     try {
-      const loginSuccess = await (await this.authService.login(redirectUrl)).toPromise(); // Convertir Observable en Promise
+      const loginSuccess = await (await this.authService.login(redirectUrl)).toPromise();
       loginSuccess ? this.loadAdminInfo(redirectUrl) : this.logout();
     } catch (error) {
       console.error('Erreur lors de la connexion', error);

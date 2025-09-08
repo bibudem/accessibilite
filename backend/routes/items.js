@@ -4,6 +4,8 @@ const itemsController = require('../controllers/items');
 
 const router = express.Router();
 
+const authMiddleware = require('../auth/authMiddleware');
+
 let fs = require('fs');
 
 const path = require('path');
@@ -13,19 +15,19 @@ const multer = require('multer');
 
 let cors = require('cors')
 
-router.post('/add', itemsController.postItem);
+router.post('/add',authMiddleware, itemsController.postItem);
 
-router.put('/save', itemsController.putItem);
+router.put('/save',authMiddleware, itemsController.putItem);
 
-router.delete('/delete/:id', itemsController.deleteItem);
+router.delete('/delete/:id',authMiddleware, itemsController.deleteItem);
 
-router.get('/fiche/:id', itemsController.consulterItem);
+router.get('/fiche/:id',authMiddleware, itemsController.consulterItem);
 
-router.get('/all', itemsController.allItems);
+router.get('/all',authMiddleware,itemsController.allItems);
 
 router.get('/all/collections', itemsController.allListeCollections);
 
-router.get('/updateUrl/:rep', itemsController.updateUrlItem);
+router.get('/updateUrl/:rep',authMiddleware, itemsController.updateUrlItem);
 
 let corsOptions = {
   origin: '*',

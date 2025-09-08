@@ -3,10 +3,6 @@ const Lib = require("../util/lib");
 
 exports.post = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
-    }
     let values=Object.values(req.body);
     const postResponse = await Collections.post(values);
     res.status(201).json(postResponse);
@@ -20,10 +16,6 @@ exports.post = async (req, res, next) => {
 
 exports.put = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
-    }
     let values=Object.values(req.body);
     //console.log(Object.values(values));
     const putResponse = await Collections.update(values);
@@ -38,10 +30,6 @@ exports.put = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout');
-    }
     //console.log(req.params.id);
     const deleteResponse = await Collections.delete(req.params.id);
     res.status(200).json(deleteResponse);
@@ -54,10 +42,6 @@ exports.delete = async (req, res, next) => {
 };
 exports.consulter = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout');
-    }
     const [fichePeriodiques] = await Collections.consulter(req.params.id);
     res.status(200).json(fichePeriodiques);
   } catch (err) {
@@ -69,10 +53,6 @@ exports.consulter = async (req, res, next) => {
 };
 exports.getAll = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout');
-    }
     const [all] = await Collections.getAll();
     res.status(200).json(all);
   } catch (err) {
@@ -84,10 +64,6 @@ exports.getAll = async (req, res, next) => {
 };
 exports.uploud = async (req, res, next) => {
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(Lib.userConnect(req).length==0){
-      return res.redirect('/api/logout'); // Utilisez "return" ici pour éviter d'envoyer une autre réponse plus tard
-    }
     let values=Object.values(req.body);
     //console.log(Object.values(values));
     const [all] = Collections.uploud(Object.values(values));

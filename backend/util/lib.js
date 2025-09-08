@@ -1,5 +1,6 @@
 const auth = require("../auth/auth");
 const datetime = require("node-datetime");
+const crypto = require("crypto");
 module.exports = class Lib {
   constructor() {
 

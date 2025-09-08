@@ -2,7 +2,6 @@ const express = require("express");
 const userUdem = require("../controllers/userUdem");
 const auth = require("../auth/auth");
 const router = express.Router();
-const Lib  = require("../util/lib");
 const passport = require("passport");
 
 
@@ -36,8 +35,12 @@ router.get('/callback.js',
 
         req.logIn(user, function(err) {
           if (err) { return next(err); }
-          auth.passport.session.userConnect=[]
-          auth.passport.session.userConnect[Lib.sessionToken(req)]=JSON.stringify(user);
+           // Vérification ou création du token
+          const token = req.session.token || generateNewToken(user.email.toString());
+          req.session.token = token;
+          req.session.passport.user[token]  = JSON.stringify(user);
+          //console.log(token);
+          //console.log(req.session.passport.user[token]);
           return res.redirect('/accueil');
           //return res.status(200).json(user);
         });
@@ -46,6 +49,12 @@ router.get('/callback.js',
   }
 );
 
+// Exemple de fonction pour générer un nouveau token
+function generateNewToken(email) {
+  const separator = "_"; // ou "-", ".", etc.
+  const rep = Math.random().toString(36).substr(2) + separator + email;
+  return rep;
+}
 
 
 

@@ -9,7 +9,7 @@ module.exports = class Rapport {
 
 
   static async fetchItems() {
-       return db.execute('SELECT idItem,titre,auteur,editeur,edition,annee,isbn,docOriginal,format,visuelAccessibles,documentComplet,description,langue,typeDocument,note,dateA,dateM FROM tbl_items order by idItem');
+       return db.execute('SELECT idItem,titre,auteur,editeur,edition,annee,isbn,docOriginal,format,visuelAccessibles,file,documentComplet,description,langue,typeDocument,note,dateA,dateM FROM tbl_items order by idItem');
    
   }
 

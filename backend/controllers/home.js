@@ -1,6 +1,5 @@
 const Logs = require('../models/home');
 const auth = require("../auth/auth");
-const Lib = require("../util/lib");
 
 exports.getCount = async (req, res, next) => {
   try {

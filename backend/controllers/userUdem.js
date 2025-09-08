@@ -1,15 +1,19 @@
 const UserAuth = require("../auth/callback");
-const Lib  = require("../util/lib");
 
 exports.getUserUdem = async (req, res, next) => {
 
   try {
-    //retourner vers la connexion si on n'a pas une bonne session pour cet utilisateur
-    if(!Lib.userConnect(req)) { 
-       return res.redirect('/logout'); 
-    }
+    //console.log("===== SESSION =====");
+    //console.log("Token:", req.session.token);
+    //console.log("===================");
 
-    const [ficheUser] = await UserAuth.returnUserUdem(Lib.sessionToken(req));
+    // Vérifiez si l'utilisateur est connecté via les données de session
+    if (!req.session.token||req.session.token==undefined) {
+      //console.log("Session invalide - redirection vers logout");
+      return res.redirect('/api/logout');
+    }
+    //console.log("UserData présent:", req.session.passport.user[req.session.token]);
+    const [ficheUser] = await UserAuth.returnUserUdem(req.session.passport.user[req.session.token]);
 
     if(ficheUser=='not-user'){
       return res.redirect('/api/logout');

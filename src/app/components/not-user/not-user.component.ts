@@ -10,6 +10,7 @@ export class NotUserComponent implements OnInit {
   constructor(private translate: TranslateService) {}
 
   ngOnInit() {
-    this.translate.setDefaultLang('fr');
-  }
+  this.translate.setDefaultLang('fr');
+  this.translate.use('fr'); // Ajoute cette ligne
+}
 }

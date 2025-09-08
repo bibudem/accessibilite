@@ -11,7 +11,6 @@ const MemoryStore = require('memorystore')(session);
 
 
 const bs = require('browser-storage');
-const Lib = require("./util/lib");
 const request = require("request");
 const auth = require("./auth/auth");
 const userUdemRoutes = require('./routes/userUdem');
@@ -45,23 +44,12 @@ app.use((req, res, next) => {
 
 // Configuration de la session avec MemoryStore pour stocker les sessions en mémoire
   app.use(session({
-      store: new MemoryStore({ checkPeriod: 86400000 }), // Nettoie les entrées expirées toutes les 24h
-      secret: config.sessionSecret,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-          secure: process.env.NODE_ENV === 'production', 
-          maxAge: 30 * 60 * 1000
-      }
-  }));
+    store: new MemoryStore({ checkPeriod: 86400000 }),
+    secret: 'X7m!qR2#vLp@9zKf*eT4uW$yHsD1bGn',
+    resave: false,
+    saveUninitialized: false
+}));
 
-// Middleware pour le comptage des vues
-app.use((req, res, next) => {
-  req.session.views = req.session.views || {};
-  const pathname = parseurl(req).pathname;
-  req.session.views[pathname] = (req.session.views[pathname] || 0) + 1;
-  next();
-});
 
 // Définir proxy url dans la création du serveur
 app.set('trust proxy', '10.120.31.31');
@@ -70,35 +58,31 @@ app.use(bodyParser.urlencoded({ extended : true }));
 app.use(auth.passport.initialize());
 app.use(auth.passport.session());
 
-// Middleware pour le comptage des vues (encore une fois?)
-app.use(function (req, res, next) {
-  if (!req.session.views) {
-    req.session.views = {}
-  }
-  // get the url pathname
-  const pathname = parseurl(req).pathname
-
-  // count the views
-  req.session.views[pathname] = (req.session.views[pathname] || 0) + 1
-
-  next()
-});
 
 // Route de déconnexion
 app.get('/logout', function(req, res) {
-  req.logOut()  // <-- not req.logout();
-  if(Lib.userConnect(req)){
-    Lib.userConnect(req)==[]
+  // D'abord, vérifiez si req.session existe avant d'y accéder
+  if (req.session) {
+    // Nettoyez les données de session avant de la détruire
+    if (req.session.passport) {
+      req.session.passport = null;
+    }
+    req.session.token = null;
   }
+  req.logOut()  // <-- not req.logout();
+
   req.session.destroy(function() {
     res.clearCookie('connect.sid');
     res.redirect('/not-user')
   });
 });
+
 //redirection pour se connecter
 app.get('/', function(req, res) {
-  if(!Lib.userConnect(req)|| Lib.userConnect(req).length==0){
+  if(!req.session.passport){
     res.redirect('/not-user')
+  }else {
+    res.redirect('/accueil')
   }
 });
 
