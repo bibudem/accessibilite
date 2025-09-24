@@ -65,12 +65,20 @@
           </div>
         </div>
         </div>
-
-    <div class="alert alert-warning mt-3 d-none" id="alertNotUser" role="alert">
-      <h1 class="mt-5 f-32 mb-3 ml-3">COLLECTIONS SPÉCIALES</h1>
-      <h2>{{ 'fichier.files-titre-recuperation' | translate }}</h2>
-      <p>{{ 'fichier.explication' | translate }}</p>
-      <p>{{ 'fichier.explication-details' | translate }}</p>
+    <!-- Message lorsque l'utilisateur est connecté mais n'a aucune ressource -->
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center">
+        <div class="alert alert-info mt-3 display-none" id="alertNotUser" >
+          <h1 class="mt-5 f-32 mb-3 ml-3">Collection du Service Accessibilité</h1>
+          <p class="mb-3">Bonjour <strong>{{this.prenom}} {{this.nom}}</strong>,</p>
+          <p>Vous n'avez actuellement aucun document associé à votre compte sur ce lien.</p>
+          <p class="mb-0">Si vous pensez qu'il s'agit d'une erreur ou si vous avez des questions concernant vos ressources, n'hésitez pas à contacter le support.</p>
+          <div class="mt-4">
+          <a href="https://bib.umontreal.ca/" class="btn btn-outline-primary mt-3" >
+            Site des bibliothèques
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

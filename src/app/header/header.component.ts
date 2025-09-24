@@ -28,26 +28,18 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // Vérifier et gérer la redirection s'il y a un URL à rediriger
-    await this.loadAdminInfo(this.router.url); // Charger les infos admin
-    const nom = localStorage.getItem('nom');
-    const prenom = localStorage.getItem('prenom');
-    //console.log(prenom);
-    if (nom==='undefined' || prenom==='undefined') {
-      window.location.href = '/not-user';
-    }
-    
     const storedRedirectUrl = localStorage.getItem('redirectUrl');
-      if (storedRedirectUrl?.startsWith('/lien/')) {
-        localStorage.removeItem('redirectUrl');
-        window.location.href = storedRedirectUrl;
-        //this.router.navigateByUrl(storedRedirectUrl)
-        return;
-      }
 
-      this.initUI(); // Initialiser les paramètres d'interface utilisateur
- 
-  }
+    if (storedRedirectUrl && storedRedirectUrl.includes('/lien/bibUdeM')) {
+      localStorage.removeItem('redirectUrl');     
+      window.location.href = storedRedirectUrl;
+      //this.router.navigateByUrl(storedRedirectUrl);
+      return;
+    }
+
+    await this.loadAdminInfo(this.router.url); // Charger les infos admin
+    this.initUI(); // Initialiser les paramètres d'interface utilisateur
+}
 
   /** Initialisation des paramètres UI */
   private initUI() {
@@ -58,7 +50,7 @@ export class HeaderComponent implements OnInit {
 
   /** Charge les informations de l'administrateur depuis le LocalStorage ou effectue une connexion */
   private async loadAdminInfo(redirectUrl: string) {
-    if (!this.authService.roleUser || localStorage.getItem('nom')==='undefined' || localStorage.getItem('prenom')==='undefined') {
+    if (!this.authService.roleUser || !localStorage.getItem('nom') || !localStorage.getItem('prenom')) {
       await this.login(redirectUrl); // Effectuer la connexion si nécessaire
     }
     this.nomAdmin = localStorage.getItem('nom') || '';

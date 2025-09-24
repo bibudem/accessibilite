@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
     } else if (adminRoutes.some(route => path.startsWith(route.split(':')[0]))) {
       this.ifAdmin = true;
       this.isUserLinkRoute = false;
-      //localStorage.removeItem('redirectUrl');
+      localStorage.removeItem('redirectUrl');
     } else {
       this.isUserLinkRoute = false;
       this.ifAdmin = false;

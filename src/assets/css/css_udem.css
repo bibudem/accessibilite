@@ -13,16 +13,16 @@
 
 /* css pour header */
 h1, h3, h5, h6{
-  font-family: 'Figtree', Arial, sans-serif !important;
+  font-family: 'Figtree', Arial, sans-serif ;
 }
 
 h2, h4{
-  font-family: 'Lora', Georgia, serif !important;
+  font-family: 'Lora', Georgia, serif ;
 }
 
 p, span {
-  font-family: 'Figtree', Arial, sans-serif !important;
-  font-size: 1rem!important;
+  font-family: 'Figtree', Arial, sans-serif;
+  font-size: 1rem;
 }
 
 .navbar .navbar-brand-wrapper{
@@ -241,7 +241,7 @@ select.form-control{
   font-size: 26px!important;
   text-transform: initial;
   margin-top: 20px!important;
-  font-family: 'Lora', Georgia, serif !important;
+  font-family: 'Lora', Georgia, serif;
 
 }
 

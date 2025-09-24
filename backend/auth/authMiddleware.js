@@ -23,6 +23,6 @@ module.exports = (req, res, next) => {
   if (!user || user.length === 0) {
     return res.redirect('/not-user');
   }
-
+  
   next();
 };

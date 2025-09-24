@@ -32,7 +32,7 @@ module.exports = class UserAuth {
     } else if (groups.includes('bib-aut-accessibilite-lecteurs')) {
       userConnect.groupe = 'Viewer';
     }
-
+    console.log(userConnect);
     return [userConnect];
   }
 

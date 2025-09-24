@@ -3,6 +3,8 @@ const auth = require("../auth/auth");
 
 exports.getLink = async (req, res, next) => {
   try {
+    console.log('Link: ');
+    console.log(req.params.key);
     const [all] = await Link.getLink(req.params.key);
     res.status(200).json(all);
   } catch (err) {

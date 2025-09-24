@@ -12,7 +12,7 @@ export class UserAuthGuard implements CanActivate {
 
   async canActivate(): Promise<boolean> {
     await this.authService.login();
-    if (this.authService.isLoggedIn && (this.authService.roleUser === 'User' || this.authService.roleUser === 'Admin')) {
+    if (this.authService.isLoggedIn && (this.authService.roleUser === 'not-user' || this.authService.roleUser === 'Admin')) {
       return true;
     } else {
       window.location.href = '/not-user' ;

@@ -53,8 +53,8 @@ export class AuthService {
               if (storedRedirectUrl?.startsWith('/lien/')) {
                 localStorage.removeItem('redirectUrl');
                 //console.log(storedRedirectUrl);
-                window.location.href = storedRedirectUrl;
-                //this.router.navigateByUrl(storedRedirectUrl)
+                //window.location.href = storedRedirectUrl;
+                this.router.navigateByUrl(storedRedirectUrl)
                 return;
               }
               break;
@@ -94,7 +94,7 @@ export class AuthService {
     localStorage.removeItem('prenom');
     localStorage.removeItem('courriel');
     localStorage.removeItem('roleUser');
-
+    localStorage.removeItem('redirectUrl');
     window.location.href = '/api/logout';
   }
 
@@ -103,8 +103,8 @@ export class AuthService {
     return new Promise<boolean>((resolve, reject) => {
       try {
         // @ts-ignore
-        //this.window.location.href = url;
-        this.router.navigateByUrl(url);
+        this.window.location.href = url;
+        //this.router.navigateByUrl(url);
       } catch (e) {
         reject(e);
       }

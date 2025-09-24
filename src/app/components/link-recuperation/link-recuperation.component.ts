@@ -43,9 +43,7 @@ export class LinkRecuperationComponent implements OnInit {
 
   // Méthode d'initialisation du composant
   ngOnInit(): void {
-    if (localStorage.getItem('nom')==='undefined' || localStorage.getItem('prenom')==='undefined' || !localStorage.getItem('nom') || !localStorage.getItem('prenom')) {
-      window.location.href = '/not-user';
-    }
+    this.global.nonAfficher('alertNotUser');
     // Étape 1: Initialiser le composant
     this.initializeComponent();
     // Étape 2: Récupérer le courriel de l'utilisateur connecté
@@ -77,8 +75,8 @@ export class LinkRecuperationComponent implements OnInit {
 
       // Vérifier si l'utilisateur a les droits d'accès
       if (
-        this.userConnect === res[0].courriel ||
-        localStorage.getItem('roleUser') === 'Admin'
+        res[0] && (this.userConnect === res[0].courriel ||
+        localStorage.getItem('roleUser') === 'Admin')
       ) {
         // Vérifier les informations de l'item et mettre à jour si nécessaire
         if (res[0] && !this.validerLesInfosItem(res[0].dateExpiration)) {
@@ -101,7 +99,12 @@ export class LinkRecuperationComponent implements OnInit {
           const infosItem = this.createInfosItem(item);
           this.listeItems.push(infosItem);
         }
+        this.global.nonAfficher('alertNotUser');
       } else {
+        this.global.afficher('alertNotUser');
+      }
+      if(this.listeItems===0){
+        //console.log(this.listeItems);
         this.global.afficher('alertNotUser');
       }
     } catch (err) {
