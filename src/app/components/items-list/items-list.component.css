@@ -1,10 +1,54 @@
+/* ── Largeurs des colonnes (total = 100%) ──────────────────────────── */
+.mat-column-idItem       { flex: 0 0 3%;  min-width: 35px; }
+.mat-column-titre        { flex: 0 0 18%; }
+.mat-column-isbn         { flex: 0 0 9%; min-width: 90px; }
+.mat-column-auteur       { flex: 0 0 11%; }
+.mat-column-description  { flex: 0 0 14%; }
+.mat-column-annee        { flex: 0 0 5%;  min-width: 40px; }
+.mat-column-editeur      { flex: 0 0 11%; }
+.mat-column-dateA        { flex: 0 0 11%;  min-width: 85px; }
+.mat-column-typeDocument { flex: 0 0 7%;  }
+.mat-column-format       { flex: 0 0 5%;  }
+.mat-column-consulter    { flex: 0 0 6%;  min-width: 50px; }
 
+/* ── En-tête ───────────────────────────────────────────────────────── */
+.mat-mdc-header-row {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid #0057ac !important;
+}
+
+.mat-mdc-header-cell {
+  font-size: 0.70rem !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Lignes ────────────────────────────────────────────────────────── */
 .mat-mdc-row .mat-mdc-cell {
-  border-bottom: 0.5px solid transparent;
-  border-top: 0.5px solid transparent;
+  border-bottom: 1px solid #f0f0f0 !important;
+  border-top: 1px solid transparent;
   cursor: pointer;
+  font-size: 0.82rem;
+  color: #343a40;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  border-color: rgba(232, 212, 243, 0.7);
+  background-color: rgba(0, 87, 172, 0.05);
+  border-color: rgba(0, 87, 172, 0.1) !important;
+}
+
+/* ── Paginateur ────────────────────────────────────────────────────── */
+.mat-mdc-paginator {
+  border-top: 1px solid #e4e4f4;
+  background-color: #fafbfd !important;
+}
+
+/* ── État vide ─────────────────────────────────────────────────────── */
+.empty-state .empty-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #adb5bd;
 }

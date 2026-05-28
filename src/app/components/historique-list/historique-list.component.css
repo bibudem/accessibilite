@@ -1,9 +1,53 @@
+/* ── Largeurs des colonnes (total = 100%) ──────────────────────────── */
+.mat-column-numero          { flex: 0 0 4%;  min-width: 35px; }
+.mat-column-sujet           { flex: 0 0 15%; }
+.mat-column-nom             { flex: 0 0 10%; }
+.mat-column-prenom          { flex: 0 0 10%; }
+.mat-column-courriel        { flex: 0 0 18%; }
+.mat-column-dateExpiration  { flex: 0 0 12%; min-width: 85px; }
+.mat-column-statut          { flex: 0 0 8%;  }
+.mat-column-url             { flex: 0 0 5%;  min-width: 50px; }
+.mat-column-lastDateModif   { flex: 0 0 12%; min-width: 110px; }
+.mat-column-consulter       { flex: 0 0 6%;  min-width: 60px; }
+
+/* ── En-tête ───────────────────────────────────────────────────────── */
+.mat-mdc-header-row {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid #0057ac !important;
+}
+
+.mat-mdc-header-cell {
+  font-size: 0.70rem !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Lignes ────────────────────────────────────────────────────────── */
 .mat-mdc-row .mat-mdc-cell {
-  border-bottom: 0.5px solid transparent;
-  border-top: 0.5px solid transparent;
+  border-bottom: 1px solid #f0f0f0 !important;
+  border-top: 1px solid transparent;
   cursor: pointer;
+  font-size: 0.82rem;
+  color: #343a40;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  border-color: rgba(232, 212, 243, 0.7);
+  background-color: rgba(0, 87, 172, 0.05);
+  border-color: rgba(0, 87, 172, 0.1) !important;
+}
+
+/* ── Paginateur ────────────────────────────────────────────────────── */
+.mat-mdc-paginator {
+  border-top: 1px solid #e4e4f4;
+  background-color: #fafbfd !important;
+}
+
+/* ── État vide ─────────────────────────────────────────────────────── */
+.empty-state .empty-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #adb5bd;
 }

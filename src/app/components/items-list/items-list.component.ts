@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { MethodesGlobal } from 'src/app/lib/MethodesGlobal';
 import { ItemService } from 'src/app/services/item.service';
-import {Location} from '@angular/common';
-import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
+import { Location } from '@angular/common';
+import { ListeChoixOptions } from '../../lib/ListeChoixOptions';
 
 @Component({
   selector: 'app-items-list',
@@ -14,155 +14,102 @@ import {ListeChoixOptions} from "../../lib/ListeChoixOptions";
   styleUrls: ['./items-list.component.css']
 })
 export class ItemsListComponent implements OnInit {
-  //les entêts du tableau
-  displayedColumns = ['idItem','titre','isbn','auteur','annee','editeur','dateA','typeDocument','format','consulter'];
+  displayedColumns = ['idItem', 'titre', 'isbn', 'auteur', 'annee', 'description', 'editeur', 'dateA', 'typeDocument', 'format', 'consulter'];
   listeItems: any[] = [];
-  // @ts-ignore
-  dataSource: MatTableDataSource<ListeItems>;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
-  @ViewChild(MatPaginator) paginator:  any;
+  @ViewChild(MatPaginator) paginator: any;
+  @ViewChild(MatSort) matSort: MatSort | any;
 
-  @ViewChild(MatSort)  matSort : MatSort | any;
-
-
-  //importer les fonctions global
   global: MethodesGlobal = new MethodesGlobal();
-
-  //importer les liste des choix
   lstOptions: ListeChoixOptions = new ListeChoixOptions();
-
   items$: Observable<any[]> | undefined;
 
-  //prendre la valeur d'un input
-  getValue(value:string){
+  textRechercher: string = localStorage.getItem('textFiltre') || '';
+  ifAdmin = false;
+
+  private readonly searchableFields = ['idItem', 'titre', 'isbn', 'auteur', 'annee', 'description', 'editeur', 'typeDocument', 'format', 'dateA', 'dateM'];
+
+  constructor(private itemService: ItemService, private _location: Location) {}
+
+  ngOnInit(): void {
+    this.creerTableau();
+    this.ifAdmin = this.global.ifAdminFunction();
+  }
+
+  getValue(value: string): string {
     return value.trim();
   }
 
-  //garder les titre rechercher dans les filtres
-  textRechercher=''
-
-  ifAdmin=false;
-
-  constructor(private itemService: ItemService,
-              private _location: Location) { }
-
-  ngOnInit(): void {
-    //creation du tableau
-    this.creerTableau();
-
-    this.textRechercher=this.historiqueRechercheZone();
-    //ajout de niveau de securité
-    this.ifAdmin=this.global.ifAdminFunction();
-
+  applyFilter(filterValue: string): void {
+    this.textRechercher = filterValue;
+    localStorage.setItem('textFiltre', filterValue);
+    this.dataSource.filter = this.global.normalizeString(filterValue);
   }
 
-//appliquer filtre
-  applyFilter(filterValue: string) {
+  viderFiltre(): void {
+    this.textRechercher = '';
     localStorage.setItem('textFiltre', '');
-    this.textRechercher = this.historiqueRechercheZone();
+    this.dataSource.filter = '';
+  }
 
-    const normalizedFilter = this.global.normalizeString(filterValue);
-
-    // Redéfinir la logique du filtre
+  creerTableau(): void {
+    // Défini une seule fois — recherche dans toutes les colonnes visibles uniquement
     this.dataSource.filterPredicate = (data: any, filter: string) => {
-      const dataStr = this.global.normalizeString(Object.values(data).join(' '));
+      const dataStr = this.searchableFields
+        .map(field => this.global.normalizeString(String(data[field] ?? '')))
+        .join(' ');
       return dataStr.includes(filter);
     };
 
-    this.dataSource.filter = normalizedFilter;
+    this.items$ = this.fetchAll();
+    firstValueFrom(this.items$).then(res => {
+      if (res) {
+        this.listeItems = res.map((item, index) => ({
+          numero: index + 1,
+          idItem: item.idItem,
+          typeDocument: this.getDocumentTypeName(item.typeDocument),
+          titre: item.titre,
+          isbn: item.isbn,
+          editeur: item.editeur,
+          auteur: item.auteur,
+          file: item.file,
+          URL: '/assets/files/items/' + item.URL + '/' + item.file,
+          format: this.getFormatName(item.format),
+          annee: item.annee,
+          description: item.description,
+          dateA: item.dateA,
+          dateM: item.dateM
+        }));
+      }
+
+      this.dataSource.data = this.listeItems;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.matSort;
+
+      if (this.textRechercher) {
+        this.applyFilter(this.textRechercher);
+      }
+    }).catch(err => console.error(`Error: ${err?.message}`));
   }
 
-  //fonction doit etre async pour attendre la reponse de la bd
-  creerTableau() {
-    try {
-      this.items$ = this.fetchAll();
-      let url: string[] = [];
-
-      this.items$.toPromise().then(res => {
-        if (res !== undefined) {
-          this.listeItems = res.map((item, index) => {
-            url[index] = '/assets/files/items/' + item.URL + '/' + item.file;
-            return {
-              "numero": index + 1,
-              "idItem": item.idItem,
-              "typeDocument": this.getDocumentTypeName(item.typeDocument),
-              "titre": item.titre,
-              "isbn": item.isbn,
-              "editeur": item.editeur,
-              "auteur": item.auteur,
-              "file": item.file,
-              "URL": url[index],
-              "format": this.getFormatName(item.format),
-              "annee": item.annee,
-              "dateA": item.dateA,
-              "dateM": item.dateM
-            };
-          });
-        }
-
-        // Redéfinir le contenu de la table avec la pagination et la recherche une fois que le résultat de la BD est retourné
-        this.dataSource = new MatTableDataSource(this.listeItems);
-        if (this.textRechercher != '') {
-          this.applyFilter(this.textRechercher);
-        }
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.matSort;
-
-      });
-    } catch (err) {
-      console.error(`Error : ${err.message}`);
-    }
-  }
-
-  //recouperer le titre de type selon l'id
   getDocumentTypeName(typeDocumentId: string): string {
     const id = Number(typeDocumentId);
     const documentType = this.lstOptions.lstTypeDocument.find(docType => docType.id === id);
     return documentType ? documentType.name : '';
   }
 
-  //recouperer le titre de format selon l'id
   getFormatName(formatId: number): string {
     const id = Number(formatId);
     const format = this.lstOptions.lstFormatSubstitut.find(f => f.id === id);
     return format ? format.name : 'Inconnu';
   }
 
-//recouperer la liste des periodiques
   fetchAll(): Observable<any[]> {
     return this.itemService.fetchAll();
   }
 
-  //garder les key pour le filtre de recherche
-  historiqueRechercheZone(){
-    let result=''
-    // @ts-ignore
-    let textFiltre=document.getElementById('textFiltre').value;
-    if(textFiltre!='')
-      localStorage.setItem('textFiltre',textFiltre)
-
-    if(localStorage.getItem('textFiltre'))
-    { // @ts-ignore
-      result=localStorage.getItem('textFiltre')
-    }
-
-    return result
-  }
-  //vider le filtre
-  viderFiltre(){
-    // @ts-ignore
-    if(document.getElementById('textFiltre').value){
-      // @ts-ignore
-      document.getElementById('textFiltre').value='';
-      localStorage.setItem('textFiltre','');
-      this.applyFilter('');
-    }
-
-  }
-
-
-//return historique page
-  backClicked() {
+  backClicked(): void {
     this._location.back();
   }
 }

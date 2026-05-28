@@ -1,107 +1,123 @@
 <div class="card mt-5">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-8">
-        <h2 class="mt-1">{{'panier.liste-suivi'| translate}}</h2>
-      </div>
-      <div class="col-md-4">
-        <mat-card-actions align="end">
-          <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
-        </mat-card-actions>
-      </div>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h2 class="mb-0">{{'panier.liste-suivi' | translate}}</h2>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm" (click)="backClicked()">
+        <i class="typcn typcn-chevron-left"></i> {{ 'btn.return' | translate }}
+      </button>
     </div>
   </div>
-</div>
-<div class="card mt-1">
+
   <div class="card-body">
-    <div class="row">
-      <mat-form-field class=" w-50 mt-2">
-        <input (keyup)="applyFilter(getValue(searchePanier.value))" class="mat-input-placeholder form-control"
-               matInput  id="searchePanier" name="searchePanier" #searchePanier value="" placeholder="{{ 'filtre-text' | translate}}">
-        <a href="javascript:;" *ngIf="searchePanier.value" ><span aria-hidden="true"  (click)="viderFiltre()">&times;</span></a>
-      </mat-form-field>
-      <div class="table-responsive mt-3 ">
-        <mat-table
-          [dataSource]="dataSource"
-          class=" w-100 table-hover"
-          matSort
-          matSortActive="nom"
-          matSortDirection="asc">
-
-          <!-- numero Column -->
-          <ng-container matColumnDef="numero">
-            <mat-header-cell  *matHeaderCellDef #numero mat-sort-header  class=" mat-w-5 pl-2 "> {{ 'nr' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let row" class=" mat-w-5 pl-2" > {{row.numero}} </mat-cell>
-          </ng-container>
-
-          <!-- sujet Column -->
-          <ng-container matColumnDef="sujet">
-            <mat-header-cell  *matHeaderCellDef #sujet mat-sort-header class="mat-w-15 "> {{ 'sujet' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.sujet}} </mat-cell>
-          </ng-container>
-
-          <!-- nom Column -->
-          <ng-container matColumnDef="nom">
-            <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-10 "> {{ 'nom' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.nom}} </mat-cell>
-          </ng-container>
-
-          <!-- prenom Column -->
-          <ng-container matColumnDef="prenom">
-            <mat-header-cell  *matHeaderCellDef #prenom mat-sort-header class="mat-w-10 "> {{ 'prenom' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.prenom}} </mat-cell>
-          </ng-container>
-
-          <!-- courriel Column -->
-          <ng-container matColumnDef="courriel">
-            <mat-header-cell  *matHeaderCellDef #courriel mat-sort-header class="mat-w-15 "> {{ 'courriel' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.courriel}} </mat-cell>
-          </ng-container>
-
-          <!-- dateExpiration Column -->
-          <ng-container matColumnDef="dateExpiration">
-            <mat-header-cell  *matHeaderCellDef #dateExpiration mat-sort-header class="mat-w-15 "> {{ 'dateExpiration' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.dateExpiration}} </mat-cell>
-          </ng-container>
-
-          <!-- statut Column -->
-          <ng-container matColumnDef="statut">
-            <mat-header-cell  *matHeaderCellDef #statut mat-sort-header class="mat-w-5 "> {{ 'statut' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-5" > {{row.statut}} </mat-cell>
-          </ng-container>
-
-          <!--  url -->
-          <ng-container matColumnDef="url">
-            <mat-header-cell  *matHeaderCellDef #url mat-sort-header class="mat-w-5 text-center "> {{ 'url' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-5 text-center" title="{{ 'copier-url' | translate}}" >
-              <button type="button" class="btn-outline-primary btn-rounded btn-icon btn-sm" [cdkCopyToClipboard]="routeUrl+'/lien/'+row.cle">
-                <i class="typcn typcn-link"></i>
-              </button>
-            </mat-cell>
-          </ng-container>
-
-          <!-- lastDateModif Column -->
-          <ng-container matColumnDef="lastDateModif">
-            <mat-header-cell  *matHeaderCellDef #dateExpiration mat-sort-header class="mat-w-15 "> {{ 'lastDateModif' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.lastDateModif | date:'yyyy/MM/dd HH:mm'}} </mat-cell>
-          </ng-container>
-
-          <!-- Consulter Column -->
-          <ng-container matColumnDef="consulter" >
-            <mat-header-cell *matHeaderCellDef   class="mat-w-5 text-center"> {{ 'details' | translate}} </mat-header-cell>
-            <mat-cell  *matCellDef="let row" class="mat-w-5 text-center">
-              <button type="button" class="btn btn-dark btn-icon btn-sm" title="Consulter la fiche"  routerLink="/historique/{{ row.idPanier }}">
-                <i class="typcn typcn-edit btn-icon-append"></i>
-              </button>
-            </mat-cell>
-          </ng-container>
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;">
-          </mat-row>
-        </mat-table>
-         <div class="mt-5"></div>
-        <mat-paginator [pageSizeOptions]="[20, 60, 90, 120]"></mat-paginator>
+    <!-- Barre de filtre -->
+    <div class="row align-items-center mb-1">
+      <div class="col-md-6 col-lg-5">
+        <mat-form-field appearance="outline" class="w-100 mt-1">
+          <mat-label>{{ 'filtre-text' | translate }}</mat-label>
+          <mat-icon matPrefix class="mr-1">search</mat-icon>
+          <input matInput #searchePanier [value]="textRechercher"
+                 (keyup)="applyFilter(getValue(searchePanier.value))"
+                 id="searchePanier" name="searchePanier">
+          <button mat-icon-button matSuffix *ngIf="textRechercher" (click)="viderFiltre()" type="button" aria-label="Vider">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
       </div>
+      <div class="col text-right">
+        <span class="text-muted small">{{ dataSource.filteredData.length }} {{'nb-resultats' | translate}}</span>
+      </div>
+    </div>
+
+    <!-- Tableau -->
+    <div>
+      <mat-table
+        [dataSource]="dataSource"
+        class="w-100"
+        matSort
+        matSortActive="nom"
+        matSortDirection="asc">
+
+        <!-- numero Column -->
+        <ng-container matColumnDef="numero">
+          <mat-header-cell *matHeaderCellDef mat-sort-header class="pl-2">{{ 'nr' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="pl-2">{{row.numero}}</mat-cell>
+        </ng-container>
+
+        <!-- sujet Column -->
+        <ng-container matColumnDef="sujet">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'sujet' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" [title]="row.sujet">{{row.sujet}}</mat-cell>
+        </ng-container>
+
+        <!-- nom Column -->
+        <ng-container matColumnDef="nom">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'nom' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.nom}}</mat-cell>
+        </ng-container>
+
+        <!-- prenom Column -->
+        <ng-container matColumnDef="prenom">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'prenom' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.prenom}}</mat-cell>
+        </ng-container>
+
+        <!-- courriel Column -->
+        <ng-container matColumnDef="courriel">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'courriel' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" [title]="row.courriel">{{row.courriel}}</mat-cell>
+        </ng-container>
+
+        <!-- dateExpiration Column -->
+        <ng-container matColumnDef="dateExpiration">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'dateExpiration' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.dateExpiration | date:'yyyy/MM/dd'}}</mat-cell>
+        </ng-container>
+
+        <!-- statut Column -->
+        <ng-container matColumnDef="statut">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'statut' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.statut}}</mat-cell>
+        </ng-container>
+
+        <!-- url Column -->
+        <ng-container matColumnDef="url">
+          <mat-header-cell *matHeaderCellDef class="justify-content-center">{{ 'url' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="justify-content-center" [title]="'copier-url' | translate">
+            <button type="button" class="btn btn-outline-primary btn-rounded btn-icon btn-sm"
+                    [cdkCopyToClipboard]="routeUrl + '/lien/' + row.cle">
+              <i class="typcn typcn-link"></i>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <!-- lastDateModif Column -->
+        <ng-container matColumnDef="lastDateModif">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'lastDateModif' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.lastDateModif | date:'yyyy/MM/dd HH:mm'}}</mat-cell>
+        </ng-container>
+
+        <!-- consulter Column -->
+        <ng-container matColumnDef="consulter">
+          <mat-header-cell *matHeaderCellDef class="justify-content-center">{{ 'details' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="justify-content-center">
+            <button type="button" class="btn btn-primary btn-rounded btn-icon btn-sm"
+                    routerLink="/historique/{{ row.idPanier }}" [title]="'details' | translate">
+              <i class="typcn typcn-document-text menu-icon"></i>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <!-- État vide -->
+      <div *ngIf="dataSource.filteredData.length === 0" class="empty-state text-center py-5">
+        <mat-icon class="empty-icon">find_in_page</mat-icon>
+        <p class="text-muted mt-2">{{'no-data' | translate}}</p>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[20, 60, 90, 120]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>

@@ -1,106 +1,72 @@
-/* rapport.component.css */
-.card {
-  border-radius: 8px;
-  overflow: hidden;
+/* ── En-tête du tableau ─────────────────────────────────────────────── */
+.mat-mdc-header-row {
+  background-color: #f5f7fa;
+  border-bottom: 2px solid #0057ac !important;
 }
 
-.mat-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+th.mat-mdc-header-cell {
+  font-size: 0.70rem !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.mat-header-cell {
-  font-weight: bold;
-  background-color: #f5f5f5;
+/* ── Lignes du tableau ──────────────────────────────────────────────── */
+td.mat-mdc-cell {
+  border-bottom: 1px solid #f0f0f0 !important;
+  border-top: 1px solid transparent;
+  font-size: 0.82rem;
+  color: #343a40;
+  cursor: default;
 }
 
-.mat-row:nth-child(even) {
-  background-color: #fafafa;
+tr.mat-mdc-row:hover td.mat-mdc-cell {
+  background-color: rgba(0, 87, 172, 0.05);
+  border-color: rgba(0, 87, 172, 0.1) !important;
 }
 
-.mat-row:hover {
-  background-color: #f0f0f0;
+/* ── Paginateur ──────────────────────────────────────────────────────── */
+.mat-mdc-paginator {
+  border-top: 1px solid #e4e4f4;
+  background-color: #fafbfd !important;
 }
 
-.mat-paginator {
-  background-color: transparent;
+/* ── État vide ───────────────────────────────────────────────────────── */
+.empty-state .empty-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #adb5bd;
 }
 
-.mat-form-field {
-  width: 100%;
+/* ── Accordéon Filtres / Sélection des champs ────────────────────────── */
+.rapport-accordion .mat-expansion-panel {
+  box-shadow: none !important;
+  border: 1px solid #e4e4f4;
+  border-radius: 4px !important;
+  margin-bottom: 6px;
 }
 
-.mat-card-header {
-  padding: 16px;
+.rapport-accordion .mat-expansion-panel-header {
+  background-color: #f8f9fb !important;
+  height: 44px !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #495057;
 }
 
-.mat-card-content {
-  padding: 16px;
-}
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.7);
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.rapport-accordion .mat-expansion-panel-header:hover {
+  background-color: #eef1f5 !important;
 }
 
-.loading-spinner {
-  text-align: center;
-}
-
-
-.btn-primary {
-    background-color: #0057AC;
-    color: #fff!important;
-}
-
-
-.mt-2 {
-  margin-top:20px!important;
+.rapport-accordion .mat-expansion-panel-body {
+  padding: 12px 16px 4px;
 }
 
 
+/* ── Snackbar erreur ─────────────────────────────────────────────────── */
 .error-snackbar {
   background-color: #f44336;
   color: white;
-}
-
-.table-responsive {
-  overflow-x: auto;
-  min-height: 300px;
-}
-
-.mat-elevation-z1 {
-  box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 
-              0 1px 1px 0 rgba(0,0,0,.14), 
-              0 1px 3px 0 rgba(0,0,0,.12);
-}
-
-.card {
-  margin-bottom: 20px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .mat-table {
-    min-width: 100%;
-    display: block;
-    overflow-x: auto;
-  }
-  
-  .mat-cell, .mat-header-cell {
-    padding: 8px;
-    font-size: 12px;
-  }
-  
-  .mat-form-field {
-    margin-bottom: 8px;
-  }
 }

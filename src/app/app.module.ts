@@ -1,4 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from "./app.component";
@@ -29,7 +30,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { AuthGuard } from "./services/auth-guard.service";
 import {AdminGuard} from "./services/admin-guard.service";
 import {MatTableModule} from "@angular/material/table";
-import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
+import {MatPaginatorModule} from "@angular/material/paginator";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr, 'fr');
@@ -57,6 +58,7 @@ import { HistoriqueDetailsComponent } from './components/historique-details/hist
 // directive pour les masks
 import {NotUserComponent} from "./components/not-user/not-user.component";
 import {MatSortModule} from "@angular/material/sort";
+import {MatExpansionModule} from "@angular/material/expansion";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {PanierFormComponent} from "./components/panier-form/panier-form.component";
 import { RapportComponent } from './components/rapport/rapport.component';
@@ -124,6 +126,7 @@ import {ViewerGuard} from "./services/viewer-guard.service";
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSortModule,
+    MatExpansionModule,
     NgbModule,
     DropDownListModule, ComboBoxModule, AutoCompleteModule, MultiSelectModule, DropDownTreeModule, MentionModule
 
@@ -151,6 +154,6 @@ export function appInitializerFactory(translate: TranslateService) {
   return () => {
     const lang = 'fr';
     translate.setDefaultLang(lang);
-    return translate.use(lang).toPromise();
+    return firstValueFrom(translate.use(lang));
   };
 }

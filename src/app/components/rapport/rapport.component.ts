@@ -131,8 +131,6 @@ export class RapportComponent implements OnInit {
     this.rapport$.subscribe(data => {
       let filteredData = [...data];
       const filters = this.filterForm.value;
-      console.log(filters.typeDocument);
-      console.log('Données reçues:', data);
       if (filters.typeDocument) {
         // Convertir en nombre si c'est une chaîne avant comparaison
         const typeDocumentFilter = Number(filters.typeDocument);

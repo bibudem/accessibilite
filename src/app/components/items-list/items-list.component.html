@@ -1,119 +1,129 @@
 <div class="card mt-5">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-6">
-        <h2 class="mt-1">{{'list-items'| translate}}</h2>
-      </div>
-      <div class="col-md-6">
-        <mat-card-actions align="end">
-          <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
-          <a class="btn btn-primary btn-sm ml-1 float-right"  href="/items/add" ><i class=" typcn typcn-download"></i> {{ 'ajouter' | translate}}</a>
-        </mat-card-actions>
-      </div>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h2 class="mb-0">{{'list-items' | translate}}</h2>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="backClicked()">
+        <i class="typcn typcn-chevron-left"></i> {{ 'btn.return' | translate }}
+      </button>
+      <a class="btn btn-primary btn-sm" href="/items/add">
+        <i class="typcn typcn-plus"></i> {{ 'ajouter' | translate }}
+      </a>
     </div>
   </div>
-</div>
-<div class="card mt-1">
+
   <div class="card-body">
-    <div class="row">
-  <mat-form-field class=" w-50 mt-2">
-    <input (keyup)="applyFilter(getValue(texteFiltre.value))" class="mat-input-placeholder"
-           matInput  id="textFiltre" name="textFiltre" #texteFiltre value="{{textRechercher}}" placeholder="{{ 'filtre-text' | translate}}">
-    <a href="javascript:;" *ngIf="texteFiltre.value"><span aria-hidden="true" (click)="viderFiltre()">&times;</span></a>
-  </mat-form-field>
-      <div class="table-responsive mt-3">
-          <mat-table
-            [dataSource]="dataSource"
-            class="w-100"
-            matSort
-            matSortActive="titre"
-            matSortDirection="asc">
-            <!-- ID Column -->
-            <ng-container matColumnDef="idItem">
-              <mat-header-cell  *matHeaderCellDef #idItem mat-sort-header  class=" mat-w-5 pl-2"> {{ 'id' | translate}} </mat-header-cell>
-              <mat-cell *matCellDef="let row" class=" mat-w-5 pl-2" > {{row.idItem}} </mat-cell>
-            </ng-container>
-
-            <!-- titre Column -->
-            <ng-container matColumnDef="titre">
-              <mat-header-cell  *matHeaderCellDef #titre mat-sort-header class="mat-w-25"> {{ 'titre' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-25" > {{row.titre}} </mat-cell>
-            </ng-container>
-
-            <!-- isbn Column -->
-            <ng-container matColumnDef="isbn">
-              <mat-header-cell  *matHeaderCellDef #isbn mat-sort-header class="mat-w-10"> {{ 'isbn' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.isbn}} </mat-cell>
-            </ng-container>
-
-            <!-- auteur Column -->
-            <ng-container matColumnDef="auteur">
-              <mat-header-cell  *matHeaderCellDef #auteur mat-sort-header class="mat-w-15"> {{ 'auteur' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.auteur}} </mat-cell>
-            </ng-container>
-
-            <!-- collection Column -->
-            <ng-container matColumnDef="annee">
-              <mat-header-cell  *matHeaderCellDef #annee mat-sort-header class="mat-w-5"> {{ 'annee' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-5 text-center" > {{row.annee}} </mat-cell>
-            </ng-container>
-
-            <!-- editeur Column -->
-            <ng-container matColumnDef="editeur">
-              <mat-header-cell  *matHeaderCellDef #editeur mat-sort-header class="mat-w-15"> {{ 'editeur' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-15" > {{row.editeur}} </mat-cell>
-            </ng-container>
-
-            <!-- dateM Column -->
-            <ng-container matColumnDef="dateA">
-              <mat-header-cell *matHeaderCellDef mat-sort-header class="mat-w-10">
-                {{ 'date-mise-a-jour' | translate }}
-              </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="mat-w-10">
-                {{ row.dateM ? (row.dateM | date:'yyyy/MM/dd') : (row.dateA | date:'yyyy/MM/dd') }} <!-- yyyy/MM/dd HH:mm -->
-              </mat-cell>
-            </ng-container>
-
-            <!-- typeDocument Column -->
-            <ng-container matColumnDef="typeDocument">
-              <mat-header-cell  *matHeaderCellDef #typeDocument mat-sort-header class="mat-w-5"> {{ 'type' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-5 align-content-center" > {{row.typeDocument}} </mat-cell>
-            </ng-container>
-
-            <!-- format Column -->
-            <ng-container matColumnDef="format">
-              <mat-header-cell  *matHeaderCellDef #format mat-sort-header class="mat-w-10"> {{ 'format' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10" > {{row.format}} </mat-cell>
-            </ng-container>
-
-
-            <!-- URL Column -->
-            <!--<ng-container matColumnDef="URL">
-              <mat-header-cell  *matHeaderCellDef #URL  class="mat-w-5 "> {{ 'file' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-5 text-center" >
-                <a *ngIf="row.file"  class="btn-outline-primary btn-rounded btn-icon btn-sm" title="{{ 'voir-fichier' | translate}}" href="{{row.URL}}" target="_blank" >
-                  <i class="typcn typcn-document-text"></i>
-                </a>
-              </mat-cell>
-            </ng-container>-->
-
-
-            <!-- Consulter Column -->
-            <ng-container matColumnDef="consulter" >
-              <mat-header-cell *matHeaderCellDef   class="mat-w-10 text-center"> {{ 'consulter' | translate}} </mat-header-cell>
-              <mat-cell  *matCellDef="let row" class="mat-w-10 align-content-center">
-                <button type="button" class="btn btn-dark btn-sm btn-icon-text text-center ml-2" routerLink="/items/{{ row.idItem }}">
-                  <i class="typcn typcn-edit btn-icon-append"></i>
-                </button>
-              </mat-cell>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;">
-            </mat-row>
-          </mat-table>
-
-          <mat-paginator [pageSizeOptions]="[30, 60, 90, 120]"></mat-paginator>
+    <!-- Barre de filtre -->
+    <div class="row align-items-center mb-1">
+      <div class="col-md-6 col-lg-5">
+        <mat-form-field appearance="outline" class="w-100 mt-1">
+          <mat-label>{{ 'filtre-text' | translate }}</mat-label>
+          <mat-icon matPrefix class="mr-1">search</mat-icon>
+          <input matInput #texteFiltre [value]="textRechercher"
+                 (keyup)="applyFilter(getValue(texteFiltre.value))"
+                 id="textFiltre" name="textFiltre">
+          <button mat-icon-button matSuffix *ngIf="textRechercher" (click)="viderFiltre()" type="button" aria-label="Vider">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
       </div>
+      <div class="col text-right">
+        <span class="text-muted small">{{ dataSource.filteredData.length }} {{'nb-resultats' | translate}}</span>
+      </div>
+    </div>
+
+    <!-- Tableau -->
+    <div>
+      <mat-table
+        [dataSource]="dataSource"
+        class="w-100"
+        matSort
+        matSortActive="titre"
+        matSortDirection="asc">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="idItem">
+          <mat-header-cell *matHeaderCellDef mat-sort-header class="pl-2">{{ 'id' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="pl-2">{{row.idItem}}</mat-cell>
+        </ng-container>
+
+        <!-- titre Column -->
+        <ng-container matColumnDef="titre">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'titre' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"[title]="row.titre">{{row.titre}}</mat-cell>
+        </ng-container>
+
+        <!-- isbn Column -->
+        <ng-container matColumnDef="isbn">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'isbn' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.isbn}}</mat-cell>
+        </ng-container>
+
+        <!-- auteur Column -->
+        <ng-container matColumnDef="auteur">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'auteur' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"[title]="row.auteur">{{row.auteur}}</mat-cell>
+        </ng-container>
+
+        <!-- description Column -->
+        <ng-container matColumnDef="description">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'description' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"[title]="row.description">{{row.description}}</mat-cell>
+        </ng-container>
+
+        <!-- annee Column -->
+        <ng-container matColumnDef="annee">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'annee' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="text-center">{{row.annee}}</mat-cell>
+        </ng-container>
+
+        <!-- editeur Column -->
+        <ng-container matColumnDef="editeur">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'editeur' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"[title]="row.editeur">{{row.editeur}}</mat-cell>
+        </ng-container>
+
+        <!-- date Column -->
+        <ng-container matColumnDef="dateA">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'date-mise-a-jour' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            {{ row.dateM ? (row.dateM | date:'yyyy/MM/dd') : (row.dateA | date:'yyyy/MM/dd') }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- typeDocument Column -->
+        <ng-container matColumnDef="typeDocument">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'type' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"[title]="row.typeDocument">{{row.typeDocument}}</mat-cell>
+        </ng-container>
+
+        <!-- format Column -->
+        <ng-container matColumnDef="format">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'format' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"[title]="row.format">{{row.format}}</mat-cell>
+        </ng-container>
+
+        <!-- consulter Column -->
+        <ng-container matColumnDef="consulter">
+          <mat-header-cell *matHeaderCellDef class="justify-content-center">{{ 'consulter' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row" class="justify-content-center">
+            <button type="button" class="btn btn-primary btn-rounded btn-icon btn-sm"
+                    routerLink="/items/{{ row.idItem }}" [title]="'consulter' | translate">
+              <i class="typcn typcn-document-text menu-icon"></i>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <!-- État vide -->
+      <div *ngIf="dataSource.filteredData.length === 0" class="empty-state text-center py-5">
+        <mat-icon class="empty-icon">find_in_page</mat-icon>
+        <p class="text-muted mt-2">{{'no-data' | translate}}</p>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[30, 60, 90, 120]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>
