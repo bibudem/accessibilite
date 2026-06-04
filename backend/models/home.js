@@ -9,24 +9,20 @@ module.exports = class Logs {
 
 
   static async fetchCountBoard() {
-    //creation de l'année
-    let totalItems=0;
-    let lastDateM=''
+    let totalItems = 0;
+    let totalCollections = 0;
+    let totalPanier = 0;
 
-    //afficher la requette
-    /*let sql = "SELECT SUM(Total_Item_Requests) as count FROM tbl_statistiques where annee=?"
-    console.log('sql: ', SqlString.format(sql,[annee]));*/
+    const count1 = await db.execute('SELECT COUNT(idItem) as count FROM tbl_items');
+    if (count1[0]['0'].count) totalItems = count1[0]['0'].count;
 
-    let count1= await  db.execute('SELECT COUNT(idItem ) as count FROM tbl_items  ');
-        if(count1[0]['0'].count)
-          totalItems=count1[0]['0'].count
+    const count2 = await db.execute('SELECT COUNT(id_collection) as count FROM tbl_collections');
+    if (count2[0]['0'].count) totalCollections = count2[0]['0'].count;
 
+    const count3 = await db.execute('SELECT COUNT(idPanier) as count FROM tbl_panier');
+    if (count3[0]['0'].count) totalPanier = count3[0]['0'].count;
 
-
-
-    let count={ 'totalItems':totalItems }
-
-    return[count]
+    return [{ totalItems, totalCollections, totalPanier }];
   }
 
   static async getGraphiqueDonnees() {

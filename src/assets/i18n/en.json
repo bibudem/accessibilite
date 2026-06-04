@@ -162,7 +162,23 @@
         "dir-collections-tel": "555-555 5555",
         "dir-collections-courriel": "courriel@umontreal.ca",
         "dir-technologies-tel": "555-555 5555",
-        "dir-technologies-courriel": "courriel@umontreal.ca"
+        "dir-technologies-courriel": "courriel@umontreal.ca",
+        "description": "Web tool for managing files in accessible formats",
+        "dashboard": {
+          "bienvenue": "Hello",
+          "total-items": "Resources",
+          "total-collections": "Collections",
+          "total-historique": "Requests",
+          "search_title": "Search resources",
+          "search_description": "Quickly find articles or files by keyword.",
+          "button_search": "Search",
+          "add_article_title": "Add a resource",
+          "add_article_description": "Submit a new digital document.",
+          "button_add": "Add",
+          "history_title": "Request history",
+          "history_description": "View your past submissions and their status.",
+          "button_view_history": "View history"
+        }
   },
   "liste":{
     "liste-archive": "List of archives",

@@ -1,21 +1,12 @@
-<div class="card mt-5 mb-1">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-9">
-        <h2 class="mt-1" *ngIf="conditionIdItem">{{ 'form-values' | translate}}
-          <span  > | {{ 'id' | translate}} = {{ this.idItemString }} </span>
-        </h2>
-        <h2 class="mt-1" *ngIf="!conditionIdItem">{{ 'new-item' | translate}}</h2>
-      </div>
-      <div class="col-md-3"><button *ngIf="conditionIdItem" class="btn btn-warning text-white btn-sm ml-1 float-right"   (click)="addToPanier(item)" ><i class="typcn typcn-shopping-cart menu-icon"></i> {{ 'btn.ajouter-panier' | translate}}</button>
-        <button class="btn btn-outline-secondary btn-sm ml-1 float-right"  (click)="backClicked()" ><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
-      </div>
+<div class="card mt-5">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h2 class="mb-0" *ngIf="conditionIdItem">{{ 'form-values' | translate}} | {{ 'id' | translate}} = {{ this.idItemString }}</h2>
+    <h2 class="mb-0" *ngIf="!conditionIdItem">{{ 'new-item' | translate}}</h2>
+    <div>
+      <button *ngIf="conditionIdItem" class="btn btn-warning text-white btn-sm mr-2" (click)="addToPanier(item)"><i class="typcn typcn-shopping-cart menu-icon"></i> {{ 'btn.ajouter-panier' | translate}}</button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="backClicked()"><i class="typcn typcn-chevron-left menu-icon"></i> {{ 'btn.return' | translate}}</button>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-12 grid-margin stretch-card">
-    <div class="card">
       <!-- Alert notification div -->
       <div *ngIf="showAlert" class="alert alert-success" role="alert" id="alert-modif">
         {{ 'message.action-text' | translate}}
@@ -121,7 +112,7 @@
               </div>
             </div>
           </div>
-          <div class="row mb-3 toggle-container" [class.show]="item.documentComplet == 'Oui'">
+          <div class="row mb-3">
             <div class="col-md-12">
               <label for="description">{{ 'description' | translate }}</label>
               <input class="form-control" #description name="description" id="description" type="text" [(ngModel)]="item.description">
@@ -293,8 +284,6 @@
           <span class="text-muted"> {{ dateM | date:'short':'fr' }}</span>
         </div>
       </div>
-    </div>
-  </div>
 
 </div>
 <div class="noVisible" *ngFor="let item of items$ | async"></div>

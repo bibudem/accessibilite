@@ -4,8 +4,7 @@ const auth = require("../auth/auth");
 exports.getCount = async (req, res, next) => {
   try {
     const [allChifres] = await Logs.fetchCountBoard();
-    //console.log(allChifres)
-    res.status(200).json(allChifres);
+    res.status(200).json([allChifres]);
 
   } catch (err) {
     if (!err.statusCode) {

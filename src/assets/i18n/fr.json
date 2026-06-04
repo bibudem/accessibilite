@@ -172,6 +172,11 @@
     "dir-technologies-courriel": "service@bib.umontreal.ca",
     "home-description-not-admin": "Bienvenue dans notre espace réservé aux membres ayant fait leur demande par courriel !",
     "dashboard": {
+      "bienvenue": "Bonjour",
+      "total-items": "Ressources",
+      "total-collections": "Collections",
+      "total-historique": "Demandes",
+
       "add_article_title": "Ajouter une ressource",
       "add_article_description": "Soumettre un nouveau document numérique.",
       "button_add": "Ajouter",

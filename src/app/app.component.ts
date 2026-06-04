@@ -1,4 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { InactivityService } from './services/inactivity.service';
 
@@ -11,11 +13,12 @@ export class AppComponent implements OnInit {
   title = 'projet-accessibilite';
   isUserLinkRoute = false;
   flagChoix = 'flag-icon-fr';
-  ifAdmin = true;
+  ifAdmin = false;
 
   constructor(
     public authService: AuthService,
-    private inactivityService: InactivityService
+    private inactivityService: InactivityService,
+    private router: Router
   ) {
     this.inactivityService.initInactivityTimer();
   }
@@ -31,6 +34,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateRouteState();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateRouteState();
+    });
   }
 
   private updateRouteState(): void {
@@ -53,7 +61,7 @@ export class AppComponent implements OnInit {
       //console.log(localStorage.getItem('redirectUrl'));
       this.ifAdmin = false;
     } else if (adminRoutes.some(route => path.startsWith(route.split(':')[0]))) {
-      this.ifAdmin = true;
+      this.ifAdmin = this.authService.isLoggedIn;
       this.isUserLinkRoute = false;
       localStorage.removeItem('redirectUrl');
     } else {

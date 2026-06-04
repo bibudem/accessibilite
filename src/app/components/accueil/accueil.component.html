@@ -1,75 +1,77 @@
-<div class="row mt-5">
-  <!-- Jumbotron -->
-  <div class="jumbotron jumbotron-billboard text-center bg-white pt-4">
-    <div class="img"></div>
-    <div class="container pt ">
-      <div class="mt-5 text-color text-align-center mb-4 ">
-        <h1 class="mb-2 bib-titre">{{'home.title' | translate }}</h1>
-        <h2  class="display-3">{{'home.description' | translate }}</h2>
+<!-- Hero -->
+<div class="hero-section mt-5 mb-4">
+  <div class="hero-overlay">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h2 class="hero-title">{{ 'home.title' | translate }}</h2>
+        <p class="hero-subtitle">{{ 'home.description' | translate }}</p>
+      </div>
+      <div class="hero-stats d-none d-md-flex">
+        <div class="hero-stat">
+          <span class="hero-stat-value">{{ stats?.totalItems || '—' }}</span>
+          <span class="hero-stat-label">{{ 'home.dashboard.total-items' | translate }}</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">{{ stats?.totalPanier || '—' }}</span>
+          <span class="hero-stat-label">{{ 'home.dashboard.total-historique' | translate }}</span>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Jumbotron -->
 </div>
-<!-- Section informative -->
-<div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-  <!-- Carte Recherche -->
-  <div class="col">
-    <div class="card h-100 action-card">
-      <div class="card-img-top search-bg"></div>
-      <div class="card-body">
-        <div class="icon-wrapper bg-primary-light mb-3">
+
+<!-- Actions rapides -->
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <div class="card action-card h-100">
+      <div class="card-body p-4">
+        <div class="action-icon-box action-box-search mb-4">
           <i class="material-icons">search</i>
         </div>
-        <h5 class="card-title mt-4">{{ 'home.dashboard.search_title' | translate }}</h5>
-        <p class="card-text">{{ 'home.dashboard.search_description' | translate }}</p>
-        <a href="/items" class="btn btn-primary btn-arrow">
+        <h5 class="action-title mb-2">{{ 'home.dashboard.search_title' | translate }}</h5>
+        <p class="action-text text-muted mb-0">{{ 'home.dashboard.search_description' | translate }}</p>
+      </div>
+      <div class="card-footer action-footer action-footer-search">
+        <a href="/items" class="action-link">
           {{ 'home.dashboard.button_search' | translate }}
-          <span class="arrow">→</span>
+          <i class="material-icons action-link-icon">arrow_forward</i>
         </a>
       </div>
     </div>
   </div>
-
-  <!-- Carte Ajout Article -->
-  <div class="col">
-    <div class="card h-100 action-card">
-      <div class="card-img-top add-bg"></div>
-      <div class="card-body">
-        <div class="icon-wrapper bg-danger-light mb-3">
-          <i class="material-icons">add_circle</i>
+  <div class="col-md-4 mb-3">
+    <div class="card action-card h-100">
+      <div class="card-body p-4">
+        <div class="action-icon-box action-box-add mb-4">
+          <i class="material-icons">add</i>
         </div>
-        <h5 class="card-title">{{ 'home.dashboard.add_article_title' | translate }}</h5>
-        <p class="card-text">{{ 'home.dashboard.add_article_description' | translate }}</p>
-        <a href="/items/add" class="btn btn-warning btn-action btn-arrow">
+        <h5 class="action-title mb-2">{{ 'home.dashboard.add_article_title' | translate }}</h5>
+        <p class="action-text text-muted mb-0">{{ 'home.dashboard.add_article_description' | translate }}</p>
+      </div>
+      <div class="card-footer action-footer action-footer-add">
+        <a href="/items/add" class="action-link">
           {{ 'home.dashboard.button_add' | translate }}
-          <span class="arrow">→</span>
+          <i class="material-icons action-link-icon">arrow_forward</i>
         </a>
       </div>
     </div>
   </div>
-
-  <!-- Carte Historique -->
-  <div class="col">
-    <div class="card h-100 action-card">
-      <div class="card-img-top history-bg"></div>
-      <div class="card-body">
-        <div class="icon-wrapper bg-success-light mb-3">
+  <div class="col-md-4 mb-3">
+    <div class="card action-card h-100">
+      <div class="card-body p-4">
+        <div class="action-icon-box action-box-history mb-4">
           <i class="material-icons">history</i>
         </div>
-        <h5 class="card-title">{{ 'home.dashboard.history_title' | translate }}</h5>
-        <p class="card-text">{{ 'home.dashboard.history_description' | translate }}</p>
-        <a href="/historique-list" class="btn btn-success btn-action btn-arrow">
+        <h5 class="action-title mb-2">{{ 'home.dashboard.history_title' | translate }}</h5>
+        <p class="action-text text-muted mb-0">{{ 'home.dashboard.history_description' | translate }}</p>
+      </div>
+      <div class="card-footer action-footer action-footer-history">
+        <a href="/historique-list" class="action-link">
           {{ 'home.dashboard.button_view_history' | translate }}
-          <span class="arrow">→</span>
+          <i class="material-icons action-link-icon">arrow_forward</i>
         </a>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-

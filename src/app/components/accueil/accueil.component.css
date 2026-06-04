@@ -1,0 +1,129 @@
+/* Hero */
+.hero-section {
+  border-radius: 10px;
+  overflow: hidden;
+  background-image: url('/assets/images/accueil.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 340px;
+}
+.hero-overlay {
+  min-height: 340px;
+  background: rgba(20, 46, 90, 0.70);
+  display: flex;
+  align-items: center;
+  padding: 2rem 2.5rem;
+}
+.hero-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hero-title {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+.hero-stats {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 1rem 1.75rem;
+  flex-shrink: 0;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+.hero-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 5px;
+}
+.hero-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 0 1.25rem;
+}
+
+/* Action Cards */
+.action-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+.action-card:hover {
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.13);
+}
+
+.action-icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action-icon-box .material-icons { font-size: 28px; color: #ffffff; }
+.action-box-search  { background-color: #4e73df; }
+.action-box-add     { background-color: #d4a00b; }
+.action-box-history { background-color: #1cc88a; }
+
+.action-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e2a3a;
+}
+.action-text {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Pied de carte */
+.action-footer {
+  padding: 0.85rem 1.5rem;
+  border-top: none;
+}
+.action-footer-search  { background-color: #f0f3fd; }
+.action-footer-add     { background-color: #fdf6e0; }
+.action-footer-history { background-color: #edfaf5; }
+
+.action-link {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.action-footer-search  .action-link { color: #4e73df; }
+.action-footer-add     .action-link { color: #d4a00b; }
+.action-footer-history .action-link { color: #1cc88a; }
+.action-link:hover { text-decoration: none; opacity: 0.8; }
+
+.action-link-icon {
+  font-size: 16px;
+  margin-left: 6px;
+}
