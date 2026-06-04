@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
     ).subscribe(() => {
       this.updateRouteState();
     });
+
   }
 
   private updateRouteState(): void {

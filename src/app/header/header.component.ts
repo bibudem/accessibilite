@@ -27,6 +27,10 @@ export class HeaderComponent implements OnInit {
     public panierService: PanierService
   ) {}
 
+  toggleSidebar() {
+    document.body.classList.toggle('sidebar-icon-only');
+  }
+
   async ngOnInit() {
     const storedRedirectUrl = localStorage.getItem('redirectUrl');
 
