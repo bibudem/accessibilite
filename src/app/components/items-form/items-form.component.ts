@@ -57,6 +57,8 @@ export class ItemsFormComponent implements OnInit {
 
   isFile = true;
 
+  showReplaceForm = false;
+
   file_list: Array<string> = [];
 
   ancienImage = '';
@@ -238,6 +240,7 @@ export class ItemsFormComponent implements OnInit {
   }
 
   handleSubmit(): void {
+    this.formData = new FormData();
     this.file_list = [];
     let nameFile = new Date().getHours().toLocaleString() + '_item_';
     let nameFolder = this.global.generateRandomNumber(12);
@@ -276,7 +279,18 @@ export class ItemsFormComponent implements OnInit {
       }
     });
 
+    this.showReplaceForm = false;
     this.onFermeModal();
+  }
+
+  // Annuler le remplacement de fichier
+  cancelReplace(): void {
+    this.showReplaceForm = false;
+    this.file_store = undefined;
+    this.display.setValue('');
+    if (this.myInputVariable !== undefined) {
+      this.myInputVariable.nativeElement.value = '';
+    }
   }
 
   // Mise à jour de l'URL

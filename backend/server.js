@@ -30,8 +30,8 @@ const homeLink= require('./routes/link');
 const rapports = require('./routes/rapports');
 
 // Configuration des limites de requêtes pour gros fichiers
-app.use(bodyParser.json({ limit: '1gb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '1gb' }));
+app.use(bodyParser.json({ limit: '3gb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '3gb' }));
 
 
 // Middleware pour les en-têtes

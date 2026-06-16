@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 * 1024 }, // Limite à 1 Go par fichier
+  limits: { fileSize: 3 * 1024 * 1024 * 1024 }, // Limite à 3 Go par fichier
 });
 
 router.put('/uploud', upload.single('file'), async (req, res) => {

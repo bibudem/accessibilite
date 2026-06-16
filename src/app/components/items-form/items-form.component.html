@@ -122,73 +122,105 @@
           <div class="mb-5">
             <mat-tab-group animationDuration="2000ms">
             <mat-tab label="{{ 'file-item' | translate}}">
-              <div class="form-group" *ngIf="(!isFile)">
-              <mat-card-content>
-                  <br><br>
-                  <mat-form-field style="width: 100%;">
-                    <mat-label>{{ 'file-uploud' | translate}}</mat-label>
+              <div class="file-tab-container">
+
+                <!-- Input fichier natif (toujours présent dans le DOM) -->
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.gif,.png,.svg,.xls,.xlsx,.csv,.pptx,.ppt,.rtf,.mp3,.wav,.ogg,.zip"
+                  hidden
+                  #f_input
+                  (change)="handleFileInputChange(f_input.files)"
+                />
+
+                <!-- === Aucun fichier : zone de dépôt === -->
+                <div *ngIf="!isFile" class="upload-zone">
+                  <mat-icon class="upload-zone-icon">cloud_upload</mat-icon>
+                  <mat-form-field class="upload-field">
+                    <mat-label>{{ 'file-uploud' | translate }}</mat-label>
                     <button mat-icon-button matPrefix type="button" (click)="f_input.click()">
-                      <mat-icon class="f-20 mr-2">attach_file</mat-icon>
+                      <mat-icon>attach_file</mat-icon>
                     </button>
                     <input type="text" readonly matInput [formControl]="display" id="label-name-file" />
-                    <input
-                      type="file"
-                      [accept]="[
-                       '.pdf', '.doc', '.docx', '.txt', '.jpg', '.jpeg', '.gif', '.png',
-                       '.svg', '.xls', '.xlsx', '.csv', '.pptx', '.ppt', '.rtf', '.mp3',
-                       '.wav', '.ogg', '.zip'
-                        ]"
-                      id="f_input"
-                      required="false"
-                      hidden
-                      #f_input
-                      (change)="handleFileInputChange(f_input.files)"
-                    />
-                    <mat-hint
-                    >{{ 'accept-file' | translate}}
-                    </mat-hint>
-                    <mat-error>{{ 'file-required' | translate}}</mat-error>
+                    <mat-hint>{{ 'accept-file' | translate }}</mat-hint>
+                    <mat-error>{{ 'file-required' | translate }}</mat-error>
                   </mat-form-field>
-                  <br><br>
-                </mat-card-content>
-              </div>
-              <div *ngIf="(isFile) && isFileLoading"  class="loading-container" >
-                <div class="dots">
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
                 </div>
-              </div>
-              <mat-card *ngIf="(isFile) && (!isFileLoading)" id="img-collection" class="mt-5 mb-5">
-                <mat-card-content>
-                  <div class="form-group">
-                    <div class="input-group">
-                    <span class="input-group-addon hidden-xs linkname">
-                      <a *ngIf="isFile" (click)="downloadAndOpen(item.file, item.URL)" class="" href="javascript:void(0)">
-                         <span> {{ 'voir-fichier' | translate }}</span>
-                      </a>
-                    </span>
-                      <!--<span id="copyButton" class="input-group-addon btn" title="{{ 'click-modif' | translate}}" (click)="global.copyInputValue(fichierURL)">
-                    <i class="typcn typcn-clipboard menu-icon"></i>
-                  </span>-->
-                       <input type="text"  name="fichierURL" id="fichierURL" #fichierURL value="{{item.file}}" class="form-control"  readonly>
-                     </div>
-                   </div>
-                  <br>
-                  <button mat-button color="warn" (click)="deleteFile(item.file,item.URL)" type="button"><mat-icon>delete</mat-icon> {{ 'supprimer-file' | translate}}</button>
-                 </mat-card-content>
-                   <!--<button mat-button color="primary" (click)="updateURL(item.idItem,item.URL)" type="button"><mat-icon>cached</mat-icon> {{ 'mise-a-jour-url' | translate}}</button>-->
 
-
-              </mat-card>
-              <div *ngIf="isLoading">
-                <p>Téléchargement en cours : {{ uploadProgress }}%</p>
-                <div class="progress-bar">
-                  <div class="progress" [style.width.%]="uploadProgress"></div>
+                <!-- === Chargement en cours === -->
+                <div *ngIf="isFile && isFileLoading" class="loading-container">
+                  <div class="dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </div>
                 </div>
+
+                <!-- === Fichier existant === -->
+                <div *ngIf="isFile && !isFileLoading" class="file-card">
+
+                  <!-- En-tête : icône + nom + actions -->
+                  <div class="file-card-header">
+                    <div class="file-card-info">
+                      <mat-icon class="file-type-icon">insert_drive_file</mat-icon>
+                      <span class="file-name-text" title="{{ item.file }}">{{ item.file }}</span>
+                    </div>
+                    <div class="file-card-actions">
+                      <button mat-stroked-button color="primary" type="button"
+                        (click)="downloadAndOpen(item.file, item.URL)">
+                        <mat-icon>visibility</mat-icon>
+                        <span class="btn-label">{{ 'voir-fichier' | translate }}</span>
+                      </button>
+                      <button mat-stroked-button type="button"
+                        [class.replace-active]="showReplaceForm"
+                        (click)="showReplaceForm ? cancelReplace() : (showReplaceForm = true)">
+                        <mat-icon>{{ showReplaceForm ? 'close' : 'swap_horiz' }}</mat-icon>
+                        <span class="btn-label">{{ 'remplacer-fichier' | translate }}</span>
+                      </button>
+                      <button mat-stroked-button color="warn" type="button"
+                        (click)="deleteFile(item.file, item.URL)">
+                        <mat-icon>delete_outline</mat-icon>
+                        <span class="btn-label">{{ 'supprimer-file' | translate }}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Formulaire de remplacement (accordéon) -->
+                  <div class="replace-form-wrapper" [class.show]="showReplaceForm">
+                    <mat-divider></mat-divider>
+                    <div class="replace-form-inner">
+                      <mat-form-field style="flex: 1;">
+                        <mat-label>{{ 'remplacer-fichier' | translate }}</mat-label>
+                        <button mat-icon-button matPrefix type="button" (click)="f_input.click()">
+                          <mat-icon>attach_file</mat-icon>
+                        </button>
+                        <input type="text" readonly matInput [formControl]="display" />
+                        <mat-hint>{{ 'accept-file' | translate }}</mat-hint>
+                      </mat-form-field>
+                      <button mat-button type="button" class="cancel-replace-btn" (click)="cancelReplace()">
+                        <mat-icon>close</mat-icon> {{ 'annuler' | translate }}
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- === Téléchargement en cours === -->
+                <div *ngIf="isLoading" class="upload-progress-container">
+                  <div class="upload-progress-header">
+                    <mat-icon>upload</mat-icon>
+                    <span>Téléchargement en cours : <strong>{{ uploadProgress }}%</strong></span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress" [style.width.%]="uploadProgress"></div>
+                  </div>
+                </div>
+
               </div>
-              <input type="hidden" id="URL" name="URL" #URL="ngModel"  [(ngModel)]="item.URL" class="form-control"  >
-              <input  class="form-control mb-3" #image="ngModel" name="file" id="file" type="hidden" [(ngModel)]="item.file">
+
+              <!-- Champs cachés du formulaire -->
+              <input type="hidden" id="URL" name="URL" #URL="ngModel" [(ngModel)]="item.URL">
+              <input class="form-control mb-3" #image="ngModel" name="file" id="file" type="hidden" [(ngModel)]="item.file">
             </mat-tab>
             <mat-tab label="{{ 'note-item' | translate}}">
               <div class="form-group mt-4 mb-4">
