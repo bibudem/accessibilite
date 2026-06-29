@@ -145,7 +145,8 @@ ng help
 
 ---
 
-## Conception et développement
+## Auteure
 
-Conçu et développé par **Natalia Jabinschi**
-Direction des bibliothèques, Université de Montréal
+**Natalia Jabinschi**  
+Direction des bibliothèques  
+Université de Montréal
