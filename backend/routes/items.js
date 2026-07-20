@@ -65,7 +65,9 @@ router.put('/uploud', upload.single('file'), async (req, res) => {
     const folderItem = path.join('/apps/accessibilite/prod/backend/files/items/', folderName);
     const newPath = path.join(folderItem, file.originalname);
     const backupDir = '/apps/accessibilite/prod/backend/backup-temp';
-    const backupPath = path.join(backupDir, file.filename);
+    // Nom stable par opération (dossier + nom original) : une nouvelle tentative
+    // écrase l'ancienne copie au lieu d'en empiler une nouvelle.
+    const backupPath = path.join(backupDir, `${folderName}-${file.originalname}`);
 
     // Créer les dossiers nécessaires
     await fs.promises.mkdir(folderItem, { recursive: true });
@@ -77,15 +79,17 @@ router.put('/uploud', upload.single('file'), async (req, res) => {
     // 🟢 Déplace le fichier temporaire vers son dossier final
     await fs.promises.rename(file.path, newPath);
 
-    console.log(`Fichier déplacé de ${file.path} à ${newPath}`);
-    console.log(`Copie de sauvegarde conservée à : ${backupPath}`);
+    // 🧹 Nettoyage immédiat de la copie de sauvegarde (n'était utile que le temps de l'opération)
+    await fs.promises.unlink(backupPath);
+
+    console.log(`[upload] OK: ${folderName}/${file.originalname}`);
 
     // Nettoyage optionnel du dossier temporaire
     await cleanTemporaryDirectory();
 
     res.status(200).send('File successfully uploaded and moved.');
   } catch (err) {
-    console.error('Error during file upload:', err);
+    console.error(`[upload] ERREUR: ${req.body?.nameFolder}/${req.file?.originalname || '?'} — ${err.message}`);
     res.status(500).send('An error occurred during file upload.');
   }
 });
