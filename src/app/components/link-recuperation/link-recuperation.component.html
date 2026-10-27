@@ -1,84 +1,114 @@
-<div class="container-fluid">
-  <div class="row bg-white">
-    <div class="container mt-2 bib-user-header">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <img src="assets/images/biblio-logo.png" alt="Logo de bibUdem" class="img-responsive m-3 img-logo">
-        </div>
-        <div class="col-md-6 text-right">
-          <small class="text-primary text-uppercase">{{this.nom}} {{this.prenom}} | </small>
-          <small class="text-primary">{{this.userConnect}} </small>
-          <br><br>
-          <small><a href="https://bib.umontreal.ca/" class="text-black" onclick="clearRedirectUrl()">{{ 'not-user-lien' | translate}}</a></small>
-        </div>
-      </div>
-    </div>
+<!-- Lien d'évitement : premier élément atteint au clavier -->
+<a class="lien-evitement" href="#contenu" (click)="allerAuContenu($event)">Aller au contenu principal</a>
 
-    <div class="container mt-5 p-5" *ngIf="listeItems.length != 0">
-      <h1 class="text-center text-md-left f-32 text-uppercase">{{'home.title' | translate }}</h1>
-        <h4 class="mb-4 text-center text-bib-warning">{{'fichier.files-titre-recuperation'| translate}}</h4>
-        <div class="table-responsive">
-          <table class="table table-striped mt-5">
-            <thead>
-            <tr>
-              <th class="w-50">{{'titre' | translate}}</th>
-              <th class="w-20">{{'auteur' | translate}}</th>
-              <th>{{'dateExpiration' | translate}}</th>
-              <th>{{'statut' | translate}}</th>
-              <th>{{'btn.actions' | translate}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let item of listeItems">
-              <td>{{ item.titre }}</td>
-              <td>{{ item.auteur }}</td>
-              <td>{{ item.dateExpiration }}</td>
-              <td>
-                <ng-container *ngIf="item.statut === 'Inactif'; else actifStatus">
-                  <label class="badge badge-danger p-2">{{ item.statut }}</label>
-                </ng-container>
-                <ng-template #actifStatus>
-                  <label class="badge badge-success p-2">{{ item.statut }}</label>
-                </ng-template>
-              </td>
-              <td *ngIf="validerLesInfosItem(item.dateExpiration)">
-                <button class="btn btn-sm btn-outline-primary" (click)="download(item.file, item.URL)">
-                  {{ 'fichier.file-telecharger' | translate }}
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-      </div>
-       <!-- Animation de chargement -->
-        <div *ngIf="isLoading" class="loading-overlay">
-          <div class="loading-spinner">
-            <div class="spinner-border text-primary" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-            <div class="loading-text mt-3">
-              <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
-              </div>
-              <p class="mt-2">{{ 'fichier.telechargement-en-cours' | translate }}</p>
-            </div>
-          </div>
-        </div>
-        </div>
-    <!-- Message lorsque l'utilisateur est connecté mais n'a aucune ressource -->
-    <div class="row justify-content-center">
-      <div class="col-md-8 text-center">
-        <div class="alert alert-info mt-3 display-none" id="alertNotUser" >
-          <h1 class="mt-5 f-32 mb-3 ml-3">Collection du Service Accessibilité</h1>
-          <p class="mb-3">Bonjour <strong>{{this.prenom}} {{this.nom}}</strong>,</p>
-          <p>Vous n'avez actuellement aucun document associé à votre compte sur ce lien.</p>
-          <p class="mb-0">Si vous pensez qu'il s'agit d'une erreur ou si vous avez des questions concernant vos ressources, n'hésitez pas à contacter le support.</p>
-          <div class="mt-4">
-          <a href="https://bib.umontreal.ca/" class="btn btn-outline-primary mt-3" >
-            Site des bibliothèques
-          </a>
-        </div>
-      </div>
+<header class="entete">
+  <div class="entete-interieur">
+    <img src="assets/images/biblio-logo.png" alt="Bibliothèques – Université de Montréal" class="logo">
+    <div class="entete-utilisateur">
+      <p *ngIf="userConnect" class="identite">
+        Compte connecté : <strong>{{ prenom }} {{ nom }}</strong>
+        <span class="courriel">{{ userConnect }}</span>
+      </p>
+      <a href="https://bib.umontreal.ca/" class="lien-site">Site des Bibliothèques UdeM</a>
     </div>
   </div>
-</div>
+</header>
+
+<main id="contenu" #contenu tabindex="-1" class="contenu">
+  <h1>Ressources adaptées</h1>
+
+  <!-- Annonce les changements d'état aux lecteurs d'écran -->
+  <div class="texte-masque" role="status" aria-live="polite">{{ annonce }}</div>
+
+  <ng-container [ngSwitch]="etat">
+
+    <!-- Chargement -->
+    <p *ngSwitchCase="'chargement'" class="message-etat" aria-hidden="true">
+      <span class="indicateur"></span> Chargement de vos documents…
+    </p>
+
+    <!-- Liste des documents -->
+    <ng-container *ngSwitchCase="'documents'">
+      <h2>Vos documents à télécharger</h2>
+      <p class="consigne">
+        Choisissez « Télécharger » à côté du document voulu. Le fichier sera enregistré
+        dans le dossier Téléchargements de votre appareil.
+      </p>
+
+      <div *ngIf="erreurTelechargement" class="alerte alerte-erreur" role="alert">
+        <p class="alerte-titre">Le téléchargement n'a pas pu se faire</p>
+        <p>{{ erreurTelechargement }}</p>
+        <button type="button" class="bouton bouton-secondaire" (click)="fermerErreur()">Fermer ce message</button>
+      </div>
+
+      <ul class="liste-documents">
+        <li *ngFor="let item of listeItems" class="document">
+          <h3 class="document-titre">{{ item.titre }}</h3>
+          <dl class="document-details">
+            <div *ngIf="item.auteur"><dt>Auteur</dt><dd>{{ item.auteur }}</dd></div>
+            <div><dt>Format</dt><dd>{{ item.format }}</dd></div>
+            <div>
+              <dt>{{ item.expire ? 'Lien expiré le' : 'Disponible jusqu’au' }}</dt>
+              <dd>{{ item.dateExpirationTexte }}</dd>
+            </div>
+          </dl>
+
+          <button *ngIf="!item.expire" type="button" class="bouton bouton-principal"
+                  [disabled]="isLoading" (click)="download(item.file, item.URL, $event)">
+            <!-- Icône SVG intégrée : s'affiche même si les polices externes ne se chargent pas -->
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z" fill="currentColor"/>
+            </svg>
+            Télécharger<span class="texte-masque"> « {{ item.titre }} », format {{ item.format }}</span>
+          </button>
+
+          <p *ngIf="item.expire" class="avis-expire">
+            Ce lien a expiré. Pour obtenir de nouveau ce document, communiquez avec
+            le Service Accessibilité ou la personne qui vous a envoyé le lien.
+          </p>
+        </li>
+      </ul>
+    </ng-container>
+
+    <!-- Aucun document pour ce compte -->
+    <section *ngSwitchCase="'aucunDocument'" class="alerte alerte-info" aria-labelledby="titre-aucun">
+      <h2 id="titre-aucun">Aucun document disponible</h2>
+      <p>Bonjour <strong>{{ prenom }} {{ nom }}</strong>,</p>
+      <p>
+        Aucun document n'est associé à votre compte
+        <strong *ngIf="userConnect">({{ userConnect }})</strong> pour ce lien.
+      </p>
+      <p>Causes possibles :</p>
+      <ul>
+        <li>la session ouverte n'est pas celle du compte auquel le lien a été envoyé;</li>
+        <li>le lien est incomplet (vérifiez qu'il a été copié en entier);</li>
+        <li>les documents ont été retirés.</li>
+      </ul>
+      <p>Si le problème persiste, communiquez avec le Service Accessibilité ou la personne qui vous a envoyé le lien.</p>
+    </section>
+
+    <!-- Session expirée -->
+    <section *ngSwitchCase="'sessionExpiree'" class="alerte alerte-info" aria-labelledby="titre-session">
+      <h2 id="titre-session">Votre session a expiré</h2>
+      <p>Pour des raisons de sécurité, votre session a pris fin. Rechargez la page pour vous reconnecter : vous reviendrez ensuite sur vos documents.</p>
+      <button type="button" class="bouton bouton-principal" (click)="recharger()">Recharger la page</button>
+    </section>
+
+    <!-- Erreur technique -->
+    <section *ngSwitchCase="'erreur'" class="alerte alerte-erreur" aria-labelledby="titre-erreur">
+      <h2 id="titre-erreur">Impossible d'afficher vos documents</h2>
+      <p>Un problème technique empêche l'affichage de vos documents. Réessayez dans quelques minutes.</p>
+      <p>Si le problème persiste, communiquez avec le Service Accessibilité.</p>
+      <button type="button" class="bouton bouton-principal" (click)="fetchItemDetails(key)">Réessayer</button>
+    </section>
+
+  </ng-container>
+
+  <!-- Vérification avant téléchargement -->
+  <div *ngIf="isLoading" class="superposition" role="status">
+    <div class="superposition-boite">
+      <span class="indicateur" aria-hidden="true"></span>
+      <p>Préparation du téléchargement…</p>
+    </div>
+  </div>
+</main>

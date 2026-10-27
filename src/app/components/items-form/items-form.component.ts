@@ -51,7 +51,7 @@ export class ItemsFormComponent implements OnInit {
 
   formData = new FormData();
 
-  isFile$: Observable<Blob>;
+  isFile$: Observable<any>;
 
   display: FormControl = new FormControl("", Validators.required);
 
@@ -95,6 +95,9 @@ export class ItemsFormComponent implements OnInit {
 
   // Ajoutez cette propriété pour suivre l'avancement
   uploadProgress: number | null = null;
+
+  // Message affiché quand l'upload ou l'enregistrement de la notice échoue
+  uploadErreur = '';
 
   idItemString='';
 
@@ -201,23 +204,12 @@ export class ItemsFormComponent implements OnInit {
   downloadAndOpen(file: string, urlFile: string): void {
     let param=file+'&'+urlFile;
     const url = `${window.location.origin}/api/items/file/${param}`;
-    this.linkService.downloadAndOpen(url, this.idItem.toString()).subscribe((blob: Blob) => {
-        // Create a URL for the blob object
-        const objectUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = objectUrl;
-        a.download = file;
-        document.body.appendChild(a);
-        a.click();
-
-        // Revoke the object URL after download is complete
-        URL.revokeObjectURL(objectUrl);
-        a.remove();
-      },
-      error => {
+    this.linkService.telechargerFichier(url, file).subscribe({
+      error: (error) => {
         console.error('Error during file download:', error);
+        this.uploadErreur = this.linkService.messageErreurTelechargement(error.status);
       }
-    );
+    });
   }
 
   // Consulter une fiche
@@ -311,29 +303,7 @@ export class ItemsFormComponent implements OnInit {
   async post(item: Item) {
     // Vérification si un fichier est présent dans formData
     if (this.formData.has("file")) {
-      this.uploadProgress = 0;
-      this.isLoading = true;
-      this.closebutton.nativeElement.click();
-
-      // Appel à la méthode de téléchargement avec gestion de la progression
-      this.itemService.uploadWithProgress(this.formData).subscribe({
-        next: (progress: number) => {
-          if (progress !== undefined) {
-            this.uploadProgress = progress;
-          }
-        },
-        complete: () => {
-          this.isLoading = false;
-          this.uploadProgress = 0;
-          this.reloadPage();
-        },
-        error: (err) => {
-          console.error("Erreur lors du téléchargement:", err);
-          this.isLoading = false;
-          this.reloadPage();
-        }
-      });
-      this.items$ = this.itemService.post(item);
+      this.envoyerFichierPuisEnregistrer(() => this.itemService.post(item));
     } else {
       // Appel du service pour poster l'item si aucun fichier n'est présent
       this.items$ = this.itemService.post(item);
@@ -345,33 +315,7 @@ export class ItemsFormComponent implements OnInit {
   async update(item: Item) {
     // Vérification si un fichier est présent dans formData
     if (this.formData.has("file")) {
-      this.uploadProgress = 0;
-      this.isLoading = true;
-      this.closebutton.nativeElement.click();
-
-      // Appel à la méthode de téléchargement avec gestion de la progression
-      this.itemService.uploadWithProgress(this.formData).subscribe({
-        next: (progress: number) => {
-          if (progress !== undefined) {
-            this.uploadProgress = progress;
-          }
-        },
-        complete: () => {
-          this.isLoading = false;
-          this.uploadProgress = 100;  // S'assurer que la barre de progression atteint 100%
-          this.reloadPage();
-        },
-        error: (err) => {
-          console.error("Erreur lors du téléchargement:", err);
-          this.isLoading = false;
-          this.reloadPage();
-        },
-
-      });
-      if (this.uploadProgress === 99) {
-        console.log('Téléchargement terminé avec succès !');
-      }
-      this.items$ = this.itemService.update(item);
+      this.envoyerFichierPuisEnregistrer(() => this.itemService.update(item));
     } else {
       // Appel du service pour mettre à jour l'item si aucun fichier n'est présent
       this.items$ = this.itemService.update(item);
@@ -380,6 +324,43 @@ export class ItemsFormComponent implements OnInit {
   }
 
 
+
+  // Envoie le fichier, puis enregistre la notice seulement si l'upload a réussi :
+  // sinon la notice pointerait vers un fichier absent du serveur.
+  private envoyerFichierPuisEnregistrer(enregistrer: () => Observable<any>) {
+    this.uploadProgress = 0;
+    this.isLoading = true;
+    this.uploadErreur = '';
+    this.closebutton.nativeElement.click();
+
+    this.itemService.uploadWithProgress(this.formData).subscribe({
+      next: (progress: number) => {
+        if (progress !== undefined) {
+          this.uploadProgress = progress;
+        }
+      },
+      complete: () => {
+        this.uploadProgress = 100;
+        enregistrer().subscribe(res => {
+          this.isLoading = false;
+          // ErrorHandlerService renvoie undefined quand l'appel échoue
+          if (res === undefined) {
+            this.uploadErreur = "Le fichier a été déposé, mais la notice n'a pas pu être enregistrée (vérifiez la longueur des champs, ex. auteur). Réessayez l'enregistrement.";
+            return;
+          }
+          this.reloadPage();
+        });
+      },
+      error: (err) => {
+        console.error("Erreur lors du téléchargement:", err);
+        this.isLoading = false;
+        this.uploadProgress = 0;
+        const detail = err?.error?.message
+          || (err?.status === 0 ? 'Connexion au serveur interrompue.' : `Erreur ${err?.status}.`);
+        this.uploadErreur = `Le fichier n'a pas été déposé : ${detail} La notice n'a pas été modifiée.`;
+      }
+    });
+  }
 
   // Fonction utilitaire pour ajouter un délai (pause)
   private delay(ms: number): Promise<void> {

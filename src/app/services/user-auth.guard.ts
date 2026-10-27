@@ -14,6 +14,8 @@ export class UserAuthGuard implements CanActivate {
     await this.authService.login();
     if (this.authService.isLoggedIn && (this.authService.roleUser === 'not-user' || this.authService.roleUser === 'Admin')) {
       return true;
+    } else if (this.authService.redirectionConnexionEnCours) {
+      return false;
     } else {
       window.location.href = '/not-user' ;
       //this.router.navigate(['/not-user']);

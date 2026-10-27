@@ -11,12 +11,18 @@ export class AuthService {
   roleUser: string = '';
   user: User = { courriel: '', groupe: '', nom: '', prenom: '' };
   redirectUrl: string | null = null;
+  // Vrai quand on est en train de partir vers la connexion Microsoft :
+  // les guards ne doivent alors plus rediriger ailleurs.
+  redirectionConnexionEnCours = false;
 
   constructor(private http: HttpClient,
               private router: Router,) {}
 
   async login(redirectUrl?: string): Promise<Observable<boolean>> {
     let isLoggedIn: boolean;
+    if (this.redirectionConnexionEnCours) {
+      return of(false);
+    }
     try {
       // Reconnecte le bon utilisateur
       await this.http
@@ -74,9 +80,16 @@ export class AuthService {
               localStorage.setItem('redirectUrl', currentUrl);
               this.redirectUrl = currentUrl;
           }
+
+          // Connexion réussie : la tentative de retour vers le lien est terminée
+          sessionStorage.removeItem('tentativeConnexionLien');
+          localStorage.removeItem('lienRetour');
         });
     } catch (e: any) {
       isLoggedIn = false;
+      if (this.connecterPuisRevenirAuLien()) {
+        return of(false);
+      }
       await this.logout();
       console.log('Erreur login http' + e);
     }
@@ -85,6 +98,32 @@ export class AuthService {
       delay(100),
       tap((val) => (this.isLoggedIn = isLoggedIn))
     );
+  }
+
+  /**
+   * Sans session sur un lien de partage (ex. lien ouvert depuis Outlook dans un autre navigateur),
+   * on envoie directement vers la connexion Microsoft en demandant au serveur d'y revenir ensuite.
+   * Une seule tentative automatique par lien : si la session ne tient toujours pas au retour
+   * (cookies bloqués…), on mémorise le lien pour le bouton « Connectez-vous » de /not-user.
+   */
+  private connecterPuisRevenirAuLien(): boolean {
+    // Les guards de /lien/:key appellent login() en parallèle : si un autre appel a déjà
+    // lancé la redirection, ne pas l'écraser par un logout().
+    if (this.redirectionConnexionEnCours) {
+      return true;
+    }
+    const chemin = window.location.pathname;
+    if (!/^\/lien\/[A-Za-z0-9-]+$/.test(chemin)) {
+      return false;
+    }
+    localStorage.setItem('lienRetour', chemin);
+    if (sessionStorage.getItem('tentativeConnexionLien') === chemin) {
+      return false;
+    }
+    sessionStorage.setItem('tentativeConnexionLien', chemin);
+    this.redirectionConnexionEnCours = true;
+    window.location.href = '/api/user-udem/login?returnTo=' + encodeURIComponent(chemin);
+    return true;
   }
 
   async logout() {

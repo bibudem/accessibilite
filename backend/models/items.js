@@ -2,6 +2,8 @@ const db = require('../util/database');
 let SqlString = require('sqlstring'); //global declare
 let datetime = require('node-datetime');
 let fs = require('fs');
+const path = require('path');
+const { DOSSIER_ITEMS, segmentValide } = require('../util/chemins');
 
 module.exports = class Items {
 //ajouter une fiche
@@ -50,36 +52,30 @@ module.exports = class Items {
     return db.execute('SELECT * FROM tbl_collections order by nom');
   }
 
-  //mise a jour d'URL
+  // Vrai si ce fichier fait partie d'un panier non expiré destiné à ce courriel
+  static async fichierAccessible(courriel, file, URL) {
+    const [rows] = await db.execute(
+      'SELECT 1 FROM tbl_panier p JOIN tbl_panier_details pd ON pd.idPanier = p.idPanier JOIN tbl_items i ON i.idItem = pd.idItem ' +
+      'WHERE LOWER(p.courriel) = LOWER(?) AND i.file = ? AND i.URL = ? AND DATE(p.dateExpiration) >= CURDATE() LIMIT 1',
+      [courriel, file, URL]
+    );
+    return rows.length > 0;
+  }
+
+  //mise a jour d'URL : renomme le dossier du fichier, puis met à jour la notice
   static async updateUrlItem(value){
-    let idItem, ancienName, newName;
     let dt = datetime.create();
     let date = dt.format('Y-m-d H:M:S');
-    let result =[];
-    if(value){
-      idItem=Number(value.split('&')[0]);
-      ancienName=value.split('&')[1];
-      newName=value.split('&')[2];
-      const path = './../src/assets/files/items/'+ancienName;
-      const pathNew = './../src/assets/files/items/'+newName;
-
-      try {
-           fs.rename(path, pathNew, async  function(err) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("Successfully renamed the directory.");
-                result = await db.execute("UPDATE tbl_items SET URL = ?,dateM =? WHERE idItem  = ?", [newName,date,idItem]);
-              }
-            });
-
-      } catch(err) {
-        console.error(err)
-      }
-      return result;
+    const [id, ancienName, newName] = String(value || '').split('&');
+    const idItem = Number(id);
+    if (!Number.isInteger(idItem) || !segmentValide(ancienName) || !segmentValide(newName)) {
+      const err = new Error('Paramètres de mise à jour d’URL invalides');
+      err.statusCode = 400;
+      throw err;
     }
-
-    return result;
+    await fs.promises.rename(path.join(DOSSIER_ITEMS, ancienName), path.join(DOSSIER_ITEMS, newName));
+    console.log(`[updateUrl] Dossier renommé : ${ancienName} -> ${newName}`);
+    return db.execute("UPDATE tbl_items SET URL = ?,dateM =? WHERE idItem  = ?", [newName,date,idItem]);
   }
 
 };

@@ -13,6 +13,10 @@ module.exports = class Link {
 
   }
 
+  static getPanier(id) {
+    return db.execute('SELECT idPanier, courriel FROM tbl_panier WHERE idPanier = ?', [id]);
+  }
+
   static async updateStateLink(id) {
     let dt = datetime.create();
     let date = dt.format('Y-m-d H:M:S');

@@ -2,12 +2,12 @@ const express = require('express');
 
 const rapportsController = require('../controllers/rapports');
 
-const authMiddleware = require('../auth/authMiddleware');
+const { exigerAdmin } = require('../auth/roles');
 
 const router = express.Router();
 
 
-router.get('/list',authMiddleware, rapportsController.getItems);
+router.get('/list', exigerAdmin, rapportsController.getItems);
 
 
 module.exports = router;

@@ -92,13 +92,11 @@ export class ItemService {
   }
 
   //veriffier si file existe
-  getFile(name:string,folder:string): Observable<Blob>  {
+  // Requête HEAD : vérifie l'existence sans transférer le fichier (qui peut faire plusieurs Go)
+  getFile(name:string,folder:string): Observable<any>  {
     let param=name+'&'+folder;
-    console.log(this.url+`/file/${param}`);
     return this.http
-      .get(`${this.url}/file/${param}`, {
-        responseType: 'blob' // Utilisation correcte pour recevoir un fichier binaire
-      })
+      .head(`${this.url}/file/${param}`, { observe: 'response' })
       .pipe(catchError(this.errorHandlerService.handleError<any>("verifier si file existe")));
   }
 

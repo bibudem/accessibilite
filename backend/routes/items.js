@@ -4,7 +4,11 @@ const itemsController = require('../controllers/items');
 
 const router = express.Router();
 
-const authMiddleware = require('../auth/authMiddleware');
+const { exigerConnexion, exigerAdmin } = require('../auth/roles');
+
+const Items = require('../models/items');
+
+const { DOSSIER_ITEMS, DOSSIER_SUPPRIMES, segmentValide } = require('../util/chemins');
 
 let fs = require('fs');
 
@@ -15,19 +19,20 @@ const multer = require('multer');
 
 let cors = require('cors')
 
-router.post('/add',authMiddleware, itemsController.postItem);
+// Gestion des notices : réservée aux gestionnaires
+router.post('/add', exigerAdmin, itemsController.postItem);
 
-router.put('/save',authMiddleware, itemsController.putItem);
+router.put('/save', exigerAdmin, itemsController.putItem);
 
-router.delete('/delete/:id',authMiddleware, itemsController.deleteItem);
+router.delete('/delete/:id', exigerAdmin, itemsController.deleteItem);
 
-router.get('/fiche/:id',authMiddleware, itemsController.consulterItem);
+router.get('/fiche/:id', exigerAdmin, itemsController.consulterItem);
 
-router.get('/all',authMiddleware,itemsController.allItems);
+router.get('/all', exigerAdmin, itemsController.allItems);
 
-router.get('/all/collections', itemsController.allListeCollections);
+router.get('/all/collections', exigerAdmin, itemsController.allListeCollections);
 
-router.get('/updateUrl/:rep',authMiddleware, itemsController.updateUrlItem);
+router.get('/updateUrl/:rep', exigerAdmin, itemsController.updateUrlItem);
 
 let corsOptions = {
   origin: '*',
@@ -39,86 +44,155 @@ router.use(cors(corsOptions))
 router.use(express.urlencoded({ extended: true }));
 
 
+// Dossier où multer écrit les fichiers pendant leur réception
+const TEMP_DIR = '/apps/accessibilite/temp';
+const TAILLE_MAX_GO = 9;
+// Âge au-delà duquel un fichier temporaire est considéré comme abandonné
+const AGE_MAX_TEMP_MS = 24 * 60 * 60 * 1000;
+// Découpe le paramètre « fichier&dossier » ; null si l'un des deux est invalide
+function lireParamFichier(param) {
+  const [nameFile, folder] = String(param || '').split('&');
+  if (!segmentValide(nameFile) || !segmentValide(folder)) {
+    return null;
+  }
+  return { nameFile, folder };
+}
+
 // Configuration de `diskStorage` pour gérer le dossier temporaire
 const storage = multer.diskStorage({
-  destination: '/apps/accessibilite/temp',
+  destination: TEMP_DIR,
   filename: (req, file, cb) => {
-    // Génère un nom de fichier unique pour éviter les conflits
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}-${file.originalname}`;
+    // Génère un nom de fichier unique pour éviter les conflits.
+    // Le nom d'origine est assaini : il vient du client et pourrait contenir « ../ ».
+    const nomSur = file.originalname.replace(/[^A-Za-z0-9_.-]/g, '_');
+    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}-${nomSur}`;
     cb(null, uniqueName);
   },
 });
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 3 * 1024 * 1024 * 1024 }, // Limite à 3 Go par fichier
+  limits: { fileSize: TAILLE_MAX_GO * 1024 * 1024 * 1024 }, // Limite par fichier
 });
 
-router.put('/uploud', upload.single('file'), async (req, res) => {
+// Traduit une erreur d'upload en code HTTP + message lisible pour l'interface
+function erreurUpload(err) {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return { status: 413, message: `Le fichier dépasse la taille maximale autorisée (${TAILLE_MAX_GO} Go).` };
+  }
+  if (err.code === 'ENOSPC') {
+    return { status: 507, message: 'Espace disque insuffisant sur le serveur. Contactez le soutien technique.' };
+  }
+  if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return { status: 400, message: 'Un seul fichier peut être déposé à la fois.' };
+  }
+  return { status: 500, message: "Une erreur est survenue pendant l'enregistrement du fichier." };
+}
+
+// Supprime un fichier sans échouer s'il n'existe déjà plus
+async function supprimerSiExiste(filePath) {
+  try {
+    await fs.promises.unlink(filePath);
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.error(`[upload] Impossible de supprimer ${filePath} — ${err.message}`);
+    }
+  }
+}
+
+// Les erreurs de multer (taille, disque plein) surviennent avant la route :
+// on les intercepte ici pour répondre proprement au lieu de laisser Express renvoyer une page HTML.
+function recevoirFichier(req, res, next) {
+  upload.single('file')(req, res, async (err) => {
+    if (!err) {
+      return next();
+    }
+    if (req.file?.path) {
+      await supprimerSiExiste(req.file.path);
+    }
+    const { status, message } = erreurUpload(err);
+    console.error(`[upload] ERREUR réception: ${req.body?.nameFolder || '?'}/${req.file?.originalname || '?'} — ${err.code || ''} ${err.message}`);
+    res.status(status).json({ message });
+  });
+}
+
+// exigerAdmin passe avant multer : un non-gestionnaire ne peut même pas écrire dans le temporaire
+router.put('/uploud', exigerAdmin, recevoirFichier, async (req, res) => {
   try {
     const { file } = req; // Récupère les informations du fichier
     if (!file) {
-      return res.status(400).send('No file uploaded.');
+      return res.status(400).json({ message: 'Aucun fichier reçu.' });
     }
 
     const folderName = req.body.nameFolder;
-    const folderItem = path.join('/apps/accessibilite/prod/backend/files/items/', folderName);
+    if (!segmentValide(folderName) || !segmentValide(file.originalname)) {
+      await supprimerSiExiste(file.path);
+      return res.status(400).json({ message: 'Nom de fichier ou dossier de destination invalide.' });
+    }
+    const folderItem = path.join(DOSSIER_ITEMS, folderName);
     const newPath = path.join(folderItem, file.originalname);
-    const backupDir = '/apps/accessibilite/prod/backend/backup-temp';
-    // Nom stable par opération (dossier + nom original) : une nouvelle tentative
-    // écrase l'ancienne copie au lieu d'en empiler une nouvelle.
-    const backupPath = path.join(backupDir, `${folderName}-${file.originalname}`);
 
-    // Créer les dossiers nécessaires
+    // Créer le dossier de la notice
     await fs.promises.mkdir(folderItem, { recursive: true });
-    await fs.promises.mkdir(backupDir, { recursive: true });
 
-    // 🔐 Crée une copie de sauvegarde du fichier temporaire avant de le déplacer
-    await fs.promises.copyFile(file.path, backupPath);
-
-    // 🟢 Déplace le fichier temporaire vers son dossier final
+    // 🟢 Déplace le fichier temporaire vers son dossier final.
+    // Pas de copie de sauvegarde : elle doublait l'espace disque, et le fichier temporaire
+    // reste en place tant que le déplacement n'a pas réussi.
     await fs.promises.rename(file.path, newPath);
-
-    // 🧹 Nettoyage immédiat de la copie de sauvegarde (n'était utile que le temps de l'opération)
-    await fs.promises.unlink(backupPath);
 
     console.log(`[upload] OK: ${folderName}/${file.originalname}`);
 
-    // Nettoyage optionnel du dossier temporaire
-    await cleanTemporaryDirectory();
-
-    res.status(200).send('File successfully uploaded and moved.');
+    res.status(200).json({ message: 'Fichier enregistré.' });
   } catch (err) {
-    console.error(`[upload] ERREUR: ${req.body?.nameFolder}/${req.file?.originalname || '?'} — ${err.message}`);
-    res.status(500).send('An error occurred during file upload.');
+    // Le fichier temporaire n'a pas été déplacé : on le retire pour ne pas remplir le disque
+    if (req.file?.path) {
+      await supprimerSiExiste(req.file.path);
+    }
+    const { status, message } = erreurUpload(err);
+    console.error(`[upload] ERREUR: ${req.body?.nameFolder}/${req.file?.originalname || '?'} — ${err.code || ''} ${err.message}`);
+    res.status(status).json({ message });
   }
 });
 
 
-// Fonction optionnelle pour nettoyer le dossier temporaire (si nécessaire)
-async function cleanTemporaryDirectory() {
-  const tempDir = '/apps/accessibilite/prod/backend/temp';
-
+// Supprime les fichiers temporaires abandonnés (uploads interrompus, erreurs passées).
+// On ne touche qu'aux fichiers anciens pour ne pas effacer un upload encore en cours.
+async function nettoyerDossierTemporaire() {
   try {
-    const files = await fs.promises.readdir(tempDir);
-    // Supprimez tous les fichiers temporaires
-    await Promise.all(files.map(file => fs.promises.unlink(path.join(tempDir, file))));
-    //console.log('Temporary directory cleaned.');
+    const files = await fs.promises.readdir(TEMP_DIR);
+    const limite = Date.now() - AGE_MAX_TEMP_MS;
+    for (const file of files) {
+      const filePath = path.join(TEMP_DIR, file);
+      // Un fichier peut disparaître entre readdir et stat (upload terminé entre-temps)
+      const stats = await fs.promises.stat(filePath).catch(() => null);
+      if (stats && stats.isFile() && stats.mtimeMs < limite) {
+        await supprimerSiExiste(filePath);
+        console.log(`[upload] Fichier temporaire abandonné supprimé : ${file}`);
+      }
+    }
   } catch (err) {
-    console.error('Error cleaning temporary directory:', err);
+    console.error(`[upload] Erreur lors du nettoyage de ${TEMP_DIR} — ${err.message}`);
   }
 }
+
+nettoyerDossierTemporaire();
+setInterval(nettoyerDossierTemporaire, 60 * 60 * 1000).unref();
 
 module.exports = router;
 
 
 
-router.get('/deleteFile/:name', async function (req, res) {
-  const name = req.params.name;
-  const [nameFile, folder] = name.split('&');
-  const sourceDir = path.join('/apps/accessibilite/prod/backend/files/items/', folder);
+router.get('/deleteFile/:name', exigerAdmin, async function (req, res) {
+  // Un nom ou dossier vide ferait viser DOSSIER_ITEMS lui-même (déplacement de tous les fichiers)
+  const param = lireParamFichier(req.params.name);
+  if (!param) {
+    console.error(`[ERROR] Suppression refusée, paramètre invalide : ${req.params.name}`);
+    return res.status(400).json({ status: 'error', moved: false, message: 'Nom de fichier ou dossier invalide.' });
+  }
+  const { nameFile, folder } = param;
+  const sourceDir = path.join(DOSSIER_ITEMS, folder);
   const sourcePath = path.join(sourceDir, nameFile);
-  const destDir = path.join('/apps/accessibilite/prod/backend/files-del', folder);
+  const destDir = path.join(DOSSIER_SUPPRIMES, folder);
   const destPath = path.join(destDir, nameFile);
 
   let result = {
@@ -141,6 +215,10 @@ router.get('/deleteFile/:name', async function (req, res) {
   try {
     await fs.promises.mkdir(destDir, { recursive: true });
     await fs.promises.rename(sourcePath, destPath);
+    // Le déplacement conserve la date du dépôt : on la remplace par la date de suppression,
+    // pour pouvoir purger files-del manuellement selon l'âge (ex. find -mtime +30)
+    const maintenant = new Date();
+    await fs.promises.utimes(destPath, maintenant, maintenant).catch(() => {});
     result.status = 'success';
     result.moved = true;
     result.message = 'Fichier déplacé avec succès';
@@ -165,12 +243,27 @@ router.get('/deleteFile/:name', async function (req, res) {
 });
 
 
-router.get('/file/:name', function (req, res) {
-  const name = req.params.name;
-  const nameFile = name.split('&')[0];
-  const folder = name.split('&')[1];
-  const folderPath = '/apps/accessibilite/prod/backend/files/items/' + folder;
+router.get('/file/:name', exigerConnexion, async function (req, res) {
+  const param = lireParamFichier(req.params.name);
+  if (!param) {
+    return res.status(400).json({ error: 'Invalid file name' });
+  }
+  const { nameFile, folder } = param;
+  const folderPath = path.join(DOSSIER_ITEMS, folder);
   const filePath = path.join(folderPath, nameFile);
+
+  // Gestionnaires : tous les fichiers. Autres : seulement ceux d'un de leurs paniers non expirés.
+  if (req.utilisateur.groupe !== 'Admin') {
+    try {
+      if (!(await Items.fichierAccessible(req.utilisateur.courriel, nameFile, folder))) {
+        console.error(`[file] Accès refusé : ${req.utilisateur.courriel} -> ${folder}/${nameFile}`);
+        return res.status(403).json({ error: 'Access denied' });
+      }
+    } catch (err) {
+      console.error(`[file] Erreur de vérification d'accès — ${err.message}`);
+      return res.status(500).json({ error: 'Error checking access' });
+    }
+  }
 
   try {
     fs.readdir(folderPath, (err, files) => {
@@ -226,6 +319,9 @@ router.get('/file/:name', function (req, res) {
           } else if (extname === '.zip') {
             mimeType = 'application/zip';
           }
+
+          // Le navigateur enregistre directement le fichier (en continu, sans le charger en mémoire)
+          res.attachment(nameFile);
 
           // Définir l'en-tête de type MIME
           res.setHeader('Content-Type', mimeType);

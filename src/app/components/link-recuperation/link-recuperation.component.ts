@@ -1,12 +1,21 @@
 // Import des modules nécessaires
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { LinkService } from '../../services/link.service';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { MethodesGlobal } from '../../lib/MethodesGlobal';
-import {ItemService} from "../../services/item.service";
+
+// États possibles de la page, chacun avec son propre message
+type EtatPage = 'chargement' | 'documents' | 'aucunDocument' | 'sessionExpiree' | 'erreur';
+
+// Libellés lisibles des formats de fichier (annoncés aussi aux lecteurs d'écran)
+const FORMATS: { [ext: string]: string } = {
+  pdf: 'PDF', doc: 'Word', docx: 'Word', txt: 'Texte', rtf: 'Texte enrichi (RTF)',
+  xls: 'Excel', xlsx: 'Excel', csv: 'Tableur (CSV)', ppt: 'PowerPoint', pptx: 'PowerPoint',
+  mp3: 'Audio MP3', wav: 'Audio WAV', ogg: 'Audio OGG', zip: 'Archive ZIP',
+  jpg: 'Image JPEG', jpeg: 'Image JPEG', png: 'Image PNG', gif: 'Image GIF', svg: 'Image SVG',
+};
 
 @Component({
   selector: 'app-link-recuperation',
@@ -16,174 +25,172 @@ import {ItemService} from "../../services/item.service";
 export class LinkRecuperationComponent implements OnInit {
   // Déclaration des propriétés de la classe
   stateUpdate$: Observable<any[]> | undefined;
-  infosItems: any[] = [];
   key = '';
-  flagChoix: string = 'flag-icon-fr';
-  listeItems: any = [];
-  lienFichier: string = '';
+  listeItems: any[] = [];
   userConnect: string = '';
   nom: string = '';
   prenom: string = '';
   isLoading: boolean = false;
+  etat: EtatPage = 'chargement';
+  // Message court annoncé par les lecteurs d'écran quand le contenu change
+  annonce = '';
+  // Message affiché quand un téléchargement échoue
+  erreurTelechargement = '';
+  // Bouton à l'origine de l'erreur, pour y ramener le focus quand on ferme le message
+  private dernierBouton: HTMLElement | null = null;
 
-  // Import des fonctions globales
-  global: MethodesGlobal = new MethodesGlobal();
-
-  statutExpirate = false;
-  idPanier = '';
+  @ViewChild('contenu') contenu: ElementRef<HTMLElement> | undefined;
 
   // Constructeur avec injection de dépendances
   constructor(
     private linkService: LinkService,
-    private _location: Location,
     private translate: TranslateService,
     private router: Router,
     private route: ActivatedRoute,
+    private title: Title,
   ) {}
 
   // Méthode d'initialisation du composant
   ngOnInit(): void {
-    this.global.nonAfficher('alertNotUser');
-    // Étape 1: Initialiser le composant
-    this.initializeComponent();
-    // Étape 2: Récupérer le courriel de l'utilisateur connecté
-    this.userConnect = localStorage.getItem('courriel');
-    // Stocker redirectUrl dans la session s'il est fourni
-    this.nom = localStorage.getItem('nom');
-    this.prenom = localStorage.getItem('prenom');
-  }
-
-  // Méthode d'initialisation du composant
-  private async initializeComponent(): Promise<void> {
-    if (this.route.snapshot.paramMap.get('key')) {
-      // Récupérer la clé depuis l'URL
-      this.key = this.route.snapshot.paramMap.get('key')!.toString();
-
-      // Récupérer les détails de l'item depuis le service
-      await this.fetchItemDetails(this.key);
-      // Configuration de la langue par défaut et du drapeau
-      this.translate.setDefaultLang('fr');
-      this.flagChoix = 'flag-icon-fr';
+    this.title.setTitle('Vos documents adaptés – Bibliothèques UdeM');
+    this.translate.setDefaultLang('fr');
+    // Récupérer l'utilisateur connecté avant de charger les documents
+    this.userConnect = localStorage.getItem('courriel') || '';
+    this.nom = localStorage.getItem('nom') || '';
+    this.prenom = localStorage.getItem('prenom') || '';
+    this.key = this.route.snapshot.paramMap.get('key') || '';
+    if (this.key) {
+      this.fetchItemDetails(this.key);
+    } else {
+      this.changerEtat('aucunDocument');
     }
   }
 
   // Méthode pour récupérer les détails de l'item depuis le service
-  private async fetchItemDetails(key: string): Promise<void> {
+  async fetchItemDetails(key: string): Promise<void> {
+    this.changerEtat('chargement');
     try {
-      // Appeler le service pour récupérer les détails de l'item
-      let res = await this.linkService.fetchAll(key).toPromise();
+      const res = await firstValueFrom(this.linkService.fetchAll(key));
 
-      // Vérifier si l'utilisateur a les droits d'accès
-      if (
-        res[0] && (this.userConnect === res[0].courriel ||
-        localStorage.getItem('roleUser') === 'Admin')
-      ) {
-        // Vérifier les informations de l'item et mettre à jour si nécessaire
-        if (res[0] && !this.validerLesInfosItem(res[0].dateExpiration)) {
-          if (res[0].statut != 'Inactif') {
-            this.stateUpdate$ = this.linkService.updateStateLink(
-              res[0].idPanier
-            );
-            this.stateUpdate$.toPromise().then(res => {
-              if (res !== undefined) {
-                this.reload('/lien/' + this.key);
-              }
-            });
+      // Le serveur ne renvoie que les paniers de l'utilisateur ; on garde la vérification côté client
+      const autorise = res[0] && (
+        this.userConnect.toLowerCase() === (res[0].courriel || '').toLowerCase() ||
+        localStorage.getItem('roleUser') === 'Admin');
+
+      if (!autorise) {
+        this.changerEtat('aucunDocument');
+        return;
+      }
+
+      // Lien expiré : marquer le panier inactif, puis recharger pour afficher le nouveau statut
+      if (this.isDateExpired(res[0].dateExpiration) && res[0].statut != 'Inactif') {
+        this.stateUpdate$ = this.linkService.updateStateLink(res[0].idPanier);
+        this.stateUpdate$.toPromise().then(r => {
+          if (r !== undefined) {
+            this.reload('/lien/' + this.key);
           }
-        }
+        });
+      }
 
-        // Parcourir les résultats et créer une structure d'information
-        for (let i = 0; i < res.length; i++) {
-          const item = res[i];
-          this.idPanier = item.idPanier;
-          const infosItem = this.createInfosItem(item);
-          this.listeItems.push(infosItem);
-        }
-        this.global.nonAfficher('alertNotUser');
-      } else {
-        this.global.afficher('alertNotUser');
-      }
-      if(this.listeItems===0){
-        //console.log(this.listeItems);
-        this.global.afficher('alertNotUser');
-      }
-    } catch (err) {
-      // Gérer les erreurs, par exemple, afficher un message d'erreur
-      console.error(`Error: ${err.message}`);
+      this.listeItems = res.map(item => this.createInfosItem(item));
+      this.changerEtat('documents');
+    } catch (err: any) {
+      console.error(`Error: ${err?.message}`);
+      this.changerEtat(err?.status === 401 ? 'sessionExpiree' : 'erreur');
     }
+  }
+
+  // Met à jour l'état de la page et le message annoncé aux lecteurs d'écran
+  private changerEtat(etat: EtatPage): void {
+    this.etat = etat;
+    const disponibles = this.listeItems.filter(i => !i.expire).length;
+    const annonces: { [e in EtatPage]: string } = {
+      chargement: 'Chargement de vos documents…',
+      documents: disponibles === 0
+        ? 'Aucun document téléchargeable : le lien a expiré.'
+        : `${disponibles} document${disponibles > 1 ? 's' : ''} disponible${disponibles > 1 ? 's' : ''} au téléchargement.`,
+      aucunDocument: 'Aucun document associé à votre compte pour ce lien.',
+      sessionExpiree: 'Votre session a expiré.',
+      erreur: "Impossible d'afficher vos documents.",
+    };
+    this.annonce = annonces[etat];
   }
 
   // Méthode pour créer la structure d'information à partir des détails de l'item
   private createInfosItem(item: any): any {
     return {
       idPanier: item.idPanier,
-      nom: item.nom,
-      prenom: item.prenom,
       courriel: item.courriel,
-      dateActivation: item.dateActivation,
       dateExpiration: item.dateExpiration,
-      nbrJours: item.nbrJours,
+      dateExpirationTexte: this.formaterDate(item.dateExpiration),
+      expire: this.isDateExpired(item.dateExpiration),
       idItem: item.idItem,
       statut: item.statut,
       titre: item.titre,
       auteur: item.auteur,
       file: item.file,
-      URL: item.URL
+      URL: item.URL,
+      format: this.formatFichier(item.file),
     };
   }
 
-  // Méthode pour valider les informations de l'item
-  validerLesInfosItem(dateExpiration: string): boolean {
-    return !this.isDateExpired(dateExpiration);
-  }
-
   // Méthode pour télécharger un fichier
-  download(file: string, urlFile: string): void {
+  download(file: string, urlFile: string, event?: Event): void {
     this.isLoading = true; // Activer l'animation de chargement
-    
+    this.erreurTelechargement = '';
+    this.dernierBouton = (event?.currentTarget as HTMLElement) || null;
+
     let param=file+'&'+urlFile;
     const url = `${window.location.origin}/api/items/file/${param}`;
-    this.linkService.download(url, this.key).subscribe(
-      (blob: Blob) => {
-        // Create a URL for the blob object
-        const objectUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = objectUrl;
-        a.download = file;
-        document.body.appendChild(a);
-        a.click();
-
-        // Revoke the object URL after download is complete
-        URL.revokeObjectURL(objectUrl);
-        a.remove();
+    // Le navigateur télécharge directement (progression native) : l'animation ne couvre que la vérification
+    this.linkService.telechargerFichier(url, file).subscribe({
+      next: () => {
         this.isLoading = false; // Désactiver l'animation de chargement
       },
-      error => {
+      error: (error) => {
         console.error('Error during file download:', error);
         this.isLoading = false; // Désactiver l'animation de chargement en cas d'erreur
+        this.erreurTelechargement = this.linkService.messageErreurTelechargement(error.status);
       }
-    );
+    });
   }
 
-  // Méthode pour changer la langue
-  switchLanguage(language: string): void {
-    this.translate.use(language);
-    this.flagChoix = `flag-icon-${language}`;
-    if (language === 'en') {
-      this.flagChoix = 'flag-icon-us';
-    }
+  // Ferme le message d'erreur et ramène le focus clavier sur le bouton concerné
+  fermerErreur(): void {
+    this.erreurTelechargement = '';
+    this.dernierBouton?.focus();
+  }
+
+  // Lien d'évitement : déplace le focus sur le contenu principal sans changer d'URL
+  allerAuContenu(event: Event): void {
+    event.preventDefault();
+    this.contenu?.nativeElement.focus();
+  }
+
+  recharger(): void {
+    window.location.reload();
+  }
+
+  // Une date « AAAA-MM-JJ » seule est interprétée en heure locale (et non UTC, qui décalerait d'un jour)
+  private lireDate(valeur: string): Date {
+    const jourSeul = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valeur || '');
+    return jourSeul ? new Date(+jourSeul[1], +jourSeul[2] - 1, +jourSeul[3]) : new Date(valeur);
+  }
+
+  // « 15 novembre 2026 » plutôt qu'une date technique, plus facile à lire et à entendre
+  private formaterDate(valeur: string): string {
+    const date = this.lireDate(valeur);
+    return isNaN(date.getTime()) ? (valeur || '') : date.toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  private formatFichier(file: string): string {
+    const ext = (file || '').split('.').pop()?.toLowerCase() || '';
+    return FORMATS[ext] || (ext ? ext.toUpperCase() : 'Fichier');
   }
 
   // Méthode pour vérifier si la date est expirée
   isDateExpired(expirationDate: string): boolean {
-    const expiration = new Date(expirationDate);
-    const now = new Date();
-    return now > expiration;
-  }
-
-  // Méthode pour effacer l'URL de redirection
-  clearRedirectUrl() {
-    localStorage.removeItem('redirectUrl');
+    return new Date() > this.lireDate(expirationDate);
   }
 
   // Méthode pour recharger l'URL

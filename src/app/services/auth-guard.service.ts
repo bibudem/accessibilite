@@ -15,6 +15,8 @@ export class AuthGuard implements CanActivate {
 
     if (this.authService.isLoggedIn) {
       return true;
+    } else if (this.authService.redirectionConnexionEnCours) {
+      return false;
     } else {
       // Utilisez la méthode getRedirectUrl de authService pour obtenir l'URL de redirection
       const redirectUrl = this.authService.redirectUrl || '/not-user';

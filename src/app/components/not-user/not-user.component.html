@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessibilité - Bibliothèque</title>
-    
-    <!-- Encodage et langage bien définis -->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="Content-Language" content="fr">
-    
         <style>
       /* ===== VARIABLES CSS ===== */
       :root {
@@ -17,7 +6,7 @@
           --teal: #00796b;
           --cyan: #52B782;
           --white: #ffffff;
-          --gray-dark: #777981;
+          --gray-dark: #5f6168; /* 6.2:1 sur blanc (l'ancien #777981 n'atteignait que 4.3:1) */
       }
 
       /* ===== RESET ===== */
@@ -53,7 +42,7 @@
           line-height: 1.2;
       }
 
-      .title h5 {
+      .title .sous-titre {
           color: var(--gray-dark);
           font-weight: normal;
           font-size: 1.5rem;
@@ -160,16 +149,65 @@
           outline: none;
       }
 
+      /* Vert assombri : #28a745 n'atteignait que 3.1:1 sur blanc */
       .btn-outline-success {
-          color: #28a745;
-          border-color: #28a745;
+          color: #1e7034;
+          border-color: #1e7034;
           background-color: transparent;
       }
       .btn-outline-success:hover,
       .btn-outline-success:focus {
           color: var(--white);
-          background-color: #28a745;
+          background-color: #1e7034;
           outline: none;
+      }
+
+      /* Bouton de connexion : plein et large, seul bouton de la page (évite la confusion au zoom) */
+      .btn-principal {
+          color: var(--white);
+          background-color: #0b4f9c; /* 8:1 avec le texte blanc */
+          border-color: #0b4f9c;
+          font-size: 1.125rem;
+          font-weight: 600;
+          min-width: 12rem;
+      }
+      .btn-principal:hover,
+      .btn-principal:focus {
+          background-color: #073a75;
+          border-color: #073a75;
+          color: var(--white);
+          text-decoration: none;
+      }
+
+      /* Lien vers le site externe : un lien souligné, pas un bouton */
+      .lien-externe {
+          color: #0b4f9c;
+          text-decoration: underline;
+          font-family: Arial, Helvetica, sans-serif;
+      }
+      .lien-externe:focus-visible {
+          outline: 3px solid #1a1a1a;
+          outline-offset: 3px;
+      }
+
+      .avis-connecte {
+          width: 90%;
+          max-width: 800px;
+          border-left: 6px solid #0b4f9c;
+          background: #f4f6f9;
+          padding: 1rem 1.5rem;
+          text-align: left;
+      }
+      .avis-connecte p {
+          width: auto;
+          margin-bottom: 0.5rem;
+          color: #1a1a1a;
+      }
+
+      /* Focus clavier toujours visible, en plus du changement de couleur */
+      .btn:focus-visible {
+          outline: 3px solid #1a1a1a;
+          outline-offset: 3px;
       }
 
       /* ===== UTILITAIRES ===== */
@@ -188,7 +226,7 @@
       /* ===== RESPONSIVE ===== */
       @media (max-width: 768px) {
           .title h1 { font-size: 1.75rem; letter-spacing: 0.3rem; }
-          .title h5 { font-size: 1.2rem; }
+          .title .sous-titre { font-size: 1.2rem; }
           .parallax2 h2 { font-size: 2rem; }
           .paragraph p { width: 95%; font-size: 1rem; }
           .col-md-8, .col-lg-6 { flex: 0 0 100%; max-width: 100%; padding: 0 15px; }
@@ -212,17 +250,23 @@
       @media (prefers-color-scheme: dark) {
           .bg-white { background-color: #1a1a1a; }
           .title { color: #ffffff; }
-          .title h5 { color: #cccccc; }
+          .title .sous-titre { color: #cccccc; }
           .paragraph p { color: #e0e0e0; }
+          /* Boutons lisibles sur fond sombre */
+          .btn-outline-dark { color: #e0e0e0; border-color: #e0e0e0; }
+          .btn-outline-success { color: #6fd38a; border-color: #6fd38a; }
+          .btn:focus-visible { outline-color: #ffffff; }
+          .lien-externe { color: #9cc3f5; }
+          .lien-externe:focus-visible { outline-color: #ffffff; }
+          .avis-connecte { background: #24282e; }
+          .avis-connecte p { color: #e0e0e0; }
       }
     </style>
-</head>
-<body>
-    <div class="bg-white">
+    <main class="bg-white">
         <section class="top">
             <div class="title p-5 text-center mt-3">
                 <h1>Ressources adaptées</h1>
-                <h5 class="mt-2">Outil web de gestion des fichiers en formats accessibles</h5>
+                <p class="sous-titre mt-2">Outil web de gestion des fichiers en formats accessibles</p>
             </div>
         </section>
 
@@ -234,13 +278,26 @@
 
             <div class="row">
                 <div class="col-md-8 col-lg-6 paragraph second text-center">
-                    <p class="mt-2">
-                        <a href="https://bib.umontreal.ca/" class="btn btn-outline-dark mt-2">Site des bibliothèques</a>
-                        <a href="/api/user-udem/login" class="btn btn-outline-success mt-2 ml-2">Connectez-vous</a>
+                    <!-- Retour de connexion sans page associée : expliquer au lieu de « recharger » la page -->
+                    <div *ngIf="connecte" class="avis-connecte" role="status">
+                        <p><strong>Votre connexion avec votre compte UdeM est active.</strong></p>
+                        <p>Pour accéder à vos documents, ouvrez le lien de téléchargement reçu par courriel.</p>
+                    </div>
+
+                    <ng-container *ngIf="!connecte">
+                        <p class="mt-2">
+                            Connectez-vous avec votre compte de l'Université de Montréal.
+                        </p>
+                        <p class="mt-2">
+                            <a [href]="urlConnexion" class="btn btn-principal mt-2">Se connecter</a>
+                        </p>
+                    </ng-container>
+
+                    <!-- Lien externe volontairement distinct du bouton de connexion -->
+                    <p class="mt-3">
+                        <a href="https://bib.umontreal.ca/" class="lien-externe">Quitter et aller au site des Bibliothèques UdeM</a>
                     </p>
                 </div>
             </div>
         </section>
-    </div>
-</body>
-</html>
+    </main>

@@ -8,7 +8,8 @@ exports.getUserUdem = async (req, res, next) => {
     //console.log("===================");
 
     // Vérifiez si l'utilisateur est connecté via les données de session
-    if (!req.session.token||req.session.token==undefined) {
+    // Token présent mais utilisateur absent (ex. connexion Microsoft abandonnée après /login)
+    if (!req.session.token || !req.session.passport?.user?.[req.session.token]) {
       //console.log("Session invalide - redirection vers logout");
       return res.redirect('/api/logout');
     }
